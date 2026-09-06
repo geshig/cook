@@ -115,27 +115,53 @@ production endpoint-а).
 3. След първия deploy, обнови Stripe webhook endpoint-а и Supabase Redirect
    URL да сочат към реалния домейн вместо localhost.
 
+### 6. Въвеждане на рецепти — без SQL
+
+Сложи своя имейл в `ADMIN_EMAILS` (env var), влез през `/login` с него,
+после отиди на `/admin`. Оттам:
+
+- **+ Нова рецепта** отваря форма — заглавие, време/порции/kcal/макроси,
+  продукти и стъпки (по един ред за всеки, номерирането на стъпките е
+  автоматично), видео/снимка линк, тагове с чекбоксове по категория,
+  checkbox за "заключена".
+- Всяка рецепта в списъка има **Редакция** и **Изтрий**.
+
+Само имейлите в `ADMIN_EMAILS` виждат `/admin` — за всеки друг (вкл.
+платени абонати) страницата показва "няма достъп". По-добре въвеждай
+рецепти през тази форма, не директно през Supabase Table Editor — формата
+пише едновременно в `recipes` и `recipe_tags`, докато в Table Editor
+junction таблицата се пълни на ръка и лесно се разминава.
+
 ## Структура на кода
 
 ```
 app/
-  page.tsx                     landing страница (hero, лийд форма, pricing, FAQ)
+  page.tsx                     landing страница (hero, pricing, preview, FAQ)
   login/page.tsx                magic-link вход
   auth/callback/route.ts        разменя Supabase code за сесия
   auth/signout/route.ts
   recipes/page.tsx               заключен зад книгата; рендерира <RecipeApp>
   account/page.tsx               статус на книга/абонамент + billing portal
-  api/leads/route.ts             лийд магнит формата -> таблица `leads`
+  admin/page.tsx                  списък рецепти (само ADMIN_EMAILS)
+  admin/recipes/new/page.tsx      форма за нова рецепта
+  admin/recipes/[id]/edit/page.tsx  форма за редакция
+  api/admin/recipes/route.ts      create (POST), гейтнат с isAdmin
+  api/admin/recipes/[id]/route.ts update (PUT) / изтриване (DELETE)
+  api/leads/route.ts             лийд магнит -> таблица `leads` (не е свързан към UI все още)
   api/checkout/book/route.ts     Stripe Checkout, mode=payment
   api/checkout/subscription/route.ts   Stripe Checkout, mode=subscription
   api/billing-portal/route.ts    Stripe Billing Portal сесия
   api/webhooks/stripe/route.ts   единственият писател в `subscribers`
 components/
   RecipeApp.tsx                  тагбар + грид + detail sheet (клиентски)
+  RecipeForm.tsx                  споделена форма за нова/редакция на рецепта
   LeadForm.tsx, CheckoutButton.tsx, ManageBillingButton.tsx, SiteHeader.tsx
+  DeleteRecipeButton.tsx
 lib/
   supabase/admin.ts              service-role клиент — само сървър
   supabase/server.ts             auth-само клиент, четe сесия от cookies
+  recipeText.ts                  ; / номерирани редове <-> списъци, споделено
+                                  между RecipeApp и RecipeForm
   supabase/browser.ts            браузърен клиент, само за magic-link
   access.ts                      кой какво вижда (единственото място)
   recipes.ts                     четене + редакция на заключено съдържание
@@ -148,10 +174,11 @@ supabase/
 
 ## Какво съзнателно НЕ е построено
 
-- **Изпращане на имейла с 3-те безплатни рецепти** — `/api/leads` пише в
-  таблица `leads`; реалното изпращане (авто-отговор с рецептите) очаква
-  свързване с ESP (напр. Resend, Mailchimp, ConvertKit) по твой избор,
-  извън обхвата на този build.
+- **Лийд магнит (3 безплатни рецепти)** — landing страницата вече не го
+  показва (решено да не се ползва тази тактика за сега). `/api/leads` и
+  `LeadForm.tsx` са останали в кода, неизползвани — ако по-късно решиш да
+  събираш имейл лист, реалното изпращане пак ще изисква ESP (Resend,
+  Mailchimp, ConvertKit...) по твой избор.
 - **ДДС регистрация / фактуриране** — под прага в брифа, за проверка със
   счетоводител преди launch, не е технически проблем сега.
 - Реален Supabase / Stripe / Vercel акаунт — build-нато е и локално

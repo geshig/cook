@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import type { RecipeCard } from "@/lib/types";
+import { parseIngredients, parseSteps } from "@/lib/recipeText";
 
 export function RecipeApp({ recipes }: { recipes: RecipeCard[] }) {
   const allTags = useMemo(
@@ -92,23 +93,15 @@ export function RecipeApp({ recipes }: { recipes: RecipeCard[] }) {
               )}
               <h4>Продукти</h4>
               <ul>
-                {(open.ingredients ?? "")
-                  .split(";")
-                  .map((i) => i.trim())
-                  .filter(Boolean)
-                  .map((i, idx) => (
-                    <li key={idx}>{i}</li>
-                  ))}
+                {parseIngredients(open.ingredients).map((i, idx) => (
+                  <li key={idx}>{i}</li>
+                ))}
               </ul>
               <h4>Начин на приготвяне</h4>
               <ol>
-                {(open.steps ?? "")
-                  .split("\n")
-                  .map((s) => s.replace(/^\d+\.\s*/, "").trim())
-                  .filter(Boolean)
-                  .map((s, idx) => (
-                    <li key={idx}>{s}</li>
-                  ))}
+                {parseSteps(open.steps).map((s, idx) => (
+                  <li key={idx}>{s}</li>
+                ))}
               </ol>
               {open.videoUrl && (
                 <a className="video-link" href={open.videoUrl} target="_blank" rel="noopener noreferrer">

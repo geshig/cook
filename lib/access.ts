@@ -38,3 +38,17 @@ export async function getAccess(): Promise<Access> {
 export function hasBookAccess(access: Access) {
   return access.purchasedBook || access.subscriptionActive;
 }
+
+/**
+ * Recipe content management (/admin). Gated by email allowlist, not by
+ * having purchased anything — this is you, not a customer tier. Set
+ * ADMIN_EMAILS to a comma-separated list of the emails you sign in with.
+ */
+export function isAdmin(access: Access) {
+  if (!access.email) return false;
+  const admins = (process.env.ADMIN_EMAILS ?? "")
+    .split(",")
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean);
+  return admins.includes(access.email.toLowerCase());
+}

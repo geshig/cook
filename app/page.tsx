@@ -1,6 +1,5 @@
 import { getAccess } from "@/lib/access";
 import { getRecipesForViewer } from "@/lib/recipes";
-import { LeadForm } from "@/components/LeadForm";
 import { CheckoutButton } from "@/components/CheckoutButton";
 import { SiteHeader } from "@/components/SiteHeader";
 
@@ -32,20 +31,13 @@ export default async function LandingPage() {
           50+ рецепти с точни калории и макроси. Филтрираш по съставка, повод
           или време за готвене — без да гадаеш какво ядеш.
         </p>
-        <a href="#lead" className="btn">
-          Вземи 3 рецепти безплатно
+        <a href="#pricing" className="btn">
+          Купи книгата
         </a>
         <div className="hero-meta">
           <span>⏱ под 30 мин повечето</span>
           <span>📊 макроси на всяка</span>
         </div>
-      </section>
-
-      <section id="lead" className="lead">
-        <div className="eyebrow">Безплатно</div>
-        <h2>Пробвай преди да купиш</h2>
-        <p>3 рецепти директно в имейла — без задължение, без скрит абонамент.</p>
-        <LeadForm />
       </section>
 
       {preview.length > 0 && (

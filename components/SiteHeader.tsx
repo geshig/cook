@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getAccess } from "@/lib/access";
+import { getAccess, isAdmin } from "@/lib/access";
 
 export async function SiteHeader() {
   const access = await getAccess();
@@ -12,6 +12,7 @@ export async function SiteHeader() {
       <nav>
         {access.email ? (
           <>
+            {isAdmin(access) && <Link href="/admin">Админ</Link>}
             <Link href="/account">{access.email}</Link>
             <form action="/auth/signout" method="post">
               <button
