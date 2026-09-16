@@ -20,7 +20,7 @@ export default async function RecipesPage() {
               : "Купи книгата или влез, ако вече си я взел, за да отвориш пълния каталог с рецепти."}
           </p>
           <Link className="btn" href="/#pricing">
-            Купи книгата — 47€
+            Купи книгата — 47.99€
           </Link>
           {!access.email && (
             <Link className="btn btn-ghost" href="/login">

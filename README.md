@@ -69,7 +69,7 @@ anon ключа, PostgREST няма да върне и ред от `recipes` и�
 ### 2. Stripe
 
 1. Създай два продукта в Stripe Dashboard → Product catalog:
-   - **Книга** — one-time price, 47€ (с ДДС).
+   - **Книга** — one-time price, 47.99€ (с ДДС).
    - **Абонамент** — recurring price (месечно), ~15€ (или каквато цена
      решиш).
 2. Копирай двата `price_...` ID-та.
