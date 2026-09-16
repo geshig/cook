@@ -64,7 +64,7 @@ export default async function LandingPage() {
         <div className="price-card">
           <div className="tag">Основна книга</div>
           <div className="amount">
-            25€ <span>еднократно</span>
+            47€ <span>еднократно, с ДДС</span>
           </div>
           <ul>
             <li>50+ рецепти с макроси</li>
