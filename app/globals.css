@@ -864,3 +864,57 @@ footer {
   background: rgba(255, 255, 255, 0.08);
   color: var(--sage);
 }
+
+/* ---------- legal pages ---------- */
+
+.legal {
+  max-width: 680px;
+  padding-top: 40px;
+  line-height: 1.65;
+}
+
+.legal h1 {
+  font-size: 38px;
+  color: var(--amber);
+  margin: 4px 0 6px;
+}
+
+.legal-updated {
+  font-size: 13px;
+  color: var(--sage);
+  margin-bottom: 28px;
+}
+
+.legal h2 {
+  font-size: 20px;
+  margin: 28px 0 8px;
+}
+
+.legal p,
+.legal li {
+  color: var(--text-dim);
+  font-size: 15px;
+}
+
+.legal p + p {
+  margin-top: 10px;
+}
+
+.legal ul {
+  padding-left: 20px;
+  display: grid;
+  gap: 6px;
+  margin: 6px 0 10px;
+}
+
+.legal b {
+  color: var(--text);
+}
+
+.legal a {
+  color: var(--amber);
+}
+
+.legal-foot {
+  margin-top: 36px;
+}
