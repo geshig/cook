@@ -3,12 +3,42 @@ import { getRecipesForViewer } from "@/lib/recipes";
 import { CheckoutButton } from "@/components/CheckoutButton";
 import { SiteHeader } from "@/components/SiteHeader";
 
+const PREVIEW_TITLES = [
+  "Пиле шаурма",
+  "Протеинов кейк в чаша",
+  "Купа с хрупкав ориз и сьомга",
+  "Протеинова мусака",
+  "Пица с пълнена коричка",
+  "Протеинови брауни със сладък картоф",
+];
+
+const CATEGORIES: [string, number][] = [
+  ["Meal prep кутии за седмицата", 16],
+  ["Основни с пилешко", 12],
+  ["Телешко, свинско и риба", 12],
+  ["Салати", 11],
+  ["Сосове и мариновки", 10],
+  ["Десерти", 8],
+  ["Солени закуски", 8],
+  ["Гарнитури и снаксове", 6],
+  ["Тортили, хлебчета и пици", 5],
+  ["Сладки закуски", 5],
+  ["Супи", 5],
+  ["Вегетариански основни", 3],
+];
+
 export default async function LandingPage() {
   const access = await getAccess();
   // The recipe preview is decorative — if Supabase is briefly unreachable,
-  // the funnel (lead form, checkout) should still render and take payments.
+  // the funnel (checkout) should still render and take payments.
   const preview = await getRecipesForViewer(access)
-    .then((recipes) => recipes.slice(0, 4))
+    .then((recipes) => {
+      const withPhoto = recipes.filter((r) => r.photoUrl);
+      const picked = PREVIEW_TITLES.map((t) =>
+        withPhoto.find((r) => r.title.startsWith(t))
+      ).filter((r): r is NonNullable<typeof r> => !!r);
+      return picked.length >= 4 ? picked : withPhoto.slice(0, 6);
+    })
     .catch((err) => {
       console.error("Failed to load recipe preview:", err);
       return [];
@@ -28,31 +58,38 @@ export default async function LandingPage() {
           <span>С МАКРОСИТЕ.</span>
         </h1>
         <p>
-          50+ рецепти с точни калории и макроси. Филтрираш по съставка, повод
-          или време за готвене — без да гадаеш какво ядеш.
+          101 високопротеинови рецепти със снимка, калории и макроси на всяка.
+          Готвиш за един или за цялата седмица: избираш порциите и
+          количествата се преизчисляват сами.
         </p>
         <a href="#pricing" className="btn">
-          Купи книгата
+          Купи книгата — 47€
         </a>
         <div className="hero-meta">
-          <span>⏱ под 30 мин повечето</span>
-          <span>📊 макроси на всяка</span>
+          <span>101 рецепти</span>
+          <span>51 са до 30 мин</span>
+          <span>~35 g протеин средно</span>
         </div>
       </section>
 
       {preview.length > 0 && (
         <section className="preview">
-          <h2>Какво има вътре</h2>
-          <p>Малка извадка — пълният списък е в книгата.</p>
+          <h2>Какво ще готвиш</h2>
+          <p>Няколко от рецептите. Всяка е снимана така, както ще излезе при теб.</p>
           <div className="pgrid">
             {preview.map((r) => (
-              <div key={r.id} className={"pcard" + (r.isLocked ? " locked" : "")}>
-                {r.isLocked && <span className="lock">🔒</span>}
+              <div key={r.id} className="pcard">
+                {r.photoUrl && (
+                  <div className="pcard-photo">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={r.photoUrl} alt={r.title} loading="lazy" />
+                  </div>
+                )}
                 <h4>{r.title}</h4>
                 <div className="meta">
-                  {r.timeMinutes != null && `${r.timeMinutes} мин`}
-                  {r.timeMinutes != null && r.kcal != null && " · "}
                   {r.kcal != null && `${r.kcal} kcal`}
+                  {r.kcal != null && r.proteinG != null && " · "}
+                  {r.proteinG != null && `${r.proteinG} g протеин`}
                 </div>
               </div>
             ))}
@@ -60,17 +97,35 @@ export default async function LandingPage() {
         </section>
       )}
 
+      <section className="inside">
+        <h2>Какво има вътре</h2>
+        <ul className="cats">
+          {CATEGORIES.map(([name, n]) => (
+            <li key={name}>
+              <span>{name}</span>
+              <b>{n}</b>
+            </li>
+          ))}
+        </ul>
+        <p className="inside-note">
+          На всяка рецепта: снимка, продукти, стъпки, съвети, време за готвене и
+          калории с протеин, въглехидрати и мазнини на порция.
+        </p>
+      </section>
+
       <section id="pricing" className="pricing">
         <div className="price-card">
-          <div className="tag">Основна книга</div>
+          <div className="tag">Книгата</div>
           <div className="amount">
-            47€ <span>еднократно, с ДДС</span>
+            47€ <span>еднократно</span>
           </div>
           <ul>
-            <li>50+ рецепти с макроси</li>
-            <li>Тагове и филтриране по съставка</li>
-            <li>Достъп в браузъра — на всяко устройство</li>
-            <li>Расте — нови рецепти всяко тримесечие</li>
+            <li>101 рецепти с калории и макроси на порция</li>
+            <li>Снимка на всяка рецепта</li>
+            <li>Избираш порциите, количествата се смятат сами</li>
+            <li>Филтри по съставка, хранене и повод</li>
+            <li>В браузъра на телефона и компютъра, без приложение</li>
+            <li>Нови рецепти всяко тримесечие</li>
           </ul>
           <CheckoutButton kind="book" className="btn">
             Купи сега
@@ -87,26 +142,38 @@ export default async function LandingPage() {
         <div className="faq-item">
           <h4>Как получавам достъп?</h4>
           <p>
-            Веднага след плащане получаваш линк по имейл — отваря се в
-            браузъра, без инсталация.
+            След плащането влизаш с имейла, с който си платил. Пращаме ти линк
+            за вход, без парола. Рецептите се отварят в браузъра, без
+            инсталация, и сайтът те помни на това устройство.
+          </p>
+        </div>
+        <div className="faq-item">
+          <h4>Мога ли да готвя само за себе си?</h4>
+          <p>
+            Да. Основните ястия се отварят за 1 порция, а с бутоните + и −
+            сменяш броя и всички количества се преизчисляват.
           </p>
         </div>
         <div className="faq-item">
           <h4>Трябва ли ми кухненска везна?</h4>
           <p>
-            Не е задължително — всяка рецепта има и обичайни мерни единици
-            покрай грамажа.
+            Помага за точни макроси, но не е задължителна. Количествата са в
+            грамове, лъжици и бройки.
           </p>
         </div>
         <div className="faq-item">
           <h4>Какво ако не ми хареса?</h4>
-          <p>Пиши ми в рамките на 7 дни — връщам парите без въпроси.</p>
+          <p>Пиши ми в рамките на 7 дни и ти връщам парите.</p>
+        </div>
+        <div className="faq-item">
+          <h4>Имам въпрос, който го няма тук</h4>
+          <p>Пиши на hello@geshapov.com.</p>
         </div>
       </section>
 
       <footer>
-        Кухнята © 2026 · <a href="#">Условия</a> ·{" "}
-        <a href="#">Поверителност</a>
+        Кухнята © 2026 · <a href="/usloviya">Условия</a> ·{" "}
+        <a href="/poveritelnost">Поверителност</a>
       </footer>
     </>
   );
