@@ -1,7 +1,6 @@
 /** Who sells and who controls the data. One place to update for the legal pages. */
 export const SELLER = {
-  // TODO: пълно име (и ЕИК, ако има фирма или ЕТ)
-  name: "Кухнята (geshapov.com)",
+  name: "Георги Емилов Терзиев",
   city: "гр. София, България",
   email: "hello@geshapov.com",
   site: "www.geshapov.com",
