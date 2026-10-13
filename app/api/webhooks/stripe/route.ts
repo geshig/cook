@@ -38,7 +38,9 @@ export async function POST(request: Request) {
   switch (event.type) {
     case "checkout.session.completed": {
       const session = event.data.object as Stripe.Checkout.Session;
-      const email = session.customer_details?.email ?? session.customer_email;
+      const rawEmail = session.customer_details?.email ?? session.customer_email;
+      // Supabase Auth stores emails lowercased; match that so access lookups line up.
+      const email = rawEmail?.trim().toLowerCase();
       const customerId =
         typeof session.customer === "string" ? session.customer : null;
 
@@ -48,7 +50,7 @@ export async function POST(request: Request) {
       }
 
       if (session.mode === "payment") {
-        await admin.from("subscribers").upsert(
+        const { error } = await admin.from("subscribers").upsert(
           {
             email,
             stripe_customer_id: customerId,
@@ -56,6 +58,11 @@ export async function POST(request: Request) {
           },
           { onConflict: "email" }
         );
+        if (error) {
+          // 500 makes Stripe retry instead of silently losing the purchase.
+          console.error("subscribers upsert (book) failed:", error.message);
+          return NextResponse.json({ error: "db" }, { status: 500 });
+        }
       } else if (session.mode === "subscription") {
         let currentPeriodEnd: string | null = null;
         if (typeof session.subscription === "string") {
@@ -68,7 +75,7 @@ export async function POST(request: Request) {
             : null;
         }
 
-        await admin.from("subscribers").upsert(
+        const { error } = await admin.from("subscribers").upsert(
           {
             email,
             stripe_customer_id: customerId,
@@ -77,6 +84,10 @@ export async function POST(request: Request) {
           },
           { onConflict: "email" }
         );
+        if (error) {
+          console.error("subscribers upsert (subscription) failed:", error.message);
+          return NextResponse.json({ error: "db" }, { status: 500 });
+        }
       }
       break;
     }
