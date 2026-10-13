@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getAccess } from "@/lib/access";
 import { getRecipesForViewer } from "@/lib/recipes";
 import { CheckoutButton } from "@/components/CheckoutButton";
@@ -162,8 +163,13 @@ export default async function LandingPage() {
           </p>
         </div>
         <div className="faq-item">
-          <h4>Какво ако не ми хареса?</h4>
-          <p>Пиши ми в рамките на 7 дни и ти връщам парите.</p>
+          <h4>Мога ли да върна покупката?</h4>
+          <p>
+            Достъпът до рецептите започва веднага след плащането, затова
+            книгата не се връща. Абонаментът спираш по всяко време от
+            „Профил“. Подробности има в{" "}
+            <Link href="/usloviya">Условията</Link>.
+          </p>
         </div>
         <div className="faq-item">
           <h4>Имам въпрос, който го няма тук</h4>
@@ -172,8 +178,8 @@ export default async function LandingPage() {
       </section>
 
       <footer>
-        Кухнята © 2026 · <a href="/usloviya">Условия</a> ·{" "}
-        <a href="/poveritelnost">Поверителност</a>
+        Кухнята © 2026 · <Link href="/usloviya">Условия</Link> ·{" "}
+        <Link href="/poveritelnost">Поверителност</Link>
       </footer>
     </>
   );
