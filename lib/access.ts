@@ -23,7 +23,7 @@ export async function getAccess(): Promise<Access> {
   const { data: subscriber } = await admin
     .from("subscribers")
     .select("purchased_book, subscription_status")
-    .eq("email", user.email)
+    .eq("email", user.email.toLowerCase())
     .maybeSingle();
 
   return {

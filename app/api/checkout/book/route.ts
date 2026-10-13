@@ -14,7 +14,7 @@ export async function POST() {
   const session = await getStripe().checkout.sessions.create({
     mode: "payment",
     line_items: [{ price: priceId, quantity: 1 }],
-    success_url: `${siteUrl}/recipes?checkout=success`,
+    success_url: `${siteUrl}/recipes?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${siteUrl}/?checkout=cancelled`,
     customer_creation: "always",
     // Stripe collects the email on the Checkout page; the webhook uses it

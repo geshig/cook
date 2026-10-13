@@ -1,10 +1,20 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { Suspense, useState, type FormEvent } from "react";
+import { useSearchParams } from "next/navigation";
 import { createBrowserSupabase } from "@/lib/supabase/browser";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
+  );
+}
+
+function LoginForm() {
+  // /login?email=... (after checkout) pre-fills the address the buyer paid with.
+  const [email, setEmail] = useState(useSearchParams().get("email") ?? "");
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
     "idle"
   );
