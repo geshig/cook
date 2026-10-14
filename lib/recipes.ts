@@ -84,6 +84,17 @@ function canOpen(r: RecipeRow, access: Access): boolean {
   return new Date(r.created_at).getTime() <= new Date(access.bookPurchasedAt).getTime();
 }
 
+/** The signed-in user's favourite recipe ids; [] if the table isn't there yet. */
+export async function getFavoriteIds(email: string | null): Promise<number[]> {
+  if (!email) return [];
+  const { data, error } = await createAdminClient()
+    .from("favorites")
+    .select("recipe_id")
+    .eq("email", email.toLowerCase());
+  if (error) return [];
+  return (data ?? []).map((r) => r.recipe_id as number);
+}
+
 export async function getAllTags(): Promise<Tag[]> {
   const admin = createAdminClient();
   const { data, error } = await admin

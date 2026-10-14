@@ -45,6 +45,11 @@ export default async function AccountPage() {
             <ManageBillingButton />
           )}
         </div>
+        <form action="/auth/signout" method="post" style={{ marginTop: 28 }}>
+          <button type="submit" className="link-btn">
+            Изход от профила
+          </button>
+        </form>
       </section>
     </>
   );

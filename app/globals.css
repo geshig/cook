@@ -151,7 +151,8 @@ header.app-header p {
   display: flex;
   gap: 8px;
   overflow-x: auto;
-  padding: 16px 20px;
+  padding: 4px 20px 10px;
+  scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -171,11 +172,7 @@ header.app-header p {
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.15s ease;
-  transform: rotate(-0.6deg);
-}
-
-.tag:nth-child(even) {
-  transform: rotate(0.6deg);
+  font-family: inherit;
 }
 
 .tag.active {
@@ -245,6 +242,7 @@ header.app-header p {
 }
 
 .card-photo {
+  position: relative;
   margin: -18px -18px 14px;
   aspect-ratio: 4 / 3;
   border-radius: var(--radius) var(--radius) 0 0;
@@ -331,15 +329,21 @@ header.app-header p {
   width: 100%;
   max-width: 560px;
   border-radius: 20px 20px 0 0;
-  padding: 26px 22px 34px;
-  max-height: 85vh;
+  padding: 0 22px calc(34px + env(safe-area-inset-bottom, 0px));
+  max-height: 92vh;
+  max-height: 92dvh;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  position: relative;
+  outline: none;
 }
 
 .sheet h2 {
-  font-size: 30px;
-  color: var(--amber);
+  font-size: 28px;
+  line-height: 1.15;
+  color: var(--text);
   margin-bottom: 6px;
+  text-wrap: balance;
 }
 
 .sheet .meta {
@@ -371,12 +375,12 @@ header.app-header p {
 }
 
 .sheet-photo {
-  margin: -26px -22px 18px;
+  position: relative;
+  margin: 0 -22px 18px;
   aspect-ratio: 4 / 5;
-  max-height: 52vh;
+  max-height: 42vh;
   width: calc(100% + 44px);
   overflow: hidden;
-  border-radius: 20px 20px 0 0;
   background: var(--card-hi);
 }
 
@@ -710,6 +714,7 @@ section {
 }
 
 .pcard-photo {
+  position: relative;
   aspect-ratio: 4 / 5;
   margin: -16px -16px 12px;
   border-radius: 14px 14px 0 0;
@@ -985,4 +990,654 @@ footer {
   color: var(--text-dim);
   font-size: 13.5px;
   line-height: 1.5;
+}
+
+/* ---------- finder: search, quick filters, sort ---------- */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.finder {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--bg);
+  padding-top: 12px;
+  border-bottom: 1px solid var(--line-soft);
+  margin-bottom: 12px;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 20px 10px;
+  padding: 0 14px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 100px;
+}
+
+.search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 16px;
+  padding: 12px 0;
+  color: var(--text);
+  outline: none;
+}
+
+.search:focus-within {
+  border-color: var(--accent);
+}
+
+.finder-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 0 20px 10px;
+}
+
+.count {
+  font-size: 13px;
+  color: var(--sage);
+  font-variant-numeric: tabular-nums;
+}
+
+.finder-tools {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.link-btn {
+  background: none;
+  border: 0;
+  padding: 4px 0;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+  cursor: pointer;
+}
+
+.link-btn.on {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.sort select {
+  font: inherit;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  padding: 6px 10px;
+}
+
+.filter-panel {
+  margin: 0 20px 12px;
+  padding: 14px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  display: grid;
+  gap: 12px;
+  max-height: 55vh;
+  overflow-y: auto;
+}
+
+.filter-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--sage);
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.mini-chip {
+  font: inherit;
+  font-size: 13px;
+  padding: 6px 12px;
+  border-radius: 100px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--text-dim);
+  cursor: pointer;
+}
+
+.mini-chip.on {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+
+.filter-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 4px;
+}
+
+.fav-btn {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 0;
+  background: rgba(255, 253, 248, 0.92);
+  color: var(--rust);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.card .meta .p {
+  color: var(--rust);
+  font-weight: 600;
+}
+
+.card:focus-visible,
+.tag:focus-visible,
+.mini-chip:focus-visible,
+.icon-btn:focus-visible,
+.chip-btn:focus-visible,
+.time-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (min-width: 960px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+}
+
+/* ---------- recipe sheet: bar, macros, cooking mode ---------- */
+
+.sheet-bar {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 -22px;
+  padding: 10px 12px;
+  background: var(--card);
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.sheet-bar-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--text);
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.icon-btn.on {
+  color: var(--rust);
+  border-color: var(--rust);
+}
+
+.macro-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 6px 0 4px;
+}
+
+.macro {
+  background: var(--card-hi);
+  border-radius: 12px;
+  padding: 8px 10px;
+  display: grid;
+}
+
+.macro b {
+  font-size: 17px;
+  font-variant-numeric: tabular-nums;
+}
+
+.macro span {
+  font-size: 11px;
+  color: var(--sage);
+}
+
+.macro.p b {
+  color: var(--rust);
+}
+
+.sheet-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.chip-btn {
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 10px 16px;
+  border-radius: 100px;
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  cursor: pointer;
+}
+
+.chip-btn.on {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.cooking-note {
+  font-size: 13px;
+  color: var(--text-dim);
+  background: var(--tint);
+  border-radius: 10px;
+  padding: 8px 12px;
+  margin-top: 10px;
+}
+
+.sheet ul.ingredients li {
+  cursor: pointer;
+  align-items: baseline;
+  padding: 7px 0;
+}
+
+.sheet .tick {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  border: 1.5px solid var(--line);
+  align-self: center;
+  position: relative;
+}
+
+.sheet li.got .tick {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.sheet li.got .tick::after {
+  content: "✓";
+  position: absolute;
+  inset: 0;
+  color: var(--on-accent);
+  font-size: 12px;
+  line-height: 15px;
+  text-align: center;
+}
+
+.sheet li.got span:not(.tick) {
+  text-decoration: line-through;
+  opacity: 0.55;
+}
+
+.sheet ol.steps {
+  list-style: none;
+  padding-left: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.sheet ol.steps li {
+  display: flex;
+  gap: 12px;
+  cursor: pointer;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.step-n {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--tint-strong);
+  color: var(--accent);
+  font-weight: 800;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+}
+
+.sheet ol.steps li.done {
+  opacity: 0.45;
+}
+
+.sheet ol.steps li.done .step-n {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.time-btn {
+  font: inherit;
+  font-weight: 700;
+  color: var(--accent);
+  background: var(--tint);
+  border: 1px solid var(--tint-strong);
+  border-radius: 8px;
+  padding: 0 6px;
+  margin: 0 2px;
+  cursor: pointer;
+}
+
+.sheet.cooking {
+  max-width: 720px;
+}
+
+.sheet.cooking ul.ingredients li,
+.sheet.cooking ol.steps li {
+  font-size: 19px;
+  line-height: 1.55;
+}
+
+.sheet.cooking ol.steps {
+  gap: 16px;
+}
+
+.timers {
+  position: sticky;
+  /* the sheet's bottom padding would otherwise leave a gap under the bar */
+  bottom: calc(-34px - env(safe-area-inset-bottom, 0px));
+  margin: 16px -22px -34px;
+  padding: 10px 14px calc(10px + env(safe-area-inset-bottom, 0px));
+  background: var(--text);
+  color: var(--bg);
+  display: grid;
+  gap: 8px;
+  z-index: 4;
+}
+
+.timer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.timer-label {
+  flex: 1;
+  min-width: 0;
+  font-size: 12px;
+  opacity: 0.8;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.timer-clock {
+  font-size: 22px;
+  font-variant-numeric: tabular-nums;
+}
+
+.timer.ring .timer-clock {
+  color: #f0c36b;
+}
+
+.timer-btn {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  background: transparent;
+  color: var(--bg);
+  border: 1px solid rgba(250, 246, 238, 0.4);
+  border-radius: 100px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.toast {
+  position: fixed;
+  top: calc(16px + env(safe-area-inset-top, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: calc(100% - 32px);
+  background: var(--text);
+  color: var(--bg);
+  font-size: 14px;
+  padding: 10px 16px;
+  border-radius: 100px;
+  z-index: 5;
+}
+
+@media (min-width: 600px) {
+  .overlay {
+    align-items: center;
+  }
+  .sheet {
+    border-radius: 20px;
+    max-height: 90vh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .tag {
+    transition: none;
+  }
+}
+
+/* ---------- shopping list ---------- */
+
+.shop {
+  padding-top: 28px;
+}
+
+.shop h1 {
+  font-size: 34px;
+  margin-bottom: 16px;
+}
+
+.shop-empty p {
+  color: var(--text-dim);
+  line-height: 1.6;
+  margin-bottom: 18px;
+}
+
+.shop-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.shop-tools {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.shop-note {
+  font-size: 13px;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.shop-recipe {
+  background: var(--card);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+
+.shop-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.shop-title {
+  flex: 1;
+  min-width: 0;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.shop-portions {
+  font-size: 12px;
+  color: var(--sage);
+  white-space: nowrap;
+}
+
+.shop-lines {
+  list-style: none;
+  display: grid;
+}
+
+.shop-lines label {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--line-soft);
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.shop-lines input {
+  accent-color: var(--accent);
+  width: 18px;
+  height: 18px;
+  align-self: center;
+  flex: 0 0 auto;
+}
+
+.shop-lines .ing-amount {
+  min-width: 70px;
+  color: var(--accent);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.shop-lines label.got span {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+.shop-group {
+  font-weight: 700;
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+/* ---------- sticky buy bar (phones) ---------- */
+
+.sticky-buy {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 10px 10px 16px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  box-shadow: 0 8px 24px rgba(43, 42, 38, 0.14);
+}
+
+.sticky-buy .btn {
+  padding: 12px 22px;
+}
+
+.sticky-buy-text {
+  display: grid;
+  min-width: 0;
+}
+
+.sticky-buy-text b {
+  font-size: 14px;
+}
+
+.sticky-buy-text span {
+  font-size: 12px;
+  color: var(--sage);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (min-width: 900px) {
+  .sticky-buy {
+    display: none;
+  }
+}
+
+.seg {
+  display: inline-flex;
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  padding: 3px;
+  margin-bottom: 14px;
+  background: var(--card);
+}
+
+.seg button {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  border: 0;
+  background: transparent;
+  color: var(--text-dim);
+  padding: 7px 14px;
+  border-radius: 100px;
+  cursor: pointer;
+}
+
+.seg button.on {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.shop-from {
+  color: var(--sage);
+  font-size: 12px;
 }

@@ -1,4 +1,6 @@
 import Link from "next/link";
+import Image from "next/image";
+import { StickyBuy } from "@/components/StickyBuy";
 import { getAccess } from "@/lib/access";
 import { getRecipesForViewer } from "@/lib/recipes";
 import { CheckoutButton } from "@/components/CheckoutButton";
@@ -61,7 +63,7 @@ export default async function LandingPage() {
           Готвиш за един или за цялата седмица: избираш порциите и
           количествата се преизчисляват сами.
         </p>
-        <a href="#pricing" className="btn">
+        <a href="#pricing" className="btn" id="hero-cta">
           Купи книгата — 47€
         </a>
         <div className="hero-meta">
@@ -80,8 +82,7 @@ export default async function LandingPage() {
               <div key={r.id} className="pcard">
                 {r.photoUrl && (
                   <div className="pcard-photo">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={r.photoUrl} alt={r.title} loading="lazy" />
+                    <Image src={r.photoUrl} alt={r.title} fill sizes="(min-width: 640px) 300px, 46vw" />
                   </div>
                 )}
                 <h4>{r.title}</h4>
@@ -189,6 +190,8 @@ export default async function LandingPage() {
           <p>Пиши на hello@geshapov.com.</p>
         </div>
       </section>
+
+      <StickyBuy />
 
       <footer>
         Кухнята на Геша © 2026 · <Link href="/usloviya">Условия</Link> ·{" "}
