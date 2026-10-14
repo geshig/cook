@@ -13,16 +13,35 @@ export async function POST() {
 
   const siteUrl = getSiteUrl();
   const access = await getAccess();
+  const subPriceId = process.env.STRIPE_PRICE_SUBSCRIPTION;
+  // The book comes with the subscription: 47 € now, 3 months of new recipes
+  // free, then 5,99 €/month until cancelled. Skipped for anyone who has had a
+  // subscription before (no second free trial) or if no subscription price.
+  const bundle = !!subPriceId && !access.hadSubscription;
   const session = await getStripe().checkout.sessions.create({
-    mode: "payment",
+    ...(bundle
+      ? {
+          mode: "subscription" as const,
+          line_items: [
+            { price: priceId, quantity: 1 },
+            { price: subPriceId!, quantity: 1 },
+          ],
+          subscription_data: { trial_period_days: 90 },
+          payment_method_types: ["card" as const],
+        }
+      : {
+          mode: "payment" as const,
+          line_items: [{ price: priceId, quantity: 1 }],
+          payment_method_types: ["card" as const, "revolut_pay" as const],
+          customer_creation: "always" as const,
+        }),
+    metadata: { kind: "book" },
     ...(access.email ? { customer_email: access.email } : {}),
-    line_items: [{ price: priceId, quantity: 1 }],
     success_url: `${siteUrl}/recipes?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${siteUrl}/?checkout=cancelled`,
     locale: "bg",
-    // Карти (Visa, Mastercard, Revolut и т.н.) и Revolut Pay; Apple Pay и Google Pay
-    // идват с картите, ако са включени в Stripe → Settings → Payment methods.
-    payment_method_types: ["card", "revolut_pay"],
+    // Карти (Visa, Mastercard, Revolut и т.н.); Apple Pay и Google Pay идват с
+    // картите. Revolut Pay само при еднократно плащане (без абонамент).
     custom_fields: [
       {
         key: "marketing",
@@ -43,10 +62,11 @@ export async function POST() {
     consent_collection: { terms_of_service: "required" },
     custom_text: {
       terms_of_service_acceptance: {
-        message: `Съгласен съм с [Условията](${siteUrl}/usloviya).`,
+        message: bundle
+          ? `Съгласен съм с [Условията](${siteUrl}/usloviya). Абонаментът за новите рецепти е безплатен 3 месеца, после 5,99 € на месец, докато не го спра.`
+          : `Съгласен съм с [Условията](${siteUrl}/usloviya).`,
       },
     },
-    customer_creation: "always",
     // Stripe collects the email on the Checkout page; the webhook uses it
     // to upsert the subscribers row, and the buyer signs in with the same
     // email afterwards to unlock /recipes.

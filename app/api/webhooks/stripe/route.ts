@@ -56,7 +56,8 @@ export async function POST(request: Request) {
         break;
       }
 
-      if (session.mode === "payment") {
+      const isBook = session.mode === "payment" || session.metadata?.kind === "book";
+      if (isBook) {
         const { error } = await admin.from("subscribers").upsert(
           {
             email,
