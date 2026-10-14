@@ -49,6 +49,13 @@ export async function POST(request: Request) {
         break;
       }
 
+      // Unlock only for money actually received. Delayed methods would arrive
+      // as "unpaid" here; we only offer instant ones, but never trust that.
+      if (session.payment_status === "unpaid") {
+        console.warn("checkout.session.completed още без плащане, session:", session.id);
+        break;
+      }
+
       if (session.mode === "payment") {
         const { error } = await admin.from("subscribers").upsert(
           {
