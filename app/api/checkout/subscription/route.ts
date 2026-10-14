@@ -16,6 +16,16 @@ export async function POST() {
     line_items: [{ price: priceId, quantity: 1 }],
     success_url: `${siteUrl}/recipes?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${siteUrl}/?checkout=cancelled`,
+    locale: "bg",
+    // Digital content: the buyer must expressly agree that access starts now
+    // and that this waives the 14-day withdrawal right. Requires a Terms of
+    // service URL in Stripe → Settings → Public details.
+    consent_collection: { terms_of_service: "required" },
+    custom_text: {
+      terms_of_service_acceptance: {
+        message: `Съгласен съм с [Условията](${siteUrl}/usloviya). Искам достъпът да започне веднага и знам, че така губя правото си на отказ в 14 дни.`,
+      },
+    },
   });
 
   if (!session.url) {
