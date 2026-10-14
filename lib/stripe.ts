@@ -5,7 +5,7 @@ let stripeSingleton: Stripe | null = null;
 
 export function getStripe(): Stripe {
   if (!stripeSingleton) {
-    const key = process.env.STRIPE_SECRET_KEY;
+    const key = process.env.STRIPE_SECRET_KEY?.trim();
     if (!key) throw new Error("Missing STRIPE_SECRET_KEY env var");
     stripeSingleton = new Stripe(key);
   }

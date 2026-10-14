@@ -10,7 +10,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
  * subscribers row as paid/active — the client never sets these flags.
  */
 export async function POST(request: Request) {
-  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET?.trim();
   if (!webhookSecret) {
     return NextResponse.json(
       { error: "STRIPE_WEBHOOK_SECRET не е конфигуриран" },
