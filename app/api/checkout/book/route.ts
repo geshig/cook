@@ -17,9 +17,9 @@ export async function POST() {
     success_url: `${siteUrl}/recipes?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${siteUrl}/?checkout=cancelled`,
     locale: "bg",
-    // Cards only (Visa, Mastercard, Revolut и т.н.); Apple Pay и Google Pay
+    // Карти (Visa, Mastercard, Revolut и т.н.) и Revolut Pay; Apple Pay и Google Pay
     // идват с картите, ако са включени в Stripe → Settings → Payment methods.
-    payment_method_types: ["card"],
+    payment_method_types: ["card", "revolut_pay"],
     custom_fields: [
       {
         key: "marketing",
