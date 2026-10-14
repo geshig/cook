@@ -50,13 +50,11 @@ export default async function LandingPage() {
       <SiteHeader />
 
       <section className="hero">
-        <div className="eyebrow">Кухнята на Геша — рецепти с макроси</div>
+        <div className="eyebrow">Високопротеинова готварска книга</div>
         <h1 className="display">
-          ВКУСНО.
+          Вкусно. Бързо.
           <br />
-          БЪРЗО.
-          <br />
-          <span>С МАКРОСИТЕ.</span>
+          <span>С макросите.</span>
         </h1>
         <p>
           101 високопротеинови рецепти със снимка, калории и макроси на всяка.
