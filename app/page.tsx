@@ -127,28 +127,22 @@ export default async function LandingPage() {
             <li>Филтри по съставка, хранене и повод</li>
             <li>В браузъра на телефона и компютъра, без приложение</li>
             <li>Всички рецепти в книгата остават твои завинаги</li>
+            <li>
+              <b>Бонус:</b> 3 месеца новите рецепти безплатно
+            </li>
           </ul>
           <CheckoutButton kind="book" className="btn">
             Купи сега
           </CheckoutButton>
         </div>
-        <div className="upsell-note">
-          Новите рецепти след покупката идват с абонамента: първите 3 месеца са
-          безплатни за купилите книгата, после 5,99 € на месец.{" "}
-          {access.purchasedBook && !access.hadSubscription ? (
+        {access.purchasedBook && !access.hadSubscription && (
+          <div className="upsell-note">
+            Имаш книгата? Бонусът ти чака: 3 месеца новите рецепти безплатно.{" "}
             <CheckoutButton kind="subscription" className="upsell-link">
-              Започни 3 месеца безплатно →
+              Активирай бонуса →
             </CheckoutButton>
-          ) : access.email ? (
-            <CheckoutButton kind="subscription" className="upsell-link">
-              Абонирай се →
-            </CheckoutButton>
-          ) : (
-            <Link href="/login" className="upsell-link">
-              Имаш книгата? Влез, за да го активираш →
-            </Link>
-          )}
-        </div>
+          </div>
+        )}
       </section>
 
       <section className="faq">
@@ -159,6 +153,14 @@ export default async function LandingPage() {
             След плащането влизаш с имейла, с който си платил. Пращаме ти линк
             за вход, без парола. Рецептите се отварят в браузъра, без
             инсталация, и сайтът те помни на това устройство.
+          </p>
+        </div>
+        <div className="faq-item">
+          <h4>Какво е бонусът от 3 месеца?</h4>
+          <p>
+            Всеки месец добавяме нови рецепти. След покупката на книгата
+            активираш с един клик 3 месеца безплатен достъп до тях. Не е
+            задължително: книгата си е твоя и без него.
           </p>
         </div>
         <div className="faq-item">

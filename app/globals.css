@@ -924,3 +924,36 @@ footer {
 .legal-foot {
   margin-top: 36px;
 }
+
+/* ---------- bonus banner ---------- */
+
+.bonus {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 20px;
+  justify-content: space-between;
+  background: var(--card-hi);
+  border: 1px solid rgba(227, 167, 62, 0.35);
+  border-radius: 16px;
+  padding: 16px 18px;
+  margin: 8px 0 4px;
+}
+
+.bonus-text {
+  display: grid;
+  gap: 4px;
+  flex: 1 1 280px;
+  min-width: 0;
+}
+
+.bonus-text b {
+  color: var(--amber);
+  font-size: 16px;
+}
+
+.bonus-text span {
+  color: var(--text-dim);
+  font-size: 13.5px;
+  line-height: 1.5;
+}

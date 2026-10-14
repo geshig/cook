@@ -85,7 +85,7 @@ export function RecipeApp({ recipes, trialOffer = false }: { recipes: RecipeCard
                 {trialOffer ? (
                   <>
                     <CheckoutButton kind="subscription" className="cta">
-                      Започни 3 месеца безплатно
+                      Активирай 3 месеца безплатно
                     </CheckoutButton>
                     <p className="paywall-note">
                       После 5,99 € на месец. Спираш по всяко време от „Профил“.
