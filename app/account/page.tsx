@@ -32,17 +32,28 @@ export default async function AccountPage() {
             <span
               className={"status-pill " + (access.subscriptionActive ? "on" : "off")}
             >
-              {access.subscriptionActive ? "Активен" : "Неактивен"}
+              {access.trialEndsAt
+                ? `Безплатен до ${new Date(access.trialEndsAt).toLocaleDateString("bg-BG", { day: "numeric", month: "long" })}`
+                : access.subscriptionActive
+                  ? "Активен"
+                  : "Неактивен"}
             </span>
           </div>
         </div>
+        {access.trialEndsAt && (
+          <p style={{ marginTop: 12, fontSize: 14, color: "var(--text-dim)", lineHeight: 1.6 }}>
+            Безплатните 3 месеца са без карта. За да продължиш след тях (5,99 € на месец),
+            добави карта от „Добави карта или управлявай“. Ако не добавиш, абонаментът
+            просто спира, без такси.
+          </p>
+        )}
 
         <div style={{ marginTop: 20, display: "flex", gap: 10, flexWrap: "wrap" }}>
           <Link className="btn" href="/recipes">
             Към рецептите
           </Link>
           {(access.purchasedBook || access.subscriptionActive) && (
-            <ManageBillingButton />
+            <ManageBillingButton label={access.trialEndsAt ? "Добави карта или управлявай" : "Управление на плащания"} />
           )}
         </div>
         <form action="/auth/signout" method="post" style={{ marginTop: 28 }}>

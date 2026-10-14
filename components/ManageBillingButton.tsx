@@ -2,7 +2,10 @@
 
 import { useState } from "react";
 
-export function ManageBillingButton() {
+export function ManageBillingButton({
+  label = "Управление на плащания",
+  className = "btn btn-ghost",
+}: { label?: string; className?: string } = {}) {
   const [loading, setLoading] = useState(false);
 
   async function handleClick() {
@@ -23,8 +26,8 @@ export function ManageBillingButton() {
   }
 
   return (
-    <button className="btn btn-ghost" onClick={handleClick} disabled={loading}>
-      {loading ? "Зареждане…" : "Управление на плащания"}
+    <button className={className} onClick={handleClick} disabled={loading}>
+      {loading ? "Зареждане…" : label}
     </button>
   );
 }

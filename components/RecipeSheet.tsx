@@ -8,6 +8,7 @@ import { defaultServings, scaleLine, splitTips } from "@/lib/scale";
 import { splitTimers, formatClock } from "@/lib/timers";
 import { addToShopping } from "@/lib/shopping";
 import { CheckoutButton } from "@/components/CheckoutButton";
+import { ActivateTrialButton } from "@/components/ActivateTrialButton";
 
 type Timer = { id: number; label: string; total: number; endsAt: number | null; left: number };
 
@@ -242,12 +243,10 @@ export function RecipeSheet({
             </p>
             {trialOffer ? (
               <>
-                <CheckoutButton kind="subscription" className="cta">
-                  Активирай 3 месеца безплатно
-                </CheckoutButton>
+                <ActivateTrialButton className="cta">Активирай 3 месеца безплатно</ActivateTrialButton>
                 <p className="paywall-note">
-                  После 5,99 € на месец. Спираш по всяко време от „Профил“.
-                  Рецептите от книгата остават твои.
+                  Без карта. След 3-те месеца продължаваш за 5,99 € на месец само ако
+                  добавиш карта. Рецептите от книгата остават твои.
                 </p>
               </>
             ) : (
@@ -363,10 +362,12 @@ export function RecipeSheet({
                 </ul>
               </div>
             )}
-            {recipe.videoUrl && (
+            {recipe.videoUrl ? (
               <a className="video-link" href={recipe.videoUrl} target="_blank" rel="noopener noreferrer">
                 ▶ Гледай видеото
               </a>
+            ) : (
+              <p className="video-soon">▶ Видео: скоро</p>
             )}
           </>
         )}

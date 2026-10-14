@@ -117,9 +117,9 @@ export default async function RecipesPage({
         <h1 className="display">Рецептите</h1>
         <p>{recipes.length} рецепти · търси, филтрирай и запазвай любими</p>
       </header>
-      {access.purchasedBook && !access.hadSubscription && (
+      {access.purchasedBook && (!access.hadSubscription || access.trialEndsAt) && (
         <section style={{ paddingBlock: 0, maxWidth: 900 }}>
-          <BonusBanner />
+          <BonusBanner trialEndsAt={access.trialEndsAt} />
         </section>
       )}
       <RecipeApp

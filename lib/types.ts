@@ -44,4 +44,6 @@ export type Access = {
   bookPurchasedAt: string | null;
   /** Has had a subscription before (active, trialing or canceled): no second free trial. */
   hadSubscription: boolean;
+  /** End of the free 3 months while they run; null otherwise. */
+  trialEndsAt: string | null;
 };

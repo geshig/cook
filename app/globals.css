@@ -1641,3 +1641,80 @@ footer {
   color: var(--sage);
   font-size: 12px;
 }
+
+.video-soon {
+  margin-top: 16px;
+  font-size: 14px;
+  color: var(--sage);
+}
+
+.insta {
+  display: inline-block;
+  margin-top: 16px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.insta:hover {
+  text-decoration: underline;
+}
+
+.reviews h2 {
+  font-size: 32px;
+  margin-bottom: 4px;
+}
+
+.reviews-sub {
+  color: var(--text-dim);
+  font-size: 14px;
+  margin-bottom: 18px;
+}
+
+.reviews-row {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(230px, 70%);
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 8px;
+}
+
+@media (min-width: 640px) {
+  .reviews-row {
+    grid-auto-columns: minmax(230px, 1fr);
+  }
+}
+
+.review {
+  scroll-snap-align: start;
+  background: var(--card);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin: 0;
+}
+
+.review-photo {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  background: var(--card-hi);
+}
+
+.review-photo img {
+  object-fit: cover;
+}
+
+.review blockquote {
+  margin: 12px 14px 6px;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.review figcaption {
+  margin: 0 14px 14px;
+  font-size: 12px;
+  color: var(--sage);
+}

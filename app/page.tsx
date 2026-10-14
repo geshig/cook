@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { StickyBuy } from "@/components/StickyBuy";
+import { Testimonials } from "@/components/Testimonials";
 import { getAccess } from "@/lib/access";
 import { getRecipesForViewer } from "@/lib/recipes";
 import { CheckoutButton } from "@/components/CheckoutButton";
@@ -66,6 +67,9 @@ export default async function LandingPage() {
         <a href="#pricing" className="btn" id="hero-cta">
           Купи книгата — 47€
         </a>
+        <a className="insta" href="https://www.instagram.com/geshapov/" target="_blank" rel="noopener noreferrer">
+          Рецептите в действие: @geshapov в Instagram →
+        </a>
         <div className="hero-meta">
           <span>101 рецепти</span>
           <span>51 са до 30 мин</span>
@@ -97,6 +101,8 @@ export default async function LandingPage() {
         </section>
       )}
 
+      <Testimonials />
+
       <section className="inside">
         <h2>Какво има вътре</h2>
         <ul className="cats">
@@ -127,7 +133,8 @@ export default async function LandingPage() {
             <li>В браузъра на телефона и компютъра, без приложение</li>
             <li>Всички рецепти в книгата остават твои завинаги</li>
             <li>
-              <b>Бонус:</b> 3 месеца новите рецепти безплатно
+              <b>Бонус:</b> 3 месеца новите рецепти безплатно, 2–4 нови всяка
+              седмица
             </li>
           </ul>
           <CheckoutButton kind="book" className="btn">
@@ -157,9 +164,10 @@ export default async function LandingPage() {
         <div className="faq-item">
           <h4>Какво е бонусът от 3 месеца?</h4>
           <p>
-            Всеки месец добавяме нови рецепти. След покупката на книгата
-            активираш с един клик 3 месеца безплатен достъп до тях. Не е
-            задължително: книгата си е твоя и без него.
+            Всяка седмица добавяме 2–4 нови рецепти. С покупката на книгата
+            получаваш автоматично 3 месеца безплатен достъп до тях, без карта.
+            След това продължаваш само ако искаш. Книгата си остава твоя
+            завинаги.
           </p>
         </div>
         <div className="faq-item">
@@ -194,8 +202,11 @@ export default async function LandingPage() {
       <StickyBuy />
 
       <footer>
-        Кухнята на Геша © 2026 · <Link href="/usloviya">Условия</Link> ·{" "}
-        <Link href="/poveritelnost">Поверителност</Link>
+        Кухнята на Геша © 2026 ·{" "}
+        <a href="https://www.instagram.com/geshapov/" target="_blank" rel="noopener noreferrer">
+          Instagram @geshapov
+        </a>{" "}
+        · <Link href="/usloviya">Условия</Link> · <Link href="/poveritelnost">Поверителност</Link>
       </footer>
     </>
   );
