@@ -101,7 +101,7 @@ export default async function RecipesPage({
     <>
       <SiteHeader />
       <header className="app-header">
-        <h1 className="display">КУХНЯТА</h1>
+        <h1 className="display">Рецептите</h1>
         <p>Филтрирай рецептите по съставка, хранене или повод — тап с пръст</p>
       </header>
       {access.purchasedBook && !access.hadSubscription && (

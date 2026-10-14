@@ -1,12 +1,20 @@
 :root {
-  --bg: #1c231a;
-  --card: #262f22;
-  --card-hi: #2e3928;
-  --amber: #e3a73e;
-  --rust: #c9633b;
-  --sage: #9ca68f;
-  --text: #f2eee2;
-  --text-dim: #c9c6b8;
+  /* Маслина и крем: кремав фон, маслинено зелено за действия, теракота за протеина */
+  --bg: #faf6ee;
+  --card: #fffdf8;
+  --card-hi: #f1eadb;
+  --accent: #6b7f3a;
+  --accent-hover: #5a6c2f;
+  --on-accent: #faf6ee;
+  --amber: var(--accent);
+  --rust: #b5562e;
+  --sage: #8a8576;
+  --text: #2b2a26;
+  --text-dim: #5e5a4f;
+  --line: rgba(43, 42, 38, 0.12);
+  --line-soft: rgba(43, 42, 38, 0.07);
+  --tint: rgba(107, 127, 58, 0.1);
+  --tint-strong: rgba(107, 127, 58, 0.18);
   --radius: 14px;
 }
 
@@ -24,7 +32,8 @@ body {
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: var(--font-body), "Inter", sans-serif;
+  font-family: var(--font-body), "Manrope", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
   min-height: 100vh;
   padding-bottom: 40px;
 }
@@ -34,8 +43,9 @@ a {
 }
 
 .display {
-  font-family: var(--font-display), "Bebas Neue", Impact, sans-serif;
-  letter-spacing: 0.02em;
+  font-family: var(--font-display), "Playfair Display", Georgia, serif;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 .eyebrow {
@@ -50,7 +60,7 @@ a {
 .btn {
   display: inline-block;
   background: var(--amber);
-  color: #241804;
+  color: var(--on-accent);
   font-weight: 800;
   padding: 15px 30px;
   border-radius: 100px;
@@ -61,6 +71,14 @@ a {
   font-family: inherit;
 }
 
+.btn:hover {
+  background: var(--accent-hover);
+}
+
+.btn-ghost:hover {
+  background: var(--tint);
+}
+
 .btn:disabled {
   opacity: 0.6;
   cursor: default;
@@ -69,7 +87,7 @@ a {
 .btn-ghost {
   background: transparent;
   color: var(--text);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--line);
   font-weight: 600;
 }
 
@@ -83,8 +101,11 @@ a {
 }
 
 .site-header .logo {
-  font-size: 28px;
-  color: var(--amber);
+  font-family: var(--font-body), "Manrope", system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: var(--accent);
   text-decoration: none;
 }
 
@@ -109,13 +130,13 @@ a {
 header.app-header {
   padding: 28px 20px 18px;
   text-align: left;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid var(--line-soft);
 }
 
 header.app-header h1 {
-  font-size: 44px;
-  line-height: 1;
-  color: var(--amber);
+  font-size: 36px;
+  line-height: 1.1;
+  color: var(--text);
 }
 
 header.app-header p {
@@ -143,7 +164,7 @@ header.app-header p {
   padding: 8px 16px;
   border-radius: 100px;
   background: var(--card);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--line-soft);
   color: var(--text-dim);
   font-size: 13px;
   font-weight: 600;
@@ -159,7 +180,7 @@ header.app-header p {
 
 .tag.active {
   background: var(--amber);
-  color: #241804;
+  color: var(--on-accent);
   border-color: var(--amber);
 }
 
@@ -194,7 +215,7 @@ header.app-header p {
   padding: 18px;
   cursor: pointer;
   position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--line-soft);
   transition:
     transform 0.15s ease,
     background 0.15s ease;
@@ -277,7 +298,7 @@ header.app-header p {
   font-size: 11px;
   padding: 3px 9px;
   border-radius: 100px;
-  background: rgba(227, 167, 62, 0.12);
+  background: var(--tint);
   color: var(--amber);
   font-weight: 600;
 }
@@ -295,7 +316,7 @@ header.app-header p {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(10, 12, 8, 0.7);
+  background: rgba(43, 42, 38, 0.45);
   align-items: flex-end;
   justify-content: center;
   z-index: 10;
@@ -386,7 +407,7 @@ header.app-header p {
 .stepper {
   display: flex;
   align-items: center;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid var(--line);
   border-radius: 100px;
 }
 
@@ -424,7 +445,7 @@ header.app-header p {
   display: flex;
   gap: 10px;
   padding: 3px 0;
-  border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+  border-bottom: 1px dashed var(--line-soft);
 }
 
 .sheet .ing-amount {
@@ -447,7 +468,7 @@ header.app-header p {
   margin-top: 14px;
   padding: 4px 14px 10px;
   border-radius: 12px;
-  background: rgba(227, 167, 62, 0.08);
+  background: var(--tint);
 }
 
 .sheet .tips h4 {
@@ -469,7 +490,7 @@ header.app-header p {
   width: 100%;
   padding: 12px;
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid var(--line);
   color: var(--text-dim);
   border-radius: 100px;
   font-size: 14px;
@@ -503,7 +524,7 @@ header.app-header p {
 .cta {
   display: inline-block;
   background: var(--amber);
-  color: #241804;
+  color: var(--on-accent);
   font-weight: 700;
   padding: 12px 26px;
   border-radius: 100px;
@@ -547,6 +568,13 @@ header.app-header p {
 
 /* ---------- landing page ---------- */
 
+section h2,
+.faq h2 {
+  font-family: var(--font-display), "Playfair Display", Georgia, serif;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
 section {
   padding: 56px 20px;
   max-width: 640px;
@@ -559,13 +587,14 @@ section {
 }
 
 .hero h1 {
-  font-size: 56px;
-  line-height: 0.98;
-  color: var(--amber);
+  font-size: clamp(40px, 9vw, 58px);
+  line-height: 1.05;
+  color: var(--text);
+  text-wrap: balance;
 }
 
 .hero h1 span {
-  color: var(--text);
+  color: var(--accent);
 }
 
 .hero p {
@@ -613,7 +642,7 @@ section {
   min-width: 180px;
   padding: 14px 16px;
   border-radius: 100px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid var(--line);
   background: var(--bg);
   color: var(--text);
   font-size: 14px;
@@ -713,7 +742,7 @@ section {
   justify-content: space-between;
   gap: 12px;
   padding: 11px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid var(--line-soft);
   font-size: 15px;
 }
 
@@ -738,13 +767,13 @@ section {
   background: linear-gradient(180deg, var(--card-hi), var(--card));
   border-radius: 20px;
   padding: 28px 24px;
-  border: 1px solid rgba(227, 167, 62, 0.3);
+  border: 1px solid var(--tint-strong);
   text-align: center;
 }
 
 .price-card .tag {
   display: inline-block;
-  background: rgba(227, 167, 62, 0.15);
+  background: var(--tint);
   color: var(--amber);
   font-size: 11px;
   font-weight: 700;
@@ -776,7 +805,7 @@ section {
 
 .price-card li {
   padding: 7px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid var(--line-soft);
 }
 
 .price-card li::before {
@@ -811,7 +840,7 @@ section {
 }
 
 .faq-item {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid var(--line-soft);
   padding: 16px 0;
 }
 
@@ -846,7 +875,7 @@ footer {
   display: flex;
   justify-content: space-between;
   padding: 10px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid var(--line-soft);
   font-size: 14px;
 }
 
@@ -862,12 +891,12 @@ footer {
 }
 
 .status-pill.on {
-  background: rgba(227, 167, 62, 0.15);
+  background: var(--tint);
   color: var(--amber);
 }
 
 .status-pill.off {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--line-soft);
   color: var(--sage);
 }
 
@@ -934,7 +963,7 @@ footer {
   gap: 14px 20px;
   justify-content: space-between;
   background: var(--card-hi);
-  border: 1px solid rgba(227, 167, 62, 0.35);
+  border: 1px solid var(--tint-strong);
   border-radius: 16px;
   padding: 16px 18px;
   margin: 8px 0 4px;
