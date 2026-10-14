@@ -1,25 +1,15 @@
-import Image from "next/image";
-import { TESTIMONIALS } from "@/lib/testimonials";
+import { getTestimonials } from "@/lib/testimonials";
+import { ReviewsSlider } from "@/components/ReviewsSlider";
 
-export function Testimonials() {
-  if (TESTIMONIALS.length === 0) return null;
+/** „Сготвено от вас“: показва се само когато има поне един отзив. */
+export async function Testimonials() {
+  const items = await getTestimonials();
+  if (items.length === 0) return null;
   return (
     <section className="reviews">
       <h2>Сготвено от вас</h2>
       <p className="reviews-sub">Приятели и първи читатели, с техните снимки.</p>
-      <div className="reviews-row">
-        {TESTIMONIALS.map((t) => (
-          <figure key={t.name + t.recipe} className="review">
-            <div className="review-photo">
-              <Image src={t.photo} alt={`${t.recipe}, сготвено от ${t.name}`} fill sizes="260px" />
-            </div>
-            <blockquote>„{t.text}“</blockquote>
-            <figcaption>
-              <b>{t.name}</b> · {t.recipe}
-            </figcaption>
-          </figure>
-        ))}
-      </div>
+      <ReviewsSlider items={items} />
     </section>
   );
 }

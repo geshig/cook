@@ -1718,3 +1718,125 @@ footer {
   font-size: 12px;
   color: var(--sage);
 }
+
+.reviews-row {
+  scrollbar-width: none;
+  grid-auto-columns: 82%;
+}
+
+.slider-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.dots {
+  display: flex;
+  gap: 6px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 0;
+  padding: 0;
+  background: var(--line);
+  cursor: pointer;
+}
+
+.dot.on {
+  background: var(--accent);
+  width: 20px;
+  border-radius: 100px;
+}
+
+@media (min-width: 640px) {
+  .reviews-row {
+    grid-auto-columns: calc(50% - 6px);
+  }
+}
+
+/* ---------- admin ---------- */
+
+.admin-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.admin-tabs a {
+  padding: 7px 14px;
+  border-radius: 100px;
+  border: 1px solid var(--line);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-dim);
+}
+
+.admin-tabs a.on {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+
+.admin-form {
+  display: grid;
+  gap: 12px;
+  background: var(--card);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.admin-form label {
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-dim);
+}
+
+.admin-form input,
+.admin-form textarea {
+  font: inherit;
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.admin-msg {
+  font-size: 14px;
+  color: var(--accent);
+}
+
+.admin-review {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: var(--card);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  padding: 10px;
+}
+
+.admin-review-photo {
+  position: relative;
+  width: 64px;
+  height: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex: 0 0 auto;
+  background: var(--card-hi);
+}
+
+.admin-review-photo img {
+  object-fit: cover;
+}
