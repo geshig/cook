@@ -36,7 +36,7 @@ function LoginForm() {
     <section className="auth-section">
       <div className="eyebrow">Вход</div>
       <h1 className="display" style={{ fontSize: 40, color: "var(--amber)" }}>
-        Влез в Кухнята
+        Влез в Кухнята на Геша
       </h1>
       <p style={{ color: "var(--text-dim)", margin: "12px 0 24px", lineHeight: 1.6 }}>
         Въведи имейла, с който плати книгата или абонамента — ще ти изпратим
