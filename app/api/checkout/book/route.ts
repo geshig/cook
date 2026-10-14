@@ -23,7 +23,7 @@ export async function POST() {
     consent_collection: { terms_of_service: "required" },
     custom_text: {
       terms_of_service_acceptance: {
-        message: `Съгласен съм с [Условията](${siteUrl}/usloviya). Искам достъпът да започне веднага и знам, че така губя правото си на отказ в 14 дни.`,
+        message: `Съгласен съм с [Условията](${siteUrl}/usloviya). Искам достъп веднага и знам, че покупката не подлежи на връщане.`,
       },
     },
     customer_creation: "always",
