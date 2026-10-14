@@ -14,12 +14,15 @@ export async function SiteHeader() {
           <>
             {isAdmin(access) && <Link href="/admin">Админ</Link>}
             <Link href="/recipes">Рецепти</Link>
+            <Link href="/menyuta">Менюта</Link>
+            <Link href="/produkti">Продукти</Link>
             <Link href="/spisak">Списък</Link>
             <Link href="/account">Профил</Link>
           </>
         ) : (
           <>
-            <Link href="/spisak">Списък</Link>
+            <Link href="/menyuta">Менюта</Link>
+            <Link href="/produkti">Продукти</Link>
             <Link href="/login">Вход</Link>
           </>
         )}

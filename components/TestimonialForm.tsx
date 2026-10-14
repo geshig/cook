@@ -4,7 +4,7 @@ import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 
 /** Shrinks a phone photo in the browser (max 1400px, JPEG) so uploads stay small. */
-async function shrink(file: File): Promise<Blob> {
+export async function shrink(file: File): Promise<Blob> {
   const bmp = await createImageBitmap(file);
   const scale = Math.min(1, 1400 / Math.max(bmp.width, bmp.height));
   const canvas = document.createElement("canvas");

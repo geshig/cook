@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getAccess } from "@/lib/access";
 import { SiteHeader } from "@/components/SiteHeader";
 import { ManageBillingButton } from "@/components/ManageBillingButton";
+import { CommunityCard } from "@/components/CommunityCard";
 
 export default async function AccountPage() {
   const access = await getAccess();
@@ -56,6 +57,11 @@ export default async function AccountPage() {
             <ManageBillingButton label={access.trialEndsAt ? "Добави карта или управлявай" : "Управление на плащания"} />
           )}
         </div>
+        {access.purchasedBook && (
+          <div style={{ marginTop: 24 }}>
+            <CommunityCard />
+          </div>
+        )}
         <form action="/auth/signout" method="post" style={{ marginTop: 28 }}>
           <button type="submit" className="link-btn">
             Изход от профила

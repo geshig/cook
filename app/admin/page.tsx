@@ -12,6 +12,7 @@ export default async function AdminPage() {
           Рецепти
         </Link>
         <Link href="/admin/otzivi">Отзиви</Link>
+        <Link href="/admin/produkti">Продукти</Link>
       </div>
       <div
         style={{

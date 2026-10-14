@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { startFreeTrial } from "@/lib/trial";
+import { sendPurchaseEmail } from "@/lib/email";
 import { getStripe } from "@/lib/stripe";
 import { createAdminClient } from "@/lib/supabase/admin";
 
@@ -88,6 +89,7 @@ export async function POST(request: Request) {
           .eq("email", email)
           .maybeSingle();
         const fresh = !row?.subscription_status || row.subscription_status === "inactive";
+        let trialEnd: string | null = null;
         if (fresh && customerId) {
           try {
             const r = await startFreeTrial(stripe, admin, {
@@ -95,11 +97,27 @@ export async function POST(request: Request) {
               customerId,
               idempotencyKey: `book-bonus-${session.id}`,
             });
+            trialEnd = r.trialEnd;
             if (!r.ok) console.error("free trial not started:", r.error);
           } catch (e) {
             // Never fail the purchase over the bonus; it can be activated later.
             console.error("free trial failed:", e instanceof Error ? e.message : e);
           }
+        }
+
+        // Welcome + written confirmation of the purchase. Best-effort and
+        // idempotent per session, so a Stripe retry never sends it twice.
+        try {
+          const total = (session.amount_total ?? 0) / 100;
+          await sendPurchaseEmail({
+            email,
+            paidAt: session.created,
+            amount: `${total.toFixed(2).replace(".", ",")} €`,
+            trialEnd,
+            sessionId: session.id,
+          });
+        } catch (e) {
+          console.error("purchase email failed:", e instanceof Error ? e.message : e);
         }
       }
 

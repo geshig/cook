@@ -2,10 +2,13 @@ import Link from "next/link";
 import Image from "next/image";
 import { StickyBuy } from "@/components/StickyBuy";
 import { Testimonials } from "@/components/Testimonials";
+import { CountUp } from "@/components/CountUp";
 import { getAccess } from "@/lib/access";
 import { getRecipesForViewer } from "@/lib/recipes";
 import { CheckoutButton } from "@/components/CheckoutButton";
 import { SiteHeader } from "@/components/SiteHeader";
+import { MENUS, MENU_LEVELS } from "@/lib/menus";
+import type { RecipeCard } from "@/lib/types";
 
 const PREVIEW_TITLES = [
   "Пиле шаурма",
@@ -31,79 +34,221 @@ const CATEGORIES: [string, number][] = [
   ["Вегетариански основни", 3],
 ];
 
+/** What you get, in the words of someone cooking — each one is a real feature. */
+const FEATURES: { icon: string; title: string; text: string }[] = [
+  { icon: "M4 19h16M7 16V9m5 7V5m5 11v-4", title: "Калории и макроси", text: "На всяка порция: калории, протеин, въглехидрати и мазнини." },
+  { icon: "M12 5v14M5 12h14", title: "Порциите се смятат сами", text: "За един или за шестима. Натискаш + и всички количества се преизчисляват." },
+  { icon: "M12 8v4l3 2M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z", title: "Режим за готвене", text: "Екранът не заспива, стъпките се отмятат, таймерите са в самите стъпки." },
+  { icon: "M6 6h15l-1.5 9h-12zM6 6 5 3H2M9 20a1 1 0 1 0 0 .01M18 20a1 1 0 1 0 0 .01", title: "Списък за пазаруване", text: "Едно натискане и продуктите от рецептата са в списъка, събрани по количество." },
+  { icon: "M4 5h16v15H4zM4 10h16M9 3v4M15 3v4", title: "Дневни менюта", text: `${MENUS.length} готови дни за около 1500, 2000 и 2500 kcal, сглобени от рецептите.` },
+  { icon: "M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z", title: "Нови рецепти всяка седмица", text: "2–4 нови рецепти седмично. Първите 3 месеца са подарък с книгата." },
+];
+
+function pickPreview(withPhoto: RecipeCard[]) {
+  const picked = PREVIEW_TITLES.map((t) => withPhoto.find((r) => r.title.startsWith(t))).filter(
+    (r): r is RecipeCard => !!r
+  );
+  return picked.length >= 4 ? picked : withPhoto.slice(0, 6);
+}
+
 export default async function LandingPage() {
   const access = await getAccess();
-  // The recipe preview is decorative — if Supabase is briefly unreachable,
-  // the funnel (checkout) should still render and take payments.
-  const preview = await getRecipesForViewer(access)
-    .then((recipes) => {
-      const withPhoto = recipes.filter((r) => r.photoUrl);
-      const picked = PREVIEW_TITLES.map((t) =>
-        withPhoto.find((r) => r.title.startsWith(t))
-      ).filter((r): r is NonNullable<typeof r> => !!r);
-      return picked.length >= 4 ? picked : withPhoto.slice(0, 6);
-    })
+  // Photos are decorative — if Supabase is briefly unreachable, the funnel
+  // (checkout) must still render and take payments.
+  const withPhoto = await getRecipesForViewer(access)
+    .then((rs) => rs.filter((r) => r.photoUrl))
     .catch((err) => {
       console.error("Failed to load recipe preview:", err);
-      return [];
+      return [] as RecipeCard[];
     });
+  const preview = pickPreview(withPhoto);
+  const previewIds = new Set(preview.map((r) => r.id));
+  // Hero columns: photos not already in the preview grid, spread over the book.
+  const rest = withPhoto.filter((r) => !previewIds.has(r.id));
+  const step = Math.max(1, Math.floor(rest.length / 10));
+  const heroPics = rest.filter((_, i) => i % step === 0).slice(0, 10);
+  const colA = heroPics.filter((_, i) => i % 2 === 0);
+  const colB = heroPics.filter((_, i) => i % 2 === 1);
+  const stripPics = rest.slice(-4);
 
   return (
     <>
       <SiteHeader />
 
-      <section className="hero">
-        <div className="eyebrow">Високопротеинова готварска книга</div>
-        <h1 className="display">
-          Вкусно. Бързо.
-          <br />
-          <span>С макросите.</span>
-        </h1>
-        <p>
-          101 високопротеинови рецепти със снимка, калории и макроси на всяка.
-          Готвиш за един или за цялата седмица: избираш порциите и
-          количествата се преизчисляват сами.
-        </p>
-        <a href="#pricing" className="btn" id="hero-cta">
-          Купи книгата — 47€
-        </a>
-        <a className="insta" href="https://www.instagram.com/geshapov/" target="_blank" rel="noopener noreferrer">
-          Рецептите в действие: @geshapov в Instagram →
-        </a>
-        <div className="hero-meta">
-          <span>101 рецепти</span>
-          <span>51 са до 30 мин</span>
-          <span>~35 g протеин средно</span>
+      <div className="hero-band">
+        <section className="hero">
+          <div className="hero-copy">
+            <p className="hero-kicker">Високопротеинова готварска книга</p>
+            <h1 className="display">
+              Вкусно. Бързо.
+              <br />
+              <span>С макросите.</span>
+            </h1>
+            <p className="hero-lead">
+              101 рецепти със снимка, калории и макроси на всяка. Готвиш за един
+              или за цялата седмица: избираш порциите и количествата се
+              преизчисляват сами.
+            </p>
+            <div className="hero-actions">
+              <a href="#pricing" className="btn btn-cream" id="hero-cta">
+                Купи книгата за 47 €
+              </a>
+              <Link href="/menyuta" className="btn btn-outline-cream">
+                Виж дневните менюта
+              </Link>
+            </div>
+            <p className="hero-bonus">
+              С книгата получаваш и 3 месеца нови рецепти безплатно, по 2–4 всяка седмица.
+            </p>
+          </div>
+          {colA.length >= 3 && (
+            <div className="hero-media" aria-hidden="true">
+              {[colA, colB].map((col, ci) => (
+                <div key={ci} className={"hero-col" + (ci ? " rev" : "")}>
+                  <div className="hero-track">
+                    {[...col, ...col].map((r, i) => (
+                      <div key={i} className="hero-pic">
+                        <Image
+                          src={r.photoUrl!}
+                          alt=""
+                          fill
+                          sizes="(min-width: 900px) 240px, 150px"
+                          loading={i < 2 ? "eager" : "lazy"}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+      </div>
+
+      <section className="stats reveal" aria-label="Книгата в числа">
+        <div>
+          <b>
+            <CountUp to={101} />
+          </b>
+          <span>рецепти</span>
+        </div>
+        <div>
+          <b>
+            <CountUp to={51} />
+          </b>
+          <span>са до 30 минути</span>
+        </div>
+        <div>
+          <b>
+            <CountUp to={35} prefix="~" suffix=" g" />
+          </b>
+          <span>протеин средно</span>
+        </div>
+        <div>
+          <b>
+            <CountUp to={MENUS.length} />
+          </b>
+          <span>дневни менюта</span>
         </div>
       </section>
 
       {preview.length > 0 && (
-        <section className="preview">
-          <h2>Какво ще готвиш</h2>
-          <p>Няколко от рецептите. Всяка е снимана така, както ще излезе при теб.</p>
+        <section className="preview reveal">
+          <div className="sec-head">
+            <h2>Какво ще готвиш</h2>
+            <p>Няколко от рецептите. Всяка е снимана така, както ще излезе при теб.</p>
+          </div>
           <div className="pgrid">
             {preview.map((r) => (
-              <div key={r.id} className="pcard">
-                {r.photoUrl && (
-                  <div className="pcard-photo">
-                    <Image src={r.photoUrl} alt={r.title} fill sizes="(min-width: 640px) 300px, 46vw" />
-                  </div>
-                )}
+              <Link key={r.id} href={`/recipes?r=${r.id}`} className="pcard">
+                <div className="pcard-photo">
+                  <Image src={r.photoUrl!} alt={r.title} fill sizes="(min-width: 900px) 300px, 46vw" />
+                </div>
                 <h4>{r.title}</h4>
                 <div className="meta">
-                  {r.kcal != null && `${r.kcal} kcal`}
-                  {r.kcal != null && r.proteinG != null && " · "}
-                  {r.proteinG != null && `${r.proteinG} g протеин`}
+                  {r.kcal != null && <span>{r.kcal} kcal</span>}
+                  {r.proteinG != null && <span>{r.proteinG} g протеин</span>}
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </section>
       )}
 
+      <section className="features reveal">
+        <div className="sec-head">
+          <h2>Не е PDF, а кухня в телефона</h2>
+          <p>Рецептите се отварят в браузъра, на телефона и на компютъра, без приложение.</p>
+        </div>
+        <ul className="feature-grid">
+          {FEATURES.map((f) => (
+            <li key={f.title}>
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d={f.icon} />
+              </svg>
+              <h3>{f.title}</h3>
+              <p>{f.text}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <div className="community-band reveal">
+        <section className="community">
+          <div className="community-copy">
+            <h2>Не готвиш сам</h2>
+            <p>
+              С книгата влизаш в затворената ми общност в Skool. Там хората с
+              книгата споделят какво са сготвили, питат за хранене и тренировки и
+              си помагат. Аз качвам видеа, в които обяснявам за здраве, хранене и
+              уелнес.
+            </p>
+          </div>
+          <ul className="community-list">
+            <li>
+              <b>Споделяш какво си сготвил</b>
+              <span>Снимки, твои варианти на рецептите и идеи за седмицата.</span>
+            </li>
+            <li>
+              <b>Питаш за хранене и тренировки</b>
+              <span>Мен и останалите членове, без да се губиш в коментари в Instagram.</span>
+            </li>
+            <li>
+              <b>Видеа от мен за здраве и уелнес</b>
+              <span>Хранене, сън, възстановяване и как да го направиш навик.</span>
+            </li>
+            <li>
+              <b>Само за хората с книгата</b>
+              <span>Затворена група: поканата идва на имейла ти след покупката.</span>
+            </li>
+          </ul>
+        </section>
+      </div>
+
       <Testimonials />
 
-      <section className="inside">
+      <section className="menus-band reveal">
+        <Link href="/menyuta" className="menus-teaser">
+          <div>
+            <h2>Примерни дневни менюта</h2>
+            <p>
+              Не знаеш какво да ядеш днес? {MENUS.length} готови дни от рецептите,
+              с калориите и протеина на всяко хранене.
+            </p>
+          </div>
+          <ul>
+            {MENU_LEVELS.map((l) => (
+              <li key={l.id}>
+                <b>{l.label}</b>
+                <span>{l.hint}</span>
+              </li>
+            ))}
+          </ul>
+          <span className="more">Виж менютата</span>
+        </Link>
+      </section>
+
+      <section className="inside reveal">
         <h2>Какво има вътре</h2>
         <ul className="cats">
           {CATEGORIES.map(([name, n]) => (
@@ -119,19 +264,21 @@ export default async function LandingPage() {
         </p>
       </section>
 
-      <section id="pricing" className="pricing">
+      <section id="pricing" className="pricing reveal">
         <div className="price-card">
           <div className="tag">Книгата</div>
           <div className="amount">
-            47€ <span>еднократно</span>
+            47 € <span>еднократно</span>
           </div>
           <ul>
             <li>101 рецепти с калории и макроси на порция</li>
             <li>Снимка на всяка рецепта</li>
             <li>Избираш порциите, количествата се смятат сами</li>
+            <li>{MENUS.length} примерни дневни менюта</li>
             <li>Филтри по съставка, хранене и повод</li>
             <li>В браузъра на телефона и компютъра, без приложение</li>
             <li>Всички рецепти в книгата остават твои завинаги</li>
+            <li>Достъп до затворената общност в Skool и видеата ми за здраве и уелнес</li>
             <li>
               <b>Бонус:</b> 3 месеца новите рецепти безплатно, 2–4 нови всяка
               седмица
@@ -140,90 +287,89 @@ export default async function LandingPage() {
           <CheckoutButton kind="book" className="btn">
             Купи сега
           </CheckoutButton>
+          <p className="price-pay">Карта, Apple Pay, Google Pay или Revolut Pay. Плащането минава през Stripe.</p>
         </div>
         {access.purchasedBook && !access.hadSubscription && (
           <div className="upsell-note">
             Имаш книгата? Бонусът ти чака: 3 месеца новите рецепти безплатно.{" "}
             <CheckoutButton kind="subscription" className="upsell-link">
-              Активирай бонуса →
+              Активирай бонуса
             </CheckoutButton>
           </div>
         )}
       </section>
 
-      <section className="faq">
-        <h2 style={{ fontSize: 26, marginBottom: 10 }}>Въпроси</h2>
-        <div className="faq-item">
-          <h4>Как получавам достъп?</h4>
+      <section id="faq" className="faq reveal">
+        <h2>Въпроси</h2>
+        {[
+          {
+            q: "Как получавам достъп?",
+            a: "След плащането влизаш с имейла, с който си платил. Пращам ти линк за вход, без парола. Рецептите се отварят в браузъра, без инсталация, и сайтът те помни на това устройство.",
+          },
+          {
+            q: "Не ми идва имейлът за вход",
+            a: "Обикновено пристига до минута. Провери папките „Спам“ и „Промоции“. Ако го няма, поискай нов линк от „Вход“ и внимавай имейлът да е същият, с който си платил.",
+          },
+          {
+            q: "На телефона и на компютъра ли работи?",
+            a: "Да, на всяко устройство. Влизаш с имейла си и рецептите са там. На телефона можеш да добавиш сайта на началния екран и се отваря като приложение.",
+          },
+          {
+            q: "Какво е бонусът от 3 месеца?",
+            a: "Всяка седмица добавям 2–4 нови рецепти. С покупката на книгата получаваш автоматично 3 месеца безплатен достъп до тях, без карта. След това продължаваш само ако искаш. Книгата си остава твоя завинаги.",
+          },
+          {
+            q: "Какво е общността в Skool?",
+            a: "Затворена група само за хората с книгата, нещо като малка социална мрежа. Споделяте какво сте сготвили, питате за хранене и тренировки, а аз качвам видеа за здраве и уелнес. Поканата идва на имейла ти след покупката и достъпът не изтича.",
+          },
+          {
+            q: "Мога ли да готвя само за себе си?",
+            a: "Да. Основните ястия се отварят за 1 порция, а с бутоните + и − сменяш броя и всички количества се преизчисляват.",
+          },
+          {
+            q: "Трябва ли ми кухненска везна?",
+            a: "Помага за точни макроси, но не е задължителна. Количествата са в грамове, лъжици и бройки.",
+          },
+        ].map((f) => (
+          <details key={f.q} className="faq-item">
+            <summary>{f.q}</summary>
+            <p>{f.a}</p>
+          </details>
+        ))}
+        <details className="faq-item">
+          <summary>Мога ли да върна покупката?</summary>
           <p>
-            След плащането влизаш с имейла, с който си платил. Пращам ти линк
-            за вход, без парола. Рецептите се отварят в браузъра, без
-            инсталация, и сайтът те помни на това устройство.
+            Достъпът до рецептите започва веднага след плащането, затова книгата
+            не се връща. Абонаментът спираш по всяко време от „Профил“.
+            Подробности има в <Link href="/usloviya">Условията</Link>.
           </p>
-        </div>
-        <div className="faq-item">
-          <h4>Не ми идва имейлът за вход</h4>
+        </details>
+        <details className="faq-item">
+          <summary>Имам въпрос, който го няма тук</summary>
           <p>
-            Обикновено пристига до минута. Провери папките „Спам“ и
-            „Промоции“. Ако го няма, поискай нов линк от „Вход“ и внимавай
-            имейлът да е същият, с който си платил.
+            Пиши ми на <a href="mailto:hello@geshapov.com">hello@geshapov.com</a>.
           </p>
-        </div>
-        <div className="faq-item">
-          <h4>На телефона и на компютъра ли работи?</h4>
-          <p>
-            Да, на всяко устройство. Влизаш с имейла си и рецептите са там.
-            На телефона можеш да добавиш сайта на началния екран и се отваря
-            като приложение.
-          </p>
-        </div>
-        <div className="faq-item">
-          <h4>Какво е бонусът от 3 месеца?</h4>
-          <p>
-            Всяка седмица добавям 2–4 нови рецепти. С покупката на книгата
-            получаваш автоматично 3 месеца безплатен достъп до тях, без карта.
-            След това продължаваш само ако искаш. Книгата си остава твоя
-            завинаги.
-          </p>
-        </div>
-        <div className="faq-item">
-          <h4>Мога ли да готвя само за себе си?</h4>
-          <p>
-            Да. Основните ястия се отварят за 1 порция, а с бутоните + и −
-            сменяш броя и всички количества се преизчисляват.
-          </p>
-        </div>
-        <div className="faq-item">
-          <h4>Трябва ли ми кухненска везна?</h4>
-          <p>
-            Помага за точни макроси, но не е задължителна. Количествата са в
-            грамове, лъжици и бройки.
-          </p>
-        </div>
-        <div className="faq-item">
-          <h4>Мога ли да върна покупката?</h4>
-          <p>
-            Достъпът до рецептите започва веднага след плащането, затова
-            книгата не се връща. Абонаментът спираш по всяко време от
-            „Профил“. Подробности има в{" "}
-            <Link href="/usloviya">Условията</Link>.
-          </p>
-        </div>
-        <div className="faq-item">
-          <h4>Имам въпрос, който го няма тук</h4>
-          <p>Пиши на hello@geshapov.com.</p>
-        </div>
+        </details>
       </section>
 
-      <StickyBuy />
+      <div className="final-band reveal">
+        <div className="final-strip" aria-hidden="true">
+          {stripPics.map((r) => (
+            <div key={r.id} className="final-pic">
+              <Image src={r.photoUrl!} alt="" fill sizes="25vw" />
+            </div>
+          ))}
+        </div>
+        <div className="final-copy">
+          <h2>Сготви първата рецепта още тази вечер</h2>
+          <p>101 рецепти с макросите, менюта за цялата седмица, общността в Skool и 3 месеца нови рецепти отгоре.</p>
+          <a href="#pricing" className="btn btn-cream">
+            Купи книгата за 47 €
+          </a>
+        </div>
+      </div>
 
-      <footer>
-        Кухнята на Геша © 2026 ·{" "}
-        <a href="https://www.instagram.com/geshapov/" target="_blank" rel="noopener noreferrer">
-          Instagram @geshapov
-        </a>{" "}
-        · <Link href="/usloviya">Условия</Link> · <Link href="/poveritelnost">Поверителност</Link>
-      </footer>
+      <StickyBuy />
     </>
   );
 }
