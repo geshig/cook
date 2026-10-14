@@ -47,7 +47,8 @@ const CATEGORY_LABEL: Record<string, string> = {
 const FAV_KEY = "kuhnyata-favorites-v1";
 
 function norm(s: string) {
-  return s.toLowerCase().replace(/ё/g, "е");
+  // Both spellings find the same recipes.
+  return s.toLowerCase().replace(/ё/g, "е").replace(/кътидж/g, "котидж");
 }
 
 export function RecipeApp({
@@ -184,7 +185,7 @@ export function RecipeApp({
           <input
             type="search"
             id="recipe-search"
-            placeholder="Търси: пиле, сьомга, кътидж…"
+            placeholder="Търси: пиле, сьомга, котидж…"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             aria-label="Търси рецепта по име или продукт"
