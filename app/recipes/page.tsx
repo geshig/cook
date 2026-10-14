@@ -1,11 +1,80 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { getAccess, hasBookAccess } from "@/lib/access";
-import { getAllTags, getFavoriteIds, getRecipesForViewer } from "@/lib/recipes";
+import {
+  getAllTags,
+  getFavoriteIds,
+  getRecipeTeaser,
+  getRecipesForViewer,
+  type RecipeTeaser,
+} from "@/lib/recipes";
 import { getStripe } from "@/lib/stripe";
 import { RecipeApp } from "@/components/RecipeApp";
 import { SiteHeader } from "@/components/SiteHeader";
 import { CheckoutPending } from "@/components/CheckoutPending";
 import { BonusBanner } from "@/components/BonusBanner";
+
+type SP = Promise<{ [key: string]: string | string[] | undefined }>;
+
+function sharedId(sp: Awaited<SP>): number {
+  return typeof sp.r === "string" ? Number(sp.r) : NaN;
+}
+
+function macrosLine(t: RecipeTeaser): string {
+  return [
+    t.kcal != null && `${t.kcal} kcal`,
+    t.proteinG != null && `${t.proteinG} g протеин`,
+    t.timeMinutes != null && `${t.timeMinutes} мин`,
+  ]
+    .filter(Boolean)
+    .join(" · ");
+}
+
+/**
+ * A shared recipe link (/recipes?r=12) previews as that recipe in Viber,
+ * Messenger and WhatsApp: its photo, name and macros instead of the generic card.
+ */
+export async function generateMetadata({ searchParams }: { searchParams: SP }): Promise<Metadata> {
+  const t = await getRecipeTeaser(sharedId(await searchParams)).catch(() => null);
+  if (!t) return { title: "Рецептите — Кухнята на Геша" };
+  const title = `${t.title} — Кухнята на Геша`;
+  const description = `${macrosLine(t)}. Рецепта от високопротеиновата книга „Кухнята на Геша“.`;
+  const images = t.photoUrl ? [{ url: t.photoUrl, alt: t.title }] : undefined;
+  return {
+    title,
+    description,
+    openGraph: { title, description, images, type: "article" },
+    twitter: { card: "summary_large_image", title, description, images },
+  };
+}
+
+/** What a non-buyer sees when a friend sends them a recipe link. */
+function SharedTeaser({ t, signedIn }: { t: RecipeTeaser; signedIn: boolean }) {
+  return (
+    <div className="gate teaser">
+      {t.photoUrl && (
+        <div className="teaser-photo">
+          <Image src={t.photoUrl} alt={t.title} fill sizes="(min-width: 640px) 520px, 100vw" preload />
+        </div>
+      )}
+      <h1 className="display">{t.title}</h1>
+      <p className="teaser-macros">{macrosLine(t)}</p>
+      <p>
+        Тази рецепта е от книгата ми с 101 високопротеинови рецепти. Всяка е
+        със снимка, продукти, стъпки и макроси на порция.
+      </p>
+      <Link className="btn" href="/#pricing">
+        Виж книгата — 47€
+      </Link>
+      {!signedIn && (
+        <Link className="btn btn-ghost" href="/login">
+          Имам книгата, вход
+        </Link>
+      )}
+    </div>
+  );
+}
 
 /** The email the buyer entered on Stripe Checkout, if this session is paid. */
 async function paidEmailFor(sessionId: string | undefined): Promise<string | null> {
@@ -23,7 +92,7 @@ async function paidEmailFor(sessionId: string | undefined): Promise<string | nul
 export default async function RecipesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  searchParams: SP;
 }) {
   const access = await getAccess();
 
@@ -67,6 +136,16 @@ export default async function RecipesPage({
               </>
             )}
           </div>
+        </>
+      );
+    }
+
+    const teaser = await getRecipeTeaser(sharedId(sp)).catch(() => null);
+    if (teaser) {
+      return (
+        <>
+          <SiteHeader />
+          <SharedTeaser t={teaser} signedIn={!!access.email} />
         </>
       );
     }

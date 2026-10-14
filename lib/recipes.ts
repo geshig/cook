@@ -84,6 +84,35 @@ function canOpen(r: RecipeRow, access: Access): boolean {
   return new Date(r.created_at).getTime() <= new Date(access.bookPurchasedAt).getTime();
 }
 
+export type RecipeTeaser = Pick<
+  RecipeCard,
+  "id" | "title" | "photoUrl" | "kcal" | "proteinG" | "carbsG" | "fatG" | "timeMinutes"
+>;
+
+/**
+ * Public preview of one recipe (no ingredients or steps), for shared links:
+ * link previews in Viber/Messenger and the teaser shown to non-buyers.
+ */
+export async function getRecipeTeaser(id: number): Promise<RecipeTeaser | null> {
+  if (!Number.isInteger(id) || id <= 0) return null;
+  const { data, error } = await createAdminClient()
+    .from("recipes")
+    .select("id, title, photo_url, kcal, protein_g, carbs_g, fat_g, time_minutes")
+    .eq("id", id)
+    .maybeSingle();
+  if (error || !data) return null;
+  return {
+    id: data.id,
+    title: data.title,
+    photoUrl: data.photo_url,
+    kcal: data.kcal,
+    proteinG: data.protein_g,
+    carbsG: data.carbs_g,
+    fatG: data.fat_g,
+    timeMinutes: data.time_minutes,
+  };
+}
+
 /** The signed-in user's favourite recipe ids; [] if the table isn't there yet. */
 export async function getFavoriteIds(email: string | null): Promise<number[]> {
   if (!email) return [];

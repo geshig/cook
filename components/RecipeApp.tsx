@@ -171,6 +171,12 @@ export function RecipeApp({
     });
   }
 
+  /** "What do I cook today?": a random open recipe from the current filters. */
+  function surprise() {
+    const pool = list.filter((r) => !r.isLocked);
+    if (pool.length) open(pool[Math.floor(Math.random() * pool.length)].id);
+  }
+
   function reset() {
     setQuery("");
     setQuick("all");
@@ -210,6 +216,15 @@ export function RecipeApp({
             {list.length} {list.length === 1 ? "рецепта" : "рецепти"}
           </span>
           <div className="finder-tools">
+            <button
+              type="button"
+              className="link-btn"
+              onClick={surprise}
+              disabled={!list.some((r) => !r.isLocked)}
+              title="Отваря случайна рецепта от тези, които виждаш"
+            >
+              🎲 Изненадай ме
+            </button>
             {tagGroups.length > 0 && (
               <button
                 type="button"
