@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getStripe, getSiteUrl } from "@/lib/stripe";
+import { getAccess } from "@/lib/access";
 
 export async function POST() {
   const priceId = process.env.STRIPE_PRICE_BOOK;
@@ -11,8 +12,10 @@ export async function POST() {
   }
 
   const siteUrl = getSiteUrl();
+  const access = await getAccess();
   const session = await getStripe().checkout.sessions.create({
     mode: "payment",
+    ...(access.email ? { customer_email: access.email } : {}),
     line_items: [{ price: priceId, quantity: 1 }],
     success_url: `${siteUrl}/recipes?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${siteUrl}/?checkout=cancelled`,

@@ -103,7 +103,7 @@ export default async function RecipesPage({
         <h1 className="display">КУХНЯТА</h1>
         <p>Филтрирай рецептите по съставка, хранене или повод — тап с пръст</p>
       </header>
-      <RecipeApp recipes={recipes} />
+      <RecipeApp recipes={recipes} trialOffer={access.purchasedBook && !access.hadSubscription} />
     </>
   );
 }

@@ -16,20 +16,27 @@ export async function getAccess(): Promise<Access> {
   } = await supabase.auth.getUser();
 
   if (!user?.email) {
-    return { email: null, purchasedBook: false, subscriptionActive: false };
+    return { email: null, purchasedBook: false, subscriptionActive: false, bookPurchasedAt: null, hadSubscription: false };
   }
 
   const admin = createAdminClient();
   const { data: subscriber } = await admin
     .from("subscribers")
-    .select("purchased_book, subscription_status")
+    // "*" so a not-yet-added column (book_purchased_at) never breaks access.
+    .select("*")
     .eq("email", user.email.toLowerCase())
     .maybeSingle();
 
+  const purchasedBook = subscriber?.purchased_book ?? false;
   return {
     email: user.email,
-    purchasedBook: subscriber?.purchased_book ?? false,
+    purchasedBook,
     subscriptionActive: subscriber?.subscription_status === "active",
+    // Older rows have no purchase date: fall back to when the row was created.
+    bookPurchasedAt: purchasedBook
+      ? (subscriber?.book_purchased_at ?? subscriber?.created_at ?? null)
+      : null,
+    hadSubscription: !!subscriber?.subscription_status && subscriber.subscription_status !== "inactive",
   };
 }
 

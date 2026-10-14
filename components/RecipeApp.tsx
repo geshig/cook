@@ -1,12 +1,12 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
 import type { RecipeCard } from "@/lib/types";
 import { parseIngredients, parseSteps } from "@/lib/recipeText";
 import { defaultServings, scaleLine, splitTips } from "@/lib/scale";
+import { CheckoutButton } from "@/components/CheckoutButton";
 
-export function RecipeApp({ recipes }: { recipes: RecipeCard[] }) {
+export function RecipeApp({ recipes, trialOffer = false }: { recipes: RecipeCard[]; trialOffer?: boolean }) {
   const allTags = useMemo(
     () => ["всички", ...Array.from(new Set(recipes.flatMap((r) => r.tags)))],
     [recipes]
@@ -79,12 +79,27 @@ export function RecipeApp({ recipes }: { recipes: RecipeCard[] }) {
                 <div className="lock-big">🔒</div>
                 <h2>{open.title}</h2>
                 <p>
-                  Тази рецепта е част от абонамента. Отключи всички заключени
-                  рецепти плюс новите, които се добавят всеки месец.
+                  Тази рецепта е от новите, които добавяме след покупката на
+                  книгата. С абонамента получаваш всички нови рецепти.
                 </p>
-                <Link className="cta" href="/#pricing">
-                  Виж абонамента
-                </Link>
+                {trialOffer ? (
+                  <>
+                    <CheckoutButton kind="subscription" className="cta">
+                      Започни 3 месеца безплатно
+                    </CheckoutButton>
+                    <p className="paywall-note">
+                      После 5,99 € на месец. Спираш по всяко време от „Профил“.
+                      Рецептите от книгата остават твои.
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <CheckoutButton kind="subscription" className="cta">
+                      Абонамент за 5,99 € на месец
+                    </CheckoutButton>
+                    <p className="paywall-note">Спираш по всяко време от „Профил“.</p>
+                  </>
+                )}
               </div>
               <button className="close" onClick={() => setOpen(null)}>
                 Затвори

@@ -70,6 +70,14 @@ export async function POST(request: Request) {
           console.error("subscribers upsert (book) failed:", error.message);
           return NextResponse.json({ error: "db" }, { status: 500 });
         }
+        // Purchase time decides which recipes the book unlocks. Set once,
+        // best-effort: a missing column must not block the purchase.
+        const { error: tErr } = await admin
+          .from("subscribers")
+          .update({ book_purchased_at: new Date(session.created * 1000).toISOString() })
+          .eq("email", email)
+          .is("book_purchased_at", null);
+        if (tErr) console.error("book_purchased_at update failed:", tErr.message);
       }
 
       // Marketing opt-in from the optional Checkout field. Kept separate and

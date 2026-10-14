@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getStripe, getSiteUrl } from "@/lib/stripe";
+import { getAccess } from "@/lib/access";
 
 export async function POST() {
   const priceId = process.env.STRIPE_PRICE_SUBSCRIPTION;
@@ -11,8 +12,14 @@ export async function POST() {
   }
 
   const siteUrl = getSiteUrl();
+  const access = await getAccess();
+  // Book owners get the first 3 months free; the card is charged after that
+  // unless they cancel (Stripe sends a reminder before the trial ends).
+  const trial = access.purchasedBook && !access.hadSubscription;
   const session = await getStripe().checkout.sessions.create({
     mode: "subscription",
+    ...(access.email ? { customer_email: access.email } : {}),
+    ...(trial ? { subscription_data: { trial_period_days: 90 } } : {}),
     line_items: [{ price: priceId, quantity: 1 }],
     success_url: `${siteUrl}/recipes?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${siteUrl}/?checkout=cancelled`,

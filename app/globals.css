@@ -487,6 +487,12 @@ header.app-header p {
   margin-bottom: 10px;
 }
 
+.paywall-note {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-top: 12px;
+}
+
 .paywall p {
   color: var(--text-dim);
   font-size: 14px;
