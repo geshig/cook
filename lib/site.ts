@@ -23,5 +23,5 @@ export const CONTACT_EMAIL = "hello@geshapov.com";
  */
 export const COMMUNITY = {
   name: "Общността в Skool",
-  url: "",
+  url: "https://www.skool.com/geshacooks-3584",
 };
