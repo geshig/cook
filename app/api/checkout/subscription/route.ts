@@ -32,12 +32,12 @@ export async function POST() {
       custom_fields: [
         {
           key: "marketing",
-          label: { type: "custom", custom: "Имейли с нови рецепти и оферти" },
+          label: { type: "custom", custom: "Да ти пращаме ли нови рецепти и оферти?" },
           type: "dropdown",
           optional: true,
           dropdown: {
             options: [
-              { label: "Да, искам", value: "yes" },
+              { label: "Да, пращайте ми", value: "yes" },
               { label: "Не, благодаря", value: "no" },
             ],
           },
