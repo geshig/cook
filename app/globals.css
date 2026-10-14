@@ -624,9 +624,15 @@ section h2,
 }
 
 section {
-  padding: 56px 20px;
+  padding: 36px 20px;
   max-width: 640px;
   margin: 0 auto;
+}
+
+@media (min-width: 900px) {
+  section {
+    padding: 56px 20px;
+  }
 }
 
 
@@ -2951,5 +2957,83 @@ html.reveal-ready .reveal {
   from {
     opacity: 0;
     transform: translateY(16px);
+  }
+}
+
+/* ---- spacing pass: phone first, no dead space on desktop ---- */
+
+.pcard h4 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+@media (max-width: 759px) {
+  .pcard {
+    padding: 12px;
+  }
+  .pcard-photo {
+    margin: -12px -12px 10px;
+  }
+  .pcard h4 {
+    font-size: 14px;
+    line-height: 1.3;
+  }
+  .community-band,
+  .final-band {
+    margin-top: 12px;
+    margin-bottom: 12px;
+  }
+  section.community {
+    padding: 36px 20px;
+  }
+  .final-copy {
+    padding: 44px 22px;
+  }
+  .final-band {
+    min-height: 0;
+  }
+  .cats li {
+    padding: 9px 0;
+  }
+  .site-footer {
+    margin-top: 32px;
+    padding-top: 32px;
+  }
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 26px 16px;
+  }
+  .footer-brand,
+  .footer-grid > .footer-col:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Desktop: categories and price side by side instead of two narrow columns
+   floating in empty space. */
+@media (min-width: 900px) {
+  .buy-row {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+    padding: 0 20px;
+  }
+  .buy-row > section {
+    max-width: none;
+    margin: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .buy-row .price-card {
+    position: sticky;
+    top: 24px;
+  }
+  section.faq {
+    max-width: 760px;
   }
 }

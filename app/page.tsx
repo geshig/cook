@@ -248,6 +248,7 @@ export default async function LandingPage() {
         </Link>
       </section>
 
+      <div className="buy-row">
       <section className="inside reveal">
         <h2>Какво има вътре</h2>
         <ul className="cats">
@@ -298,6 +299,8 @@ export default async function LandingPage() {
           </div>
         )}
       </section>
+
+      </div>
 
       <section id="faq" className="faq reveal">
         <h2>Въпроси</h2>
