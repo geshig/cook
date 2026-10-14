@@ -42,7 +42,7 @@ export default async function RecipesPage({
           <SiteHeader />
           <div className="gate">
             <div className="lock-big">🎉</div>
-            <h1 className="display">Благодарим за покупката</h1>
+            <h1 className="display">Благодаря ти за покупката</h1>
             {signedIn && (!paidEmail || paidEmail === signedIn) ? (
               <CheckoutPending />
             ) : signedIn && paidEmail ? (
@@ -59,7 +59,7 @@ export default async function RecipesPage({
               <>
                 <p>
                   Плащането мина. Влез с {paidEmail ?? "имейла, с който плати"} и
-                  ще ти изпратим линк. Рецептите ще те чакат отключени.
+                  ще ти изпратя линк. Рецептите ще те чакат отключени.
                 </p>
                 <Link className="btn" href={loginHref}>
                   Влез в рецептите

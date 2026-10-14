@@ -29,20 +29,6 @@ export async function POST() {
       // Cards only (Visa, Mastercard, Revolut и т.н.); Apple Pay и Google Pay
       // идват с картите, ако са включени в Stripe → Settings → Payment methods.
       payment_method_types: ["card"],
-      custom_fields: [
-        {
-          key: "marketing",
-          label: { type: "custom", custom: "Да ти пращаме ли нови рецепти и оферти?" },
-          type: "dropdown",
-          optional: true,
-          dropdown: {
-            options: [
-              { label: "Да, пращайте ми", value: "yes" },
-              { label: "Не, благодаря", value: "no" },
-            ],
-          },
-        },
-      ],
       // Digital content: the buyer must expressly agree that access starts now
       // and that this waives the 14-day withdrawal right. Requires a Terms of
       // service URL in Stripe → Settings → Public details.
