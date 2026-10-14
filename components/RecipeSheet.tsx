@@ -362,7 +362,7 @@ export function RecipeSheet({
                 </ul>
               </div>
             )}
-            {recipe.videoUrl ? (
+            {recipe.videoUrl && /^https?:\/\//i.test(recipe.videoUrl) ? (
               <a className="video-link" href={recipe.videoUrl} target="_blank" rel="noopener noreferrer">
                 ▶ Гледай видеото
               </a>

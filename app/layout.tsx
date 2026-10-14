@@ -3,6 +3,8 @@ import { getSiteUrl } from "@/lib/site";
 import { Playfair_Display, Manrope } from "next/font/google";
 import "./globals.css";
 import { ServiceWorker } from "@/components/ServiceWorker";
+import { SiteFooter } from "@/components/SiteFooter";
+import { RevealOnScroll } from "@/components/RevealOnScroll";
 
 const playfair = Playfair_Display({
   weight: ["500", "700"],
@@ -43,7 +45,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="bg" className={`${playfair.variable} ${manrope.variable}`}>
       <body>
         {children}
+        <SiteFooter />
         <ServiceWorker />
+        <RevealOnScroll />
       </body>
     </html>
   );

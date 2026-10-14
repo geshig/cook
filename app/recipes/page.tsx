@@ -14,6 +14,8 @@ import { RecipeApp } from "@/components/RecipeApp";
 import { SiteHeader } from "@/components/SiteHeader";
 import { CheckoutPending } from "@/components/CheckoutPending";
 import { BonusBanner } from "@/components/BonusBanner";
+import { CommunityCard } from "@/components/CommunityCard";
+import { COMMUNITY } from "@/lib/site";
 
 type SP = Promise<{ [key: string]: string | string[] | undefined }>;
 
@@ -199,6 +201,11 @@ export default async function RecipesPage({
       {access.purchasedBook && (!access.hadSubscription || access.trialEndsAt) && (
         <section style={{ paddingBlock: 0, maxWidth: 900 }}>
           <BonusBanner trialEndsAt={access.trialEndsAt} />
+        </section>
+      )}
+      {access.purchasedBook && COMMUNITY.url && (
+        <section style={{ paddingBlock: "0 8px", maxWidth: 900 }}>
+          <CommunityCard />
         </section>
       )}
       <RecipeApp

@@ -12,6 +12,7 @@ export default async function AdminTestimonials() {
         <Link href="/admin/otzivi" className="on">
           Отзиви
         </Link>
+        <Link href="/admin/produkti">Продукти</Link>
       </div>
       <h1 className="display" style={{ fontSize: 34, marginBottom: 6 }}>
         Отзиви ({items.length})
