@@ -16,7 +16,7 @@ export async function getAccess(): Promise<Access> {
   } = await supabase.auth.getUser();
 
   if (!user?.email) {
-    return { email: null, purchasedBook: false, subscriptionActive: false, bookPurchasedAt: null, hadSubscription: false };
+    return { email: null, purchasedBook: false, subscriptionActive: false, bookPurchasedAt: null, hadSubscription: false, trialEndsAt: null };
   }
 
   const admin = createAdminClient();
@@ -37,6 +37,10 @@ export async function getAccess(): Promise<Access> {
       ? (subscriber?.book_purchased_at ?? subscriber?.created_at ?? null)
       : null,
     hadSubscription: !!subscriber?.subscription_status && subscriber.subscription_status !== "inactive",
+    trialEndsAt:
+      subscriber?.trial_end && new Date(subscriber.trial_end).getTime() > Date.now()
+        ? subscriber.trial_end
+        : null,
   };
 }
 

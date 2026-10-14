@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { getSiteUrl } from "@/lib/site";
 import { Playfair_Display, Manrope } from "next/font/google";
 import "./globals.css";
+import { ServiceWorker } from "@/components/ServiceWorker";
 
 const playfair = Playfair_Display({
   weight: ["500", "700"],
@@ -40,7 +41,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="bg" className={`${playfair.variable} ${manrope.variable}`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <ServiceWorker />
+      </body>
     </html>
   );
 }

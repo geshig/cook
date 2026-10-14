@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
+import { startFreeTrial } from "@/lib/trial";
 import { getStripe } from "@/lib/stripe";
 import { createAdminClient } from "@/lib/supabase/admin";
 
@@ -78,6 +79,28 @@ export async function POST(request: Request) {
           .eq("email", email)
           .is("book_purchased_at", null);
         if (tErr) console.error("book_purchased_at update failed:", tErr.message);
+
+        // The book's bonus: 3 months of new recipes, started automatically and
+        // without a card. Only for people who never had a subscription.
+        const { data: row } = await admin
+          .from("subscribers")
+          .select("subscription_status")
+          .eq("email", email)
+          .maybeSingle();
+        const fresh = !row?.subscription_status || row.subscription_status === "inactive";
+        if (fresh && customerId) {
+          try {
+            const r = await startFreeTrial(stripe, admin, {
+              email,
+              customerId,
+              idempotencyKey: `book-bonus-${session.id}`,
+            });
+            if (!r.ok) console.error("free trial not started:", r.error);
+          } catch (e) {
+            // Never fail the purchase over the bonus; it can be activated later.
+            console.error("free trial failed:", e instanceof Error ? e.message : e);
+          }
+        }
       }
 
       // Marketing opt-in from the optional Checkout field. Kept separate and
@@ -138,6 +161,16 @@ export async function POST(request: Request) {
           current_period_end: periodEndSeconds
             ? new Date(periodEndSeconds * 1000).toISOString()
             : null,
+        })
+        .eq("stripe_customer_id", customerId);
+      // Trial end for the banner; best-effort (column may not exist yet).
+      await admin
+        .from("subscribers")
+        .update({
+          trial_end:
+            subscription.status === "trialing" && subscription.trial_end
+              ? new Date(subscription.trial_end * 1000).toISOString()
+              : null,
         })
         .eq("stripe_customer_id", customerId);
       break;
