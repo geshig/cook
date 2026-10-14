@@ -126,15 +126,28 @@ export default async function LandingPage() {
             <li>Избираш порциите, количествата се смятат сами</li>
             <li>Филтри по съставка, хранене и повод</li>
             <li>В браузъра на телефона и компютъра, без приложение</li>
-            <li>Нови рецепти всяко тримесечие</li>
+            <li>Всички рецепти в книгата остават твои завинаги</li>
           </ul>
           <CheckoutButton kind="book" className="btn">
             Купи сега
           </CheckoutButton>
         </div>
         <div className="upsell-note">
-          Искаш всичко ново веднага, без да чакаш?{" "}
-          <CheckoutButtonLink />
+          Новите рецепти след покупката идват с абонамента: първите 3 месеца са
+          безплатни за купилите книгата, после 5,99 € на месец.{" "}
+          {access.purchasedBook && !access.hadSubscription ? (
+            <CheckoutButton kind="subscription" className="upsell-link">
+              Започни 3 месеца безплатно →
+            </CheckoutButton>
+          ) : access.email ? (
+            <CheckoutButton kind="subscription" className="upsell-link">
+              Абонирай се →
+            </CheckoutButton>
+          ) : (
+            <Link href="/login" className="upsell-link">
+              Имаш книгата? Влез, за да го активираш →
+            </Link>
+          )}
         </div>
       </section>
 
@@ -182,13 +195,5 @@ export default async function LandingPage() {
         <Link href="/poveritelnost">Поверителност</Link>
       </footer>
     </>
-  );
-}
-
-function CheckoutButtonLink() {
-  return (
-    <CheckoutButton kind="subscription" className="upsell-link">
-      Виж абонамента →
-    </CheckoutButton>
   );
 }

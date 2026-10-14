@@ -39,4 +39,9 @@ export type Access = {
   email: string | null;
   purchasedBook: boolean;
   subscriptionActive: boolean;
+  /** When the book was bought: the book unlocks every recipe published up to
+   * this moment, forever. Newer recipes need the subscription. */
+  bookPurchasedAt: string | null;
+  /** Has had a subscription before (active, trialing or canceled): no second free trial. */
+  hadSubscription: boolean;
 };

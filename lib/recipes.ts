@@ -18,6 +18,7 @@ type RecipeRow = {
   photo_url: string | null;
   is_locked: boolean;
   batch_number: number | null;
+  created_at: string | null;
   recipe_tags: { tag_id: number; tags: { name: string } | null }[];
 };
 
@@ -42,7 +43,7 @@ function rowToCard(r: RecipeRow, unlocked: boolean): RecipeCard {
 }
 
 const RECIPE_SELECT = `id, title, time_minutes, servings, kcal, protein_g, carbs_g, fat_g,
-       ingredients, steps, video_url, photo_url, is_locked, batch_number,
+       ingredients, steps, video_url, photo_url, is_locked, batch_number, created_at,
        recipe_tags ( tag_id, tags ( name ) )`;
 
 /**
@@ -63,7 +64,24 @@ export async function getRecipesForViewer(access: Access): Promise<RecipeCard[]>
 
   if (error) throw error;
 
-  return (data ?? []).map((r) => rowToCard(r, !r.is_locked || access.subscriptionActive));
+  return (data ?? []).map((r) => {
+    const open = canOpen(r, access);
+    // For viewers the lock icon means "not unlocked for you".
+    return { ...rowToCard(r, open), isLocked: !open };
+  });
+}
+
+/**
+ * Who can open a recipe:
+ * - an active (or trialing) subscriber: everything;
+ * - a book owner: every recipe that was already published when they bought
+ *   the book, forever, except recipes marked subscriber-only (is_locked).
+ */
+function canOpen(r: RecipeRow, access: Access): boolean {
+  if (access.subscriptionActive) return true;
+  if (!access.purchasedBook || r.is_locked) return false;
+  if (!access.bookPurchasedAt || !r.created_at) return true;
+  return new Date(r.created_at).getTime() <= new Date(access.bookPurchasedAt).getTime();
 }
 
 export async function getAllTags(): Promise<Tag[]> {
