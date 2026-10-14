@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getAccess, hasBookAccess } from "@/lib/access";
-import { getRecipesForViewer } from "@/lib/recipes";
+import { getAllTags, getFavoriteIds, getRecipesForViewer } from "@/lib/recipes";
 import { getStripe } from "@/lib/stripe";
 import { RecipeApp } from "@/components/RecipeApp";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -95,21 +95,39 @@ export default async function RecipesPage({
     );
   }
 
-  const recipes = await getRecipesForViewer(access);
+  const [recipes, tags, favorites] = await Promise.all([
+    getRecipesForViewer(access),
+    getAllTags().catch(() => []),
+    getFavoriteIds(access.email).catch(() => []),
+  ]);
+  // Only offer tags that at least one recipe actually has, grouped for the filter panel.
+  const used = new Set(recipes.flatMap((r) => r.tags));
+  const tagGroups: { category: string; names: string[] }[] = [];
+  for (const t of tags) {
+    if (!used.has(t.name)) continue;
+    let g = tagGroups.find((x) => x.category === t.category);
+    if (!g) tagGroups.push((g = { category: t.category, names: [] }));
+    g.names.push(t.name);
+  }
 
   return (
     <>
       <SiteHeader />
       <header className="app-header">
         <h1 className="display">Рецептите</h1>
-        <p>Филтрирай рецептите по съставка, хранене или повод — тап с пръст</p>
+        <p>{recipes.length} рецепти · търси, филтрирай и запазвай любими</p>
       </header>
       {access.purchasedBook && !access.hadSubscription && (
         <section style={{ paddingBlock: 0, maxWidth: 900 }}>
           <BonusBanner />
         </section>
       )}
-      <RecipeApp recipes={recipes} trialOffer={access.purchasedBook && !access.hadSubscription} />
+      <RecipeApp
+        recipes={recipes}
+        tagGroups={tagGroups}
+        initialFavorites={favorites}
+        trialOffer={access.purchasedBook && !access.hadSubscription}
+      />
     </>
   );
 }

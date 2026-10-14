@@ -1,4 +1,5 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import { getSiteUrl } from "@/lib/site";
 import { Playfair_Display, Manrope } from "next/font/google";
 import "./globals.css";
 
@@ -14,8 +15,24 @@ const manrope = Manrope({
   variable: "--font-body",
 });
 
+export const viewport: Viewport = {
+  themeColor: "#faf6ee",
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
+
 export const metadata: Metadata = {
+  metadataBase: new URL(getSiteUrl()),
   title: "Кухнята на Геша — рецепти с макроси",
+  appleWebApp: { capable: true, title: "Кухнята", statusBarStyle: "default" },
+  openGraph: {
+    type: "website",
+    locale: "bg_BG",
+    siteName: "Кухнята на Геша",
+    title: "Кухнята на Геша — 101 рецепти с макросите",
+    description: "Високопротеинови рецепти със снимка, калории и макроси на всяка.",
+  },
   description:
     "101 високопротеинови рецепти със снимка, калории и макроси на всяка. Избираш порциите, количествата се смятат сами.",
 };

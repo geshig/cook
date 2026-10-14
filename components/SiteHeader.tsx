@@ -9,29 +9,19 @@ export async function SiteHeader() {
       <Link href="/" className="display logo">
         КУХНЯТА НА ГЕША
       </Link>
-      <nav>
+      <nav aria-label="Основна навигация">
         {access.email ? (
           <>
             {isAdmin(access) && <Link href="/admin">Админ</Link>}
-            <Link href="/account">{access.email}</Link>
-            <form action="/auth/signout" method="post">
-              <button
-                type="submit"
-                style={{
-                  background: "none",
-                  border: "none",
-                  color: "inherit",
-                  font: "inherit",
-                  cursor: "pointer",
-                  padding: 0,
-                }}
-              >
-                Изход
-              </button>
-            </form>
+            <Link href="/recipes">Рецепти</Link>
+            <Link href="/spisak">Списък</Link>
+            <Link href="/account">Профил</Link>
           </>
         ) : (
-          <Link href="/login">Вход</Link>
+          <>
+            <Link href="/spisak">Списък</Link>
+            <Link href="/login">Вход</Link>
+          </>
         )}
       </nav>
     </div>
