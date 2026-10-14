@@ -63,7 +63,20 @@ export async function POST(request: Request) {
           console.error("subscribers upsert (book) failed:", error.message);
           return NextResponse.json({ error: "db" }, { status: 500 });
         }
-      } else if (session.mode === "subscription") {
+      }
+
+      // Marketing opt-in from the optional Checkout field. Kept separate and
+      // best-effort so a missing column never blocks unlocking the purchase.
+      const marketing = session.custom_fields?.find((f) => f.key === "marketing")?.dropdown?.value;
+      if (marketing === "yes" || marketing === "no") {
+        const { error: mErr } = await admin
+          .from("subscribers")
+          .update({ marketing_opt_in: marketing === "yes" })
+          .eq("email", email);
+        if (mErr) console.error("marketing_opt_in update failed:", mErr.message);
+      }
+
+      if (session.mode === "subscription") {
         let currentPeriodEnd: string | null = null;
         if (typeof session.subscription === "string") {
           const subscription = await stripe.subscriptions.retrieve(

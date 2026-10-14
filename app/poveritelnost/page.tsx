@@ -3,7 +3,7 @@ import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SELLER, LEGAL_UPDATED } from "@/lib/legal";
 
-export const metadata: Metadata = { title: "Поверителност и бисквитки — Кухнята" };
+export const metadata: Metadata = { title: "Поверителност и бисквитки — Кухнята на Геша" };
 
 export default function PrivacyPage() {
   return (
@@ -37,7 +37,12 @@ export default function PrivacyPage() {
             грешки. Основание: законен интерес.
           </li>
         </ul>
-        <p>Не продаваме данните ти и не ги ползваме за реклама.</p>
+        <p>
+          Ако при плащането избереш да получаваш имейли с нови рецепти и
+          оферти, ще ти пишем на имейла. Основание: твоето съгласие. Можеш да се
+          откажеш по всяко време с линка в писмото или като ни пишеш.
+        </p>
+        <p>Не продаваме данните ти на трети страни.</p>
 
         <h2>3. Кой още обработва данните</h2>
         <p>Ползваме доставчици, които обработват данни само по наши указания:</p>

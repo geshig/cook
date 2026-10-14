@@ -50,7 +50,7 @@ export default async function LandingPage() {
       <SiteHeader />
 
       <section className="hero">
-        <div className="eyebrow">Кухнята — рецепти с макроси</div>
+        <div className="eyebrow">Кухнята на Геша — рецепти с макроси</div>
         <h1 className="display">
           ВКУСНО.
           <br />
@@ -178,7 +178,7 @@ export default async function LandingPage() {
       </section>
 
       <footer>
-        Кухнята © 2026 · <Link href="/usloviya">Условия</Link> ·{" "}
+        Кухнята на Геша © 2026 · <Link href="/usloviya">Условия</Link> ·{" "}
         <Link href="/poveritelnost">Поверителност</Link>
       </footer>
     </>

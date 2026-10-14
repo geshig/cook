@@ -7,7 +7,7 @@ export async function SiteHeader() {
   return (
     <div className="site-header">
       <Link href="/" className="display logo">
-        КУХНЯТА
+        КУХНЯТА НА ГЕША
       </Link>
       <nav>
         {access.email ? (
