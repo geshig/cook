@@ -5,6 +5,7 @@ import { getStripe } from "@/lib/stripe";
 import { RecipeApp } from "@/components/RecipeApp";
 import { SiteHeader } from "@/components/SiteHeader";
 import { CheckoutPending } from "@/components/CheckoutPending";
+import { BonusBanner } from "@/components/BonusBanner";
 
 /** The email the buyer entered on Stripe Checkout, if this session is paid. */
 async function paidEmailFor(sessionId: string | undefined): Promise<string | null> {
@@ -103,6 +104,11 @@ export default async function RecipesPage({
         <h1 className="display">КУХНЯТА</h1>
         <p>Филтрирай рецептите по съставка, хранене или повод — тап с пръст</p>
       </header>
+      {access.purchasedBook && !access.hadSubscription && (
+        <section style={{ paddingBlock: 0, maxWidth: 900 }}>
+          <BonusBanner />
+        </section>
+      )}
       <RecipeApp recipes={recipes} trialOffer={access.purchasedBook && !access.hadSubscription} />
     </>
   );
