@@ -14,7 +14,7 @@ export async function startFreeTrial(
   admin: SupabaseClient,
   opts: { email: string; customerId: string; idempotencyKey: string }
 ): Promise<{ ok: boolean; trialEnd: string | null; error?: string }> {
-  const priceId = process.env.STRIPE_PRICE_SUBSCRIPTION;
+  const priceId = process.env.STRIPE_PRICE_SUBSCRIPTION?.trim();
   if (!priceId) return { ok: false, trialEnd: null, error: "STRIPE_PRICE_SUBSCRIPTION липсва" };
 
   const sub = await stripe.subscriptions.create(

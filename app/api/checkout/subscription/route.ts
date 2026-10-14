@@ -3,7 +3,7 @@ import { getStripe, getSiteUrl } from "@/lib/stripe";
 import { getAccess } from "@/lib/access";
 
 export async function POST() {
-  const priceId = process.env.STRIPE_PRICE_SUBSCRIPTION;
+  const priceId = process.env.STRIPE_PRICE_SUBSCRIPTION?.trim();
   if (!priceId) {
     return NextResponse.json(
       { error: "STRIPE_PRICE_SUBSCRIPTION не е конфигуриран" },
