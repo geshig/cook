@@ -29,6 +29,21 @@ body {
   height: 100%;
 }
 
+/* Класически печатни кирилски букви навсякъде (т, д, и както в Instagram),
+   а не българските ръкописни форми, които шрифтовете включват при lang="bg".
+   lang остава "bg" за търсачките и екранните четци. */
+html {
+  font-feature-settings: "locl" 0;
+  -webkit-locale: "ru";
+}
+
+input,
+textarea,
+select,
+button {
+  font-feature-settings: inherit;
+}
+
 body {
   background: var(--bg);
   color: var(--text);
