@@ -27,7 +27,20 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
-  title: "Кухнята на Геша — рецепти с макроси",
+  title: "Кухнята на Геша — 101 високопротеинови рецепти с калории и макроси",
+  alternates: { canonical: "./" },
+  keywords: [
+    "високопротеинови рецепти",
+    "фит рецепти",
+    "рецепти с макроси",
+    "протеинови рецепти",
+    "meal prep рецепти",
+    "здравословни рецепти",
+    "рецепти с калории",
+    "Кухнята на Геша",
+  ],
+  authors: [{ name: "Геша", url: "https://www.instagram.com/geshapov/" }],
+  creator: "Геша",
   appleWebApp: { capable: true, title: "Кухнята", statusBarStyle: "default" },
   openGraph: {
     type: "website",

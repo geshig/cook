@@ -9,6 +9,7 @@ import { CheckoutButton } from "@/components/CheckoutButton";
 import { SiteHeader } from "@/components/SiteHeader";
 import { MENUS, MENU_LEVELS } from "@/lib/menus";
 import type { RecipeCard } from "@/lib/types";
+import { COMMUNITY, CONTACT_EMAIL, SOCIALS, getSiteUrl } from "@/lib/site";
 
 const PREVIEW_TITLES = [
   "Пиле шаурма",
@@ -71,8 +72,52 @@ export default async function LandingPage() {
   const colB = heroPics.filter((_, i) => i % 2 === 1);
   const stripPics = rest.slice(-4);
 
+  const site = getSiteUrl();
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": `${site}/#org`,
+        name: "Кухнята на Геша",
+        url: site,
+        logo: `${site}/icon-512.png`,
+        email: CONTACT_EMAIL,
+        sameAs: [...SOCIALS.filter((s) => s.href).map((s) => s.href), ...(COMMUNITY.url ? [COMMUNITY.url] : [])],
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${site}/#website`,
+        url: site,
+        name: "Кухнята на Геша",
+        inLanguage: "bg",
+        publisher: { "@id": `${site}/#org` },
+      },
+      {
+        "@type": "Product",
+        name: "Кухнята на Геша — 101 високопротеинови рецепти",
+        description:
+          "Онлайн готварска книга със 101 високопротеинови рецепти: снимка, калории и макроси на всяка, порции, които се смятат сами, дневни менюта и общност в Skool.",
+        image: [`${site}/opengraph-image.png`],
+        brand: { "@id": `${site}/#org` },
+        offers: {
+          "@type": "Offer",
+          price: "47.00",
+          priceCurrency: "EUR",
+          availability: "https://schema.org/InStock",
+          url: `${site}/#pricing`,
+          seller: { "@id": `${site}/#org` },
+        },
+      },
+    ],
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
+      />
       <SiteHeader />
 
       <div className="hero-band">
