@@ -123,6 +123,17 @@ export async function POST(request: Request) {
           }
         }
 
+        // Bought for two: one gift link for the friend.
+        let giftCodes: string[] = [];
+        if (session.metadata?.kind === "book_for_two") {
+          try {
+            giftCodes = (await createGiftCodes(session.id, email, 1)).map((g) => g.code);
+          } catch (e) {
+            console.error("gift code (for two) failed:", e instanceof Error ? e.message : e);
+            return NextResponse.json({ error: "gift" }, { status: 500 });
+          }
+        }
+
         // Welcome + written confirmation of the purchase. Best-effort and
         // idempotent per session, so a Stripe retry never sends it twice.
         try {
@@ -133,6 +144,7 @@ export async function POST(request: Request) {
             amount: `${total.toFixed(2).replace(".", ",")} €`,
             trialEnd,
             sessionId: session.id,
+            giftCodes,
           });
         } catch (e) {
           console.error("purchase email failed:", e instanceof Error ? e.message : e);

@@ -9,9 +9,9 @@ export function GiftCard({ gifts, justBought }: { gifts: Gift[]; justBought: boo
     <div className="gift-card">
       <h2>Подари книгата на приятел</h2>
       <p>
-        Втори достъп за <b>27 €</b> вместо 47 €. Получаваш линк, пращаш го и
-        човекът влиза със своя имейл: 101 рецепти и 3 месеца нови рецепти,
-        точно като теб.
+        Двамата излизате <b>74 € вместо 94 €</b>, спестявате 20 €. Доплащаш
+        само за втория, получаваш линк, пращаш го и човекът влиза със своя
+        имейл: 101 рецепти и 3 месеца нови рецепти, точно като теб.
       </p>
       {justBought && gifts.length === 0 && (
         <p className="gift-msg">Плащането мина. Линкът ще се появи тук до минута (и идва на имейла ти).</p>
@@ -31,7 +31,7 @@ export function GiftCard({ gifts, justBought }: { gifts: Gift[]; justBought: boo
         </ul>
       )}
       <CheckoutButton kind="gift" className="btn" source="профил">
-        Подари за 27 €
+        Подари втори достъп
       </CheckoutButton>
     </div>
   );

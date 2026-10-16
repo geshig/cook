@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
 import { getStripe, getSiteUrl } from "@/lib/stripe";
 import { getAccess } from "@/lib/access";
+import { GIFT_PRICE_CENTS } from "@/lib/gifts";
 
-export async function POST() {
+export async function POST(request: Request) {
+  const forTwo = new URL(request.url).searchParams.get("for") === "2";
   const priceId = process.env.STRIPE_PRICE_BOOK?.trim();
   if (!priceId) {
     return NextResponse.json(
@@ -18,7 +20,25 @@ export async function POST() {
     session = await getStripe().checkout.sessions.create({
       mode: "payment",
       ...(access.email ? { customer_email: access.email } : {}),
-      line_items: [{ price: priceId, quantity: 1 }],
+      line_items: [
+        { price: priceId, quantity: 1 },
+        ...(forTwo
+          ? [
+              {
+                price_data: {
+                  currency: "eur",
+                  unit_amount: GIFT_PRICE_CENTS,
+                  product_data: {
+                    name: "Втори достъп за приятел",
+                    description: "Получаваш линк, който пращаш. Той влиза със своя имейл.",
+                  },
+                },
+                quantity: 1,
+              },
+            ]
+          : []),
+      ],
+      ...(forTwo ? { metadata: { kind: "book_for_two" } } : {}),
       success_url: `${siteUrl}/recipes?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${siteUrl}/?checkout=cancelled`,
       locale: "bg",
