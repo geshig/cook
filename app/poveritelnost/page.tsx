@@ -52,7 +52,6 @@ export default function PrivacyPage() {
           <li><b>Vercel</b>: хостинг на сайта;</li>
           <li><b>Resend</b>: изпращане на имейлите за вход;</li>
           <li><b>ImprovMX</b>: препращане на писмата до {SELLER.email};</li>
-          <li><b>Zapier</b>: предава имейла ти на Skool след покупка, за да получиш покана;</li>
           <li><b>Skool</b>: платформата на затворената общност. Профила там правиш ти и за него важи и политиката на Skool.</li>
         </ul>
         <p>
