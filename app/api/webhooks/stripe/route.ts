@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { startFreeTrial } from "@/lib/trial";
-import { sendPurchaseEmail } from "@/lib/email";
+import { sendGiftEmail, sendPurchaseEmail } from "@/lib/email";
+import { createGiftCodes } from "@/lib/gifts";
 import { getStripe } from "@/lib/stripe";
 import { createAdminClient } from "@/lib/supabase/admin";
 
@@ -55,6 +56,23 @@ export async function POST(request: Request) {
       // as "unpaid" here; we only offer instant ones, but never trust that.
       if (session.payment_status === "unpaid") {
         console.warn("checkout.session.completed още без плащане, session:", session.id);
+        break;
+      }
+
+      // A friend's gift (27 €): make the codes and email the links. The
+      // buyer already owns the book, so nothing else changes for them.
+      if (session.metadata?.kind === "gift") {
+        try {
+          const items = await stripe.checkout.sessions.listLineItems(session.id, { limit: 5 });
+          const qty = Math.max(1, Math.min(5, items.data.reduce((a, li) => a + (li.quantity ?? 1), 0)));
+          const gifts = await createGiftCodes(session.id, email, qty);
+          await sendGiftEmail({ email, codes: gifts.map((g) => g.code), sessionId: session.id }).catch((e) =>
+            console.error("gift email failed:", e instanceof Error ? e.message : e)
+          );
+        } catch (e) {
+          console.error("gift codes failed:", e instanceof Error ? e.message : e);
+          return NextResponse.json({ error: "gift" }, { status: 500 });
+        }
         break;
       }
 

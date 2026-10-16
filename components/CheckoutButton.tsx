@@ -9,7 +9,7 @@ export function CheckoutButton({
   children,
   source,
 }: {
-  kind: "book" | "subscription";
+  kind: "book" | "subscription" | "gift";
   className?: string;
   /** Where the button is, for analytics ("цена", "лента"…). */
   source?: string;
@@ -19,7 +19,7 @@ export function CheckoutButton({
 
   async function handleClick() {
     setLoading(true);
-    track(kind === "book" ? "Плащане: старт" : "Абонамент: старт", { от: source ?? "друго" });
+    track(kind === "book" ? "Плащане: старт" : kind === "gift" ? "Подарък: старт" : "Абонамент: старт", { от: source ?? "друго" });
     try {
       const res = await fetch(`/api/checkout/${kind}`, { method: "POST" });
       const data = await res.json();

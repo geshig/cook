@@ -3288,3 +3288,66 @@ section.menu-gen-section {
   text-decoration: none;
   border-bottom: 2px solid var(--tint-strong);
 }
+
+/* ---- gifts ---- */
+
+.gift-card {
+  margin-top: 24px;
+  padding: 20px 18px;
+  border-radius: 18px;
+  background: var(--card);
+  border: 1px solid var(--tint-strong);
+}
+
+.gift-card h2 {
+  font-family: var(--font-display), "Playfair Display", Georgia, serif;
+  font-size: 22px;
+  margin-bottom: 6px;
+}
+
+.gift-card p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-dim);
+  margin-bottom: 14px;
+}
+
+.gift-list {
+  list-style: none;
+  display: grid;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.gift-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--bg);
+}
+
+.gift-list code {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
+.gift-used {
+  font-size: 13px;
+  color: var(--sage);
+}
+
+.gift-msg {
+  margin-top: 10px;
+  font-size: 14px;
+  color: var(--rust);
+}
+
+.gift-as {
+  margin-top: 12px;
+  font-size: 13px;
+}

@@ -16,6 +16,7 @@ import { CheckoutPending } from "@/components/CheckoutPending";
 import { BonusBanner } from "@/components/BonusBanner";
 import { CommunityCard } from "@/components/CommunityCard";
 import { TrackOnce } from "@/components/TrackOnce";
+import { PendingGift } from "@/components/GiftRedeem";
 import { COMMUNITY } from "@/lib/site";
 
 type SP = Promise<{ [key: string]: string | string[] | undefined }>;
@@ -158,6 +159,7 @@ export default async function RecipesPage({
     return (
       <>
         <SiteHeader />
+        <PendingGift />
         <div className="gate">
           <div className="lock-big">🔒</div>
           <h1 className="display">Книгата отключва тук</h1>
@@ -198,6 +200,7 @@ export default async function RecipesPage({
     <>
       <SiteHeader />
       {purchaseEvent}
+      <PendingGift />
       <header className="app-header">
         <h1 className="display">Рецептите</h1>
         <p>{recipes.length} рецепти · търси, филтрирай и запазвай любими</p>
