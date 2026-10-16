@@ -21,7 +21,7 @@ const PREVIEW_TITLES = [
 ];
 
 const CATEGORIES: [string, number][] = [
-  ["Meal prep кутии за седмицата", 16],
+  ["Храна в кутии за работа (meal prep)", 16],
   ["Основни с пилешко", 12],
   ["Телешко, свинско и риба", 12],
   ["Салати", 11],
@@ -260,7 +260,7 @@ export default async function LandingPage() {
           </li>
           <li>
             <b>Нямаш време</b>
-            <span>Половината рецепти са до 30 минути, а meal prep кутиите стигат за цялата седмица.</span>
+            <span>Половината рецепти са до 30 минути, а храната в кутии за работа (meal prep) стига за цялата седмица.</span>
           </li>
           <li>
             <b>Тренираш и ти трябва повече протеин</b>
@@ -340,7 +340,6 @@ export default async function LandingPage() {
           <div className="amount">
             47 € <span>еднократно</span>
           </div>
-          <p className="price-sub">Не е просто рецептурник: това е цялата кухня около него.</p>
           <ul>
             <li>101 рецепти с калории и макроси на порция</li>
             <li>Снимка на всяка рецепта</li>
@@ -372,7 +371,8 @@ export default async function LandingPage() {
             </CheckoutButton>
           </div>
           <p className="price-help">
-            🤝 Нещо не ти се получи? Пиши ми на hello@geshapov.com и ще ти помогна лично.
+            🤝 Нещо не ти се получи? Пиши ми в Skool общността, там винаги
+            отговарям, или на hello@geshapov.com. Помагам лично.
           </p>
           <PayBadges />
           <p className="price-pay">Плащането минава защитено през Stripe. Не виждам и не пазя данните на картата ти.</p>

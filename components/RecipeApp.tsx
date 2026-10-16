@@ -16,7 +16,7 @@ const QUICK: Quick[] = [
   { id: "red", label: "Червено месо", test: (r) => r.tags.includes("червено месо") },
   { id: "fish", label: "Риба", test: (r) => r.tags.includes("риба") },
   { id: "veg", label: "Без месо", test: (r) => r.tags.includes("вегетарианско") },
-  { id: "prep", label: "Meal prep", test: (r) => r.tags.includes("meal prep") },
+  { id: "prep", label: "Кутии за работа", test: (r) => r.tags.includes("meal prep") },
   { id: "breakfast", label: "Закуска", test: (r) => r.tags.includes("закуска") },
   { id: "dessert", label: "Десерт", test: (r) => r.tags.includes("десерт") },
   { id: "fast", label: "До 30 мин", test: (r) => r.timeMinutes != null && r.timeMinutes <= 30 },
@@ -145,7 +145,7 @@ export function RecipeApp({
         if (!chosen.some((t) => r.tags.includes(t))) return false;
       }
       if (q) {
-        const hay = norm(`${r.title} ${r.tags.join(" ")} ${r.ingredients ?? ""}`);
+        const hay = norm(`${r.title} ${r.tags.join(" ")} ${r.tags.includes("meal prep") ? "кутии работа" : ""} ${r.ingredients ?? ""}`);
         if (!q.split(/\s+/).every((w) => hay.includes(w))) return false;
       }
       return true;
@@ -261,7 +261,7 @@ export function RecipeApp({
                       aria-pressed={picked.has(n)}
                       onClick={() => togglePick(n)}
                     >
-                      {n}
+                      {n === "meal prep" ? "кутии за работа" : n}
                     </button>
                   ))}
                 </div>
