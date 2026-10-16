@@ -62,8 +62,10 @@ export async function sendPurchaseEmail(opts: {
   amount: string; // "47,00 €"
   trialEnd: string | null;
   sessionId: string;
+  giftCodes?: string[];
 }): Promise<boolean> {
   const site = getSiteUrl();
+  const giftLinks = (opts.giftCodes ?? []).map((c) => `${site}/podarak/${c}`);
   const login = `${site}/login?email=${encodeURIComponent(opts.email)}`;
   const paid = bgDate(opts.paidAt * 1000);
   const until = opts.trialEnd ? bgDate(opts.trialEnd) : null;
@@ -93,6 +95,9 @@ export async function sendPurchaseEmail(opts: {
           `Линк към общността: ${COMMUNITY.url}`,
           "",
         ]
+      : []),
+    ...(giftLinks.length
+      ? ["ЛИНК ЗА ВТОРИЯ ЧОВЕК", "Прати този линк на човека, с когото купихте книгата. Той влиза със своя имейл:", ...giftLinks, ""]
       : []),
     "СЪВЕТ: На телефона добави сайта на началния екран и се отваря като приложение.",
     "",
@@ -128,6 +133,13 @@ ${
   COMMUNITY.url
     ? h("ОБЩНОСТТА В SKOOL") +
       p(`<a href="${esc(COMMUNITY.url)}" style="color:#6b7f3a">Влез от тук</a> и се присъедини. Там членовете споделят какво са сготвили, а аз качвам видеа за здраве и уелнес.`)
+    : ""
+}
+${
+  giftLinks.length
+    ? h("ЛИНК ЗА ВТОРИЯ ЧОВЕК") +
+      p("Прати този линк на човека, с когото купихте книгата. Той влиза със своя имейл:") +
+      giftLinks.map((l) => `<p style="margin:0 0 14px"><a href="${esc(l)}" style="color:#6b7f3a;font-weight:700">🎁 ${esc(l.replace(/^https?:\/\//, ""))}</a></p>`).join("")
     : ""
 }
 ${h("СЪВЕТ")}
