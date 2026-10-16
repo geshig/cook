@@ -55,6 +55,28 @@ const nextConfig: NextConfig = {
     formats: ["image/webp"],
     minimumCacheTTL: 2678400,
   },
+  /**
+   * Short links for bios and posts. Each adds UTM tags, so the statistics
+   * (Umami) show where visitors came from. 307 = can be changed any time.
+   */
+  async redirects() {
+    const go = (source: string, dest: string, src: string, medium: string, campaign?: string) => ({
+      source,
+      destination: `${dest}?utm_source=${src}&utm_medium=${medium}${campaign ? `&utm_campaign=${campaign}` : ""}`,
+      permanent: false,
+    });
+    return [
+      go("/ig", "/", "instagram", "bio"),
+      go("/story", "/", "instagram", "story"),
+      go("/reel", "/", "instagram", "reel"),
+      go("/dm", "/", "instagram", "dm"),
+      go("/tt", "/", "tiktok", "bio"),
+      go("/ttv", "/", "tiktok", "video"),
+      go("/skool", "/", "skool", "community"),
+      go("/menu", "/menyuta", "instagram", "post", "menyuta"),
+      go("/dvama", "/#pricing", "instagram", "post", "za-dvama"),
+    ];
+  },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },
