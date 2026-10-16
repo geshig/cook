@@ -60,11 +60,11 @@ const nextConfig: NextConfig = {
    * (Umami) show where visitors came from. 307 = can be changed any time.
    */
   async redirects() {
-    const go = (source: string, dest: string, src: string, medium: string, campaign?: string) => ({
-      source,
-      destination: `${dest}?utm_source=${src}&utm_medium=${medium}${campaign ? `&utm_campaign=${campaign}` : ""}`,
-      permanent: false,
-    });
+    const go = (source: string, dest: string, src: string, medium: string, campaign?: string) => {
+      const [path, hash] = dest.split("#");
+      const q = `utm_source=${src}&utm_medium=${medium}${campaign ? `&utm_campaign=${campaign}` : ""}`;
+      return { source, destination: `${path}?${q}${hash ? `#${hash}` : ""}`, permanent: false };
+    };
     return [
       go("/ig", "/", "instagram", "bio"),
       go("/story", "/", "instagram", "story"),
