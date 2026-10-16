@@ -9,8 +9,7 @@ export function getSiteUrl(): string {
  */
 export const SOCIALS: { id: "instagram" | "youtube" | "tiktok" | "facebook"; label: string; href: string }[] = [
   { id: "instagram", label: "Instagram", href: "https://www.instagram.com/geshapov/" },
-  { id: "youtube", label: "YouTube", href: "" },
-  { id: "tiktok", label: "TikTok", href: "" },
+  { id: "tiktok", label: "TikTok", href: "https://www.tiktok.com/@geshapov" },
   { id: "facebook", label: "Facebook", href: "" },
 ];
 
