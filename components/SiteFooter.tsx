@@ -48,7 +48,7 @@ export function SiteFooter() {
         <div className="footer-col">
           <h3>Книгата</h3>
           <p className="footer-offer">101 рецепти за 47 € и 3 месеца нови рецепти безплатно.</p>
-          <Link href="/#pricing" className="btn footer-btn">
+          <Link href="/#pricing" className="btn footer-btn" data-umami-event="Купи: футър">
             Купи книгата
           </Link>
           <ul className="footer-pay" aria-label="Начини на плащане">
