@@ -28,9 +28,13 @@ export function RevealOnScroll() {
       { rootMargin: "0px 0px -8% 0px", threshold: 0.08 }
     );
 
+    // Tracked per run, not on the element: when the router restores a cached
+    // page on Back/Home, its nodes come back and must be armed again.
+    const armed = new WeakSet<Element>();
     const arm = (root: ParentNode) => {
-      root.querySelectorAll<HTMLElement>(".reveal:not(.in):not([data-armed])").forEach((el) => {
-        el.dataset.armed = "1";
+      root.querySelectorAll<HTMLElement>(".reveal:not(.in)").forEach((el) => {
+        if (armed.has(el)) return;
+        armed.add(el);
         if (el.getBoundingClientRect().top < window.innerHeight) el.classList.add("in");
         else io.observe(el);
       });
@@ -44,6 +48,8 @@ export function RevealOnScroll() {
     return () => {
       io.disconnect();
       mo.disconnect();
+      // Leaving the page: show everything, so a cached copy is never blank.
+      document.querySelectorAll(".reveal:not(.in)").forEach((el) => el.classList.add("in"));
     };
   }, [pathname]);
 

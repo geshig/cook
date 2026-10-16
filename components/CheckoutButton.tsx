@@ -1,20 +1,25 @@
 "use client";
 
 import { useState } from "react";
+import { track } from "@/lib/track";
 
 export function CheckoutButton({
   kind,
   className,
   children,
+  source,
 }: {
   kind: "book" | "subscription";
   className?: string;
+  /** Where the button is, for analytics ("цена", "лента"…). */
+  source?: string;
   children: React.ReactNode;
 }) {
   const [loading, setLoading] = useState(false);
 
   async function handleClick() {
     setLoading(true);
+    track(kind === "book" ? "Плащане: старт" : "Абонамент: старт", { от: source ?? "друго" });
     try {
       const res = await fetch(`/api/checkout/${kind}`, { method: "POST" });
       const data = await res.json();

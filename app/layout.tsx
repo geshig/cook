@@ -5,6 +5,7 @@ import "./globals.css";
 import { ServiceWorker } from "@/components/ServiceWorker";
 import { SiteFooter } from "@/components/SiteFooter";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
+import { Analytics } from "@/components/Analytics";
 
 const playfair = Playfair_Display({
   weight: ["500", "700"],
@@ -61,6 +62,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <SiteFooter />
         <ServiceWorker />
         <RevealOnScroll />
+        <Analytics />
       </body>
     </html>
   );

@@ -3,12 +3,12 @@ import Image from "next/image";
 import { StickyBuy } from "@/components/StickyBuy";
 import { Testimonials } from "@/components/Testimonials";
 import { CountUp } from "@/components/CountUp";
+import { PayBadges } from "@/components/PayBadges";
 import { getAccess } from "@/lib/access";
-import { getRecipesForViewer } from "@/lib/recipes";
+import { getPublicRecipes, type PublicRecipe } from "@/lib/publicRecipes";
+import { MenuGenerator } from "@/components/MenuGenerator";
 import { CheckoutButton } from "@/components/CheckoutButton";
 import { SiteHeader } from "@/components/SiteHeader";
-import { MENUS, MENU_LEVELS } from "@/lib/menus";
-import type { RecipeCard } from "@/lib/types";
 import { COMMUNITY, CONTACT_EMAIL, SOCIALS, getSiteUrl } from "@/lib/site";
 
 const PREVIEW_TITLES = [
@@ -41,27 +41,28 @@ const FEATURES: { icon: string; title: string; text: string }[] = [
   { icon: "M12 5v14M5 12h14", title: "Порциите се смятат сами", text: "За един или за шестима. Натискаш + и всички количества се преизчисляват." },
   { icon: "M12 8v4l3 2M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z", title: "Режим за готвене", text: "Екранът не заспива, стъпките се отмятат, таймерите са в самите стъпки." },
   { icon: "M6 6h15l-1.5 9h-12zM6 6 5 3H2M9 20a1 1 0 1 0 0 .01M18 20a1 1 0 1 0 0 .01", title: "Списък за пазаруване", text: "Едно натискане и продуктите от рецептата са в списъка, събрани по количество." },
-  { icon: "M4 5h16v15H4zM4 10h16M9 3v4M15 3v4", title: "Дневни менюта", text: `${MENUS.length} готови дни за около 1500, 2000 и 2500 kcal, сглобени от рецептите.` },
+  { icon: "M4 5h16v15H4zM4 10h16M9 3v4M15 3v4", title: "Дневни менюта", text: "Готови дни за около 1500, 2000 и 2500 kcal или меню точно по твоите калории." },
   { icon: "M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z", title: "Нови рецепти всяка седмица", text: "2–4 нови рецепти седмично. Първите 3 месеца са подарък с книгата." },
 ];
 
-function pickPreview(withPhoto: RecipeCard[]) {
+function pickPreview(withPhoto: PublicRecipe[]) {
   const picked = PREVIEW_TITLES.map((t) => withPhoto.find((r) => r.title.startsWith(t))).filter(
-    (r): r is RecipeCard => !!r
+    (r): r is PublicRecipe => !!r
   );
   return picked.length >= 4 ? picked : withPhoto.slice(0, 6);
 }
 
 export default async function LandingPage() {
-  const access = await getAccess();
   // Photos are decorative — if Supabase is briefly unreachable, the funnel
   // (checkout) must still render and take payments.
-  const withPhoto = await getRecipesForViewer(access)
-    .then((rs) => rs.filter((r) => r.photoUrl))
-    .catch((err) => {
+  const [access, all] = await Promise.all([
+    getAccess(),
+    getPublicRecipes().catch((err) => {
       console.error("Failed to load recipe preview:", err);
-      return [] as RecipeCard[];
-    });
+      return [] as PublicRecipe[];
+    }),
+  ]);
+  const withPhoto = all.filter((r) => r.photoUrl);
   const preview = pickPreview(withPhoto);
   const previewIds = new Set(preview.map((r) => r.id));
   // Hero columns: photos not already in the preview grid, spread over the book.
@@ -123,7 +124,7 @@ export default async function LandingPage() {
       <div className="hero-band">
         <section className="hero">
           <div className="hero-copy">
-            <p className="hero-kicker">Високопротеинова готварска книга</p>
+            <p className="hero-kicker">Здравословен готварски рецептурник</p>
             <h1 className="display">
               Вкусно. Бързо.
               <br />
@@ -135,13 +136,14 @@ export default async function LandingPage() {
               преизчисляват сами.
             </p>
             <div className="hero-actions">
-              <a href="#pricing" className="btn btn-cream" id="hero-cta">
+              <a href="#pricing" className="btn btn-cream" id="hero-cta" data-umami-event="Купи: горе">
                 Купи книгата за 47 €
               </a>
               <Link href="/menyuta" className="btn btn-outline-cream">
                 Виж дневните менюта
               </Link>
             </div>
+            <PayBadges dark />
             <p className="hero-bonus">
               С книгата получаваш и 3 месеца нови рецепти безплатно, по 2–4 всяка седмица.
             </p>
@@ -191,9 +193,9 @@ export default async function LandingPage() {
         </div>
         <div>
           <b>
-            <CountUp to={MENUS.length} />
+            <CountUp to={3} suffix=" мес." />
           </b>
-          <span>дневни менюта</span>
+          <span>нови рецепти подарък</span>
         </div>
       </section>
 
@@ -272,24 +274,17 @@ export default async function LandingPage() {
 
       <Testimonials />
 
-      <section className="menus-band reveal">
-        <Link href="/menyuta" className="menus-teaser">
-          <div>
-            <h2>Примерни дневни менюта</h2>
-            <p>
-              Не знаеш какво да ядеш днес? {MENUS.length} готови дни от рецептите,
-              с калориите и протеина на всяко хранене.
-            </p>
-          </div>
-          <ul>
-            {MENU_LEVELS.map((l) => (
-              <li key={l.id}>
-                <b>{l.label}</b>
-                <span>{l.hint}</span>
-              </li>
-            ))}
-          </ul>
-          <span className="more">Виж менютата</span>
+      <section className="menus-band reveal" id="menu">
+        <div className="sec-head">
+          <h2>Меню точно по твоите калории</h2>
+          <p>
+            Напиши колко калории искаш на ден и виж какво ще ядеш: закуска,
+            обяд, вечеря и нещо малко, все от рецептите в книгата.
+          </p>
+        </div>
+        {all.length > 0 && <MenuGenerator recipes={all} />}
+        <Link href="/menyuta" className="gen-more">
+          Още готови дни за 1500, 2000 и 2500 kcal
         </Link>
       </section>
 
@@ -320,7 +315,7 @@ export default async function LandingPage() {
             <li>101 рецепти с калории и макроси на порция</li>
             <li>Снимка на всяка рецепта</li>
             <li>Избираш порциите, количествата се смятат сами</li>
-            <li>{MENUS.length} примерни дневни менюта</li>
+            <li>Примерни дневни менюта и меню по твоите калории</li>
             <li>Филтри по съставка, хранене и повод</li>
             <li>В браузъра на телефона и компютъра, без приложение</li>
             <li>Всички рецепти в книгата остават твои завинаги</li>
@@ -330,10 +325,11 @@ export default async function LandingPage() {
               седмица
             </li>
           </ul>
-          <CheckoutButton kind="book" className="btn">
+          <CheckoutButton kind="book" className="btn" source="цена">
             Купи сега
           </CheckoutButton>
-          <p className="price-pay">Карта, Apple Pay, Google Pay или Revolut Pay. Плащането минава през Stripe.</p>
+          <PayBadges />
+          <p className="price-pay">Плащането минава защитено през Stripe. Не виждам и не пазя данните на картата ти.</p>
         </div>
         {access.purchasedBook && !access.hadSubscription && (
           <div className="upsell-note">

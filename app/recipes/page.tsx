@@ -15,6 +15,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { CheckoutPending } from "@/components/CheckoutPending";
 import { BonusBanner } from "@/components/BonusBanner";
 import { CommunityCard } from "@/components/CommunityCard";
+import { TrackOnce } from "@/components/TrackOnce";
 import { COMMUNITY } from "@/lib/site";
 
 type SP = Promise<{ [key: string]: string | string[] | undefined }>;
@@ -66,7 +67,7 @@ function SharedTeaser({ t, signedIn }: { t: RecipeTeaser; signedIn: boolean }) {
         Тази рецепта е от книгата ми с 101 високопротеинови рецепти. Всяка е
         със снимка, продукти, стъпки и макроси на порция.
       </p>
-      <Link className="btn" href="/#pricing">
+      <Link className="btn" href="/#pricing" data-umami-event="Купи: споделена рецепта">
         Виж книгата — 47€
       </Link>
       {!signedIn && (
@@ -96,10 +97,11 @@ export default async function RecipesPage({
 }: {
   searchParams: SP;
 }) {
-  const access = await getAccess();
+  const [access, sp] = await Promise.all([getAccess(), searchParams]);
+  const paidSession = sp.checkout === "success" && typeof sp.session_id === "string" ? sp.session_id : null;
+  const purchaseEvent = paidSession ? <TrackOnce name="Покупка" onceKey={paidSession} /> : null;
 
   if (!hasBookAccess(access)) {
-    const sp = await searchParams;
     const justPaid = sp.checkout === "success";
     const paidEmail = justPaid
       ? await paidEmailFor(typeof sp.session_id === "string" ? sp.session_id : undefined)
@@ -111,6 +113,7 @@ export default async function RecipesPage({
       return (
         <>
           <SiteHeader />
+          {purchaseEvent}
           <div className="gate">
             <div className="lock-big">🎉</div>
             <h1 className="display">Благодаря ти за покупката</h1>
@@ -194,6 +197,7 @@ export default async function RecipesPage({
   return (
     <>
       <SiteHeader />
+      {purchaseEvent}
       <header className="app-header">
         <h1 className="display">Рецептите</h1>
         <p>{recipes.length} рецепти · търси, филтрирай и запазвай любими</p>
