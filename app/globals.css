@@ -3392,3 +3392,73 @@ section.menu-gen-section {
 .price-card .for-two .btn {
   margin-top: 0;
 }
+
+/* ---- for whom + pricing extras ---- */
+
+section.for-whom {
+  max-width: 1000px;
+}
+
+.for-whom-list {
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.for-whom-list li {
+  display: grid;
+  gap: 3px;
+  padding: 14px 16px 14px 44px;
+  border-radius: 16px;
+  background: var(--card);
+  border: 1px solid var(--line-soft);
+  position: relative;
+}
+
+.for-whom-list li::before {
+  content: "✓";
+  position: absolute;
+  left: 14px;
+  top: 13px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  font-weight: 800;
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.for-whom-list b {
+  font-size: 16px;
+}
+
+.for-whom-list span {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-dim);
+}
+
+@media (min-width: 760px) {
+  .for-whom-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.price-sub {
+  font-size: 14px;
+  color: var(--text-dim);
+  margin-top: 6px;
+}
+
+.price-help {
+  margin-top: 14px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--card-hi);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
