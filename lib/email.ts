@@ -148,3 +148,35 @@ ${p("Геша")}
     idempotencyKey: `purchase-${opts.sessionId}`,
   });
 }
+
+/** Sent after a gift purchase: one link per friend. */
+export async function sendGiftEmail(opts: { email: string; codes: string[]; sessionId: string }): Promise<boolean> {
+  const site = getSiteUrl();
+  const links = opts.codes.map((c) => `${site}/podarak/${c}`);
+  const one = links.length === 1;
+  const text = [
+    "Здравей,",
+    "",
+    one
+      ? "Благодаря ти! Ето линка за подаръка. Прати го на човека, на когото подаряваш книгата:"
+      : "Благодаря ти! Ето линковете за подаръците. Всеки е за един човек:",
+    "",
+    ...links,
+    "",
+    "Който отвори линка, влиза със своя имейл и получава всичките 101 рецепти и 3 месеца нови рецепти безплатно, точно като теб.",
+    `Линковете ги виждаш и в Профил: ${site}/account`,
+    "",
+    "Геша",
+  ].join("\n");
+  const html = `<!doctype html><html lang="bg"><body style="margin:0;background:#faf6ee">
+<div style="max-width:560px;margin:0 auto;padding:28px 22px;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:15px;color:#2b2a26">
+<p style="margin:0 0 22px;font-size:13px;font-weight:800;letter-spacing:.1em;color:#6b7f3a">КУХНЯТА НА ГЕША</p>
+<p style="margin:0 0 14px;line-height:1.6">Здравей,</p>
+<p style="margin:0 0 14px;line-height:1.6">${one ? "Благодаря ти! Ето линка за подаръка. Прати го на човека, на когото подаряваш книгата:" : "Благодаря ти! Ето линковете за подаръците. Всеки е за един човек:"}</p>
+${links.map((l) => `<p style="margin:0 0 10px"><a href="${esc(l)}" style="display:inline-block;background:#6b7f3a;color:#fff;text-decoration:none;font-weight:700;padding:11px 18px;border-radius:100px">🎁 ${esc(l.replace(/^https?:\/\//, ""))}</a></p>`).join("")}
+<p style="margin:16px 0 14px;line-height:1.6">Който отвори линка, влиза със своя имейл и получава всичките 101 рецепти и 3 месеца нови рецепти безплатно, точно като теб.</p>
+<p style="margin:0 0 14px;line-height:1.6">Линковете ги виждаш и в <a href="${site}/account" style="color:#6b7f3a">Профил</a>.</p>
+<p style="margin:0 0 14px;line-height:1.6">Геша</p>
+</div></body></html>`;
+  return send({ to: opts.email, subject: one ? "Подаръкът ти е готов 🎁" : "Подаръците ти са готови 🎁", html, text, idempotencyKey: `gift-${opts.sessionId}` });
+}
