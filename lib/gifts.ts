@@ -59,3 +59,45 @@ export async function giftStatus(code: string): Promise<"ok" | "used" | "missing
   if (!data) return "missing";
   return data.redeemed_by ? "used" : "ok";
 }
+
+export type ManualGift = { code: string; note: string; redeemedBy: string | null; createdAt: string };
+
+/** Free access you hand out yourself (Админ → Подаръци): one code per person. */
+export async function createManualGifts(notes: string[]): Promise<{ note: string; code: string; link: string }[]> {
+  const admin = createAdminClient();
+  const out: { note: string; code: string; link: string }[] = [];
+  for (const raw of notes) {
+    const note = raw.trim().toLowerCase().slice(0, 120);
+    if (!note) continue;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const code = newCode();
+      const { error } = await admin.from("gift_codes").insert({
+        code,
+        buyer_email: "hello@geshapov.com",
+        session_id: `manual-${note}-${Date.now()}-${attempt}`,
+        idx: 1,
+      });
+      if (!error) {
+        out.push({ note, code, link: giftLink(code) });
+        break;
+      }
+    }
+  }
+  return out;
+}
+
+export async function listManualGifts(): Promise<ManualGift[]> {
+  const { data } = await createAdminClient()
+    .from("gift_codes")
+    .select("code, session_id, redeemed_by, created_at")
+    .like("session_id", "manual-%")
+    .order("created_at", { ascending: false })
+    .limit(200);
+  return (data ?? []).map((r) => ({
+    code: r.code as string,
+    // "manual-name@mail.bg-1729…-0" → "name@mail.bg"
+    note: String(r.session_id).replace(/^manual-/, "").replace(/-\d{10,}-\d$/, ""),
+    redeemedBy: (r.redeemed_by as string | null) ?? null,
+    createdAt: r.created_at as string,
+  }));
+}

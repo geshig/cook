@@ -14,6 +14,7 @@ export default async function AdminPage() {
         <Link href="/admin/otzivi">Отзиви</Link>
         <Link href="/admin/produkti">Продукти</Link>
         <Link href="/admin/video">Видео</Link>
+        <Link href="/admin/podaraci">Подаръци</Link>
       </div>
       <div
         style={{
