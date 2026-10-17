@@ -65,7 +65,7 @@ function SharedTeaser({ t, signedIn }: { t: RecipeTeaser; signedIn: boolean }) {
       <h1 className="display">{t.title}</h1>
       <p className="teaser-macros">{macrosLine(t)}</p>
       <p>
-        Тази рецепта е от книгата ми с 101 високопротеинови рецепти. Всяка е
+        Тази рецепта е от книгата ми със 100+ високопротеинови рецепти. Всяка е
         със снимка, продукти, стъпки и макроси на порция.
       </p>
       <Link className="btn" href="/#pricing" data-umami-event="Купи: споделена рецепта">

@@ -60,7 +60,7 @@ export default async function ProductsPage() {
         )}
         {!owner && (
           <div className="menu-cta" style={{ textAlign: "center", marginTop: 36 }}>
-            <p>Всичките 101 рецепти с тези продукти са в книгата.</p>
+            <p>Всички рецепти с тези продукти са в книгата.</p>
             <Link className="btn" href="/#pricing">
               Купи книгата — 47€
             </Link>

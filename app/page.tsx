@@ -101,9 +101,9 @@ export default async function LandingPage() {
       },
       {
         "@type": "Product",
-        name: "Кухнята на Геша — 101 високопротеинови рецепти",
+        name: "Кухнята на Геша — 100+ високопротеинови рецепти",
         description:
-          "Онлайн готварска книга със 101 високопротеинови рецепти: снимка, калории и макроси на всяка, порции, които се смятат сами, дневни менюта и общност в Skool.",
+          "Онлайн готварска книга със 100+ високопротеинови рецепти: снимка, калории и макроси на всяка, порции, които се смятат сами, дневни менюта и общност в Skool.",
         image: [`${site}/opengraph-image.png`],
         brand: { "@id": `${site}/#org` },
         offers: {
@@ -163,7 +163,7 @@ export default async function LandingPage() {
           )}
           <div className="hero-cta">
             <p className="hero-lead">
-              101 рецепти със снимка, калории и макроси, плюс дневни менюта,
+              100+ рецепти със снимка, калории и макроси, плюс дневни менюта,
               общност в Skool, видеа и списък за пазаруване. За всеки, който
               иска да яде вкусно и здравословно, не само за фитнес маниаци.
             </p>
@@ -186,21 +186,21 @@ export default async function LandingPage() {
       <section className="stats reveal" aria-label="Книгата в числа">
         <div>
           <b>
-            <CountUp to={101} />
+            <CountUp to={100} suffix="+" />
           </b>
           <span>рецепти</span>
         </div>
         <div>
           <b>
-            <CountUp to={51} />
+            <CountUp to={30} suffix=" мин" />
           </b>
-          <span>са до 30 минути</span>
+          <span>за толкова стават над половината рецепти</span>
         </div>
         <div>
           <b>
-            <CountUp to={35} prefix="~" suffix=" g" />
+            <CountUp to={16} />
           </b>
-          <span>протеин средно</span>
+          <span>за кутии за работа (meal prep)</span>
         </div>
         <div>
           <b>
@@ -307,7 +307,7 @@ export default async function LandingPage() {
             47 € <span>еднократно</span>
           </div>
           <ul>
-            <li>101 рецепти с калории и макроси на порция</li>
+            <li>100+ рецепти с калории и макроси на порция</li>
             <li>Снимка на всяка рецепта</li>
             <li>Избираш порциите, количествата се смятат сами</li>
             <li>Примерни дневни менюта и меню по твоите калории</li>
@@ -472,7 +472,7 @@ export default async function LandingPage() {
         </div>
         <div className="final-copy">
           <h2>Сготви първата рецепта още тази вечер</h2>
-          <p>101 рецепти с макросите, менюта за цялата седмица, общността в Skool и 3 месеца нови рецепти отгоре.</p>
+          <p>100+ рецепти с макросите, менюта за цялата седмица, общността в Skool и 3 месеца нови рецепти отгоре.</p>
           <a href="#pricing" className="btn btn-cream">
             Купи книгата за 47 €
           </a>
