@@ -28,7 +28,7 @@ export async function getTestimonials(): Promise<Testimonial[]> {
         recipe: r.recipe ?? "",
         text: r.body ?? "",
         photo: r.photo_url,
-        rating: typeof r.rating === "number" && r.rating >= 1 && r.rating <= 5 ? r.rating : null,
+        rating: typeof r.rating === "number" && r.rating >= 1 && r.rating <= 5 ? r.rating : 5,
       }));
   } catch {
     return [];
