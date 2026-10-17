@@ -9,6 +9,7 @@ export function CheckoutButton({
   children,
   source,
   forTwo,
+  id,
 }: {
   kind: "book" | "subscription" | "gift";
   className?: string;
@@ -16,6 +17,7 @@ export function CheckoutButton({
   source?: string;
   /** Book + a second access for a friend in one payment. */
   forTwo?: boolean;
+  id?: string;
   children: React.ReactNode;
 }) {
   const [loading, setLoading] = useState(false);
@@ -39,7 +41,7 @@ export function CheckoutButton({
   }
 
   return (
-    <button className={className ?? "btn"} onClick={handleClick} disabled={loading}>
+    <button id={id} className={className ?? "btn"} onClick={handleClick} disabled={loading}>
       {loading ? "Пренасочване…" : children}
     </button>
   );
