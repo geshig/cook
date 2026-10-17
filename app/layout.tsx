@@ -28,7 +28,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
-  title: "Кухнята на Геша — 101 високопротеинови рецепти с калории и макроси",
+  title: "Кухнята на Геша — 100+ високопротеинови рецепти с калории и макроси",
   alternates: { canonical: "./" },
   keywords: [
     "високопротеинови рецепти",
@@ -48,11 +48,11 @@ export const metadata: Metadata = {
     type: "website",
     locale: "bg_BG",
     siteName: "Кухнята на Геша",
-    title: "Кухнята на Геша — 101 рецепти с макросите",
+    title: "Кухнята на Геша — 100+ рецепти с макросите",
     description: "Високопротеинови рецепти със снимка, калории и макроси на всяка.",
   },
   description:
-    "101 високопротеинови рецепти със снимка, калории и макроси на всяка. Избираш порциите, количествата се смятат сами.",
+    "100+ високопротеинови рецепти със снимка, калории и макроси на всяка. Избираш порциите, количествата се смятат сами.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

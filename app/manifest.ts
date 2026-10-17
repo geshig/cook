@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Кухнята на Геша",
     short_name: "Кухнята",
-    description: "101 високопротеинови рецепти със снимка, калории и макроси на всяка.",
+    description: "100+ високопротеинови рецепти със снимка, калории и макроси на всяка.",
     start_url: "/recipes",
     display: "standalone",
     background_color: "#faf6ee",

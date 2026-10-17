@@ -2343,6 +2343,7 @@ section.stats {
 .stats div {
   display: grid;
   gap: 2px;
+  align-content: start;
   padding-left: 14px;
   border-left: 2px solid var(--tint-strong);
 }

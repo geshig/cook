@@ -73,7 +73,7 @@ export async function sendPurchaseEmail(opts: {
   const text = [
     "Здравей,",
     "",
-    `Благодаря ти, че взе „Кухнята на Геша“! Плащането мина и всичките 101 рецепти вече са отключени за теб.`,
+    `Благодаря ти, че взе „Кухнята на Геша“! Плащането мина и всичките 100+ рецепти вече са отключени за теб.`,
     "",
     "КАК ВЛИЗАШ",
     `1. Отвори ${site}/login`,
@@ -118,7 +118,7 @@ export async function sendPurchaseEmail(opts: {
 <div style="max-width:560px;margin:0 auto;padding:28px 22px;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:15px;color:#2b2a26">
 <p style="margin:0 0 22px;font-size:13px;font-weight:800;letter-spacing:.1em;color:#6b7f3a">КУХНЯТА НА ГЕША</p>
 ${p("Здравей,")}
-${p("Благодаря ти, че взе „Кухнята на Геша“! Плащането мина и всичките <b>101 рецепти</b> вече са отключени за теб.")}
+${p("Благодаря ти, че взе „Кухнята на Геша“! Плащането мина и всичките <b>100+ рецепти</b> вече са отключени за теб.")}
 <p style="margin:20px 0 22px"><a href="${esc(login)}" style="display:inline-block;background:#6b7f3a;color:#fff;text-decoration:none;font-weight:700;padding:13px 24px;border-radius:100px">Влез в рецептите</a></p>
 ${h("КАК ВЛИЗАШ")}
 ${p(`Влизаш с този имейл: <b>${esc(opts.email)}</b>. Пращам ти линк за вход, без парола, и сайтът те помни на устройството.`)}
@@ -175,7 +175,7 @@ export async function sendGiftEmail(opts: { email: string; codes: string[]; sess
     "",
     ...links,
     "",
-    "Който отвори линка, влиза със своя имейл и получава всичките 101 рецепти и 3 месеца нови рецепти безплатно, точно като теб.",
+    "Който отвори линка, влиза със своя имейл и получава всичките 100+ рецепти и 3 месеца нови рецепти безплатно, точно като теб.",
     `Линковете ги виждаш и в Профил: ${site}/account`,
     "",
     "Геша",
@@ -186,7 +186,7 @@ export async function sendGiftEmail(opts: { email: string; codes: string[]; sess
 <p style="margin:0 0 14px;line-height:1.6">Здравей,</p>
 <p style="margin:0 0 14px;line-height:1.6">${one ? "Благодаря ти! Ето линка за подаръка. Прати го на човека, на когото подаряваш книгата:" : "Благодаря ти! Ето линковете за подаръците. Всеки е за един човек:"}</p>
 ${links.map((l) => `<p style="margin:0 0 10px"><a href="${esc(l)}" style="display:inline-block;background:#6b7f3a;color:#fff;text-decoration:none;font-weight:700;padding:11px 18px;border-radius:100px">🎁 ${esc(l.replace(/^https?:\/\//, ""))}</a></p>`).join("")}
-<p style="margin:16px 0 14px;line-height:1.6">Който отвори линка, влиза със своя имейл и получава всичките 101 рецепти и 3 месеца нови рецепти безплатно, точно като теб.</p>
+<p style="margin:16px 0 14px;line-height:1.6">Който отвори линка, влиза със своя имейл и получава всичките 100+ рецепти и 3 месеца нови рецепти безплатно, точно като теб.</p>
 <p style="margin:0 0 14px;line-height:1.6">Линковете ги виждаш и в <a href="${site}/account" style="color:#6b7f3a">Профил</a>.</p>
 <p style="margin:0 0 14px;line-height:1.6">Геша</p>
 </div></body></html>`;
