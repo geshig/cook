@@ -39,12 +39,14 @@ const CATEGORIES: [string, number][] = [
 
 /** What you get, in the words of someone cooking — each one is a real feature. */
 const FEATURES: { icon: string; title: string; text: string }[] = [
-  { icon: "M4 19h16M7 16V9m5 7V5m5 11v-4", title: "Калории и макроси", text: "На всяка порция: калории, протеин, въглехидрати и мазнини." },
-  { icon: "M12 5v14M5 12h14", title: "Порциите се смятат сами", text: "За един или за шестима. Натискаш + и всички количества се преизчисляват." },
-  { icon: "M12 8v4l3 2M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z", title: "Режим за готвене", text: "Екранът не заспива, стъпките се отмятат, таймерите са в самите стъпки." },
-  { icon: "M6 6h15l-1.5 9h-12zM6 6 5 3H2M9 20a1 1 0 1 0 0 .01M18 20a1 1 0 1 0 0 .01", title: "Списък за пазаруване", text: "Едно натискане и продуктите от рецептата са в списъка, събрани по количество." },
-  { icon: "M4 5h16v15H4zM4 10h16M9 3v4M15 3v4", title: "Дневни менюта", text: "Готови дни за около 1500, 2000 и 2500 kcal или меню точно по твоите калории." },
-  { icon: "M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z", title: "Нови рецепти всяка седмица", text: "2–4 нови рецепти седмично. Първите 3 месеца са подарък с книгата." },
+  { icon: "M4 19h16M7 16V9m5 7V5m5 11v-4", title: "Калории и макроси", text: "На всяка порция: калории, протеин, въглехидрати, мазнини." },
+  { icon: "M12 5v14M5 12h14", title: "Порциите се смятат сами", text: "За един или за шестима: натискаш + и всичко се преизчислява." },
+  { icon: "M12 8v4l3 2M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z", title: "Режим за готвене", text: "Екранът не заспива, таймерите са в самите стъпки." },
+  { icon: "M6 6h15l-1.5 9h-12zM6 6 5 3H2M9 20a1 1 0 1 0 0 .01M18 20a1 1 0 1 0 0 .01", title: "Списък за пазаруване", text: "Продуктите от рецептата влизат в списъка с едно натискане." },
+  { icon: "M4 5h16v15H4zM4 10h16M9 3v4M15 3v4", title: "Дневни менюта", text: "Меню по твоите калории и храна в кутии за работа (meal prep)." },
+  { icon: "M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z", title: "Нови рецепти всяка седмица", text: "По 2–4 седмично. Първите 3 месеца са подарък с книгата." },
+  { icon: "M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2M10 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM21 20v-2a4 4 0 0 0-3-3.9M16 2.1a4 4 0 0 1 0 7.8", title: "Общност в Skool", text: "Споделяш, питаш и винаги ти отговарям лично." },
+  { icon: "M3 6h13v12H3zM16 10l5-3v10l-5-3", title: "Видеа от мен", text: "За хранене, здраве и уелнес, и как да стане навик." },
 ];
 
 function pickPreview(withPhoto: PublicRecipe[]) {
@@ -125,7 +127,7 @@ export default async function LandingPage() {
       <SiteHeader />
 
       <div className="hero-band">
-        <section className="hero">
+        <section className={"hero" + (intro ? " has-video" : "")}>
           <div className="hero-copy">
             <p className="hero-kicker">Здравословен готварски рецептурник</p>
             <h1 className="display">
@@ -133,10 +135,37 @@ export default async function LandingPage() {
               <br />
               <span>С макросите.</span>
             </h1>
+          </div>
+          {intro ? (
+            <IntroVideo url={intro.url} poster={intro.poster} />
+          ) : (
+            colA.length >= 3 && (
+              <div className="hero-media" aria-hidden="true">
+                {[colA, colB].map((col, ci) => (
+                  <div key={ci} className={"hero-col" + (ci ? " rev" : "")}>
+                    <div className="hero-track">
+                      {[...col, ...col].map((r, i) => (
+                        <div key={i} className="hero-pic">
+                          <Image
+                            src={r.photoUrl!}
+                            alt=""
+                            fill
+                            sizes="(min-width: 900px) 240px, 150px"
+                            loading={i < 2 ? "eager" : "lazy"}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )
+          )}
+          <div className="hero-cta">
             <p className="hero-lead">
-              101 здравословни рецепти със снимка, калории и макроси на всяка.
-              За всеки, който иска да яде вкусно и да се чувства добре, не само
-              за фитнес маниаци. Избираш порциите и количествата се смятат сами.
+              101 рецепти със снимка, калории и макроси, плюс дневни менюта,
+              общност в Skool, видеа и списък за пазаруване. За всеки, който
+              иска да яде вкусно и здравословно, не само за фитнес маниаци.
             </p>
             <div className="hero-actions">
               <a href="#pricing" className="btn btn-cream" id="hero-cta" data-umami-event="Купи: горе">
@@ -151,31 +180,8 @@ export default async function LandingPage() {
               С книгата получаваш и 3 месеца нови рецепти безплатно, по 2–4 всяка седмица.
             </p>
           </div>
-          {colA.length >= 3 && (
-            <div className="hero-media" aria-hidden="true">
-              {[colA, colB].map((col, ci) => (
-                <div key={ci} className={"hero-col" + (ci ? " rev" : "")}>
-                  <div className="hero-track">
-                    {[...col, ...col].map((r, i) => (
-                      <div key={i} className="hero-pic">
-                        <Image
-                          src={r.photoUrl!}
-                          alt=""
-                          fill
-                          sizes="(min-width: 900px) 240px, 150px"
-                          loading={i < 2 ? "eager" : "lazy"}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
         </section>
       </div>
-
-      {intro && <IntroVideo url={intro.url} poster={intro.poster} />}
 
       <section className="stats reveal" aria-label="Книгата в числа">
         <div>
@@ -204,6 +210,27 @@ export default async function LandingPage() {
         </div>
       </section>
 
+
+      <section className="features reveal">
+        <div className="sec-head">
+          <h2>Какво получаваш</h2>
+          <p>Не е PDF, а кухня в телефона: отваря се в браузъра, без приложение.</p>
+        </div>
+        <ul className="feature-grid">
+          {FEATURES.map((f) => (
+            <li key={f.title}>
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d={f.icon} />
+              </svg>
+              <h3>{f.title}</h3>
+              <p>{f.text}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <Testimonials />
+
       {preview.length > 0 && (
         <section className="preview reveal">
           <div className="sec-head">
@@ -226,24 +253,6 @@ export default async function LandingPage() {
           </div>
         </section>
       )}
-
-      <section className="features reveal">
-        <div className="sec-head">
-          <h2>Не е PDF, а кухня в телефона</h2>
-          <p>Рецептите се отварят в браузъра, на телефона и на компютъра, без приложение.</p>
-        </div>
-        <ul className="feature-grid">
-          {FEATURES.map((f) => (
-            <li key={f.title}>
-              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d={f.icon} />
-              </svg>
-              <h3>{f.title}</h3>
-              <p>{f.text}</p>
-            </li>
-          ))}
-        </ul>
-      </section>
 
       <section className="for-whom reveal">
         <div className="sec-head">
@@ -272,54 +281,6 @@ export default async function LandingPage() {
             <span>Средно около 35 g протеин на порция, без протеинови шейкове по цял ден.</span>
           </li>
         </ul>
-      </section>
-
-      <div className="community-band reveal">
-        <section className="community">
-          <div className="community-copy">
-            <h2>Не готвиш сам</h2>
-            <p>
-              С книгата влизаш в затворената ми общност в Skool. Там хората с
-              книгата споделят какво са сготвили, питат за хранене и тренировки и
-              си помагат. Аз качвам видеа, в които обяснявам за здраве, хранене и
-              уелнес.
-            </p>
-          </div>
-          <ul className="community-list">
-            <li>
-              <b>Споделяш какво си сготвил</b>
-              <span>Снимки, твои варианти на рецептите и идеи за седмицата.</span>
-            </li>
-            <li>
-              <b>Питаш за хранене и тренировки</b>
-              <span>Мен и останалите членове, без да се губиш в коментари в Instagram.</span>
-            </li>
-            <li>
-              <b>Видеа от мен за здраве и уелнес</b>
-              <span>Хранене, сън, възстановяване и как да го направиш навик.</span>
-            </li>
-            <li>
-              <b>Само за хората с книгата</b>
-              <span>Затворена група: след покупката влизаш с един бутон от профила си.</span>
-            </li>
-          </ul>
-        </section>
-      </div>
-
-      <Testimonials />
-
-      <section className="menus-band reveal" id="menu">
-        <div className="sec-head">
-          <h2>Меню точно по твоите калории</h2>
-          <p>
-            Напиши колко калории искаш на ден и виж какво ще ядеш: закуска,
-            обяд, вечеря и нещо малко, все от рецептите в книгата.
-          </p>
-        </div>
-        {all.length > 0 && <MenuGenerator recipes={all} />}
-        <Link href="/menyuta" className="gen-more">
-          Още готови дни за 1500, 2000 и 2500 kcal
-        </Link>
       </section>
 
       <div className="buy-row">
@@ -393,6 +354,52 @@ export default async function LandingPage() {
       </section>
 
       </div>
+
+      <div className="community-band reveal">
+        <section className="community">
+          <div className="community-copy">
+            <h2>Не готвиш сам</h2>
+            <p>
+              С книгата влизаш в затворената ми общност в Skool. Там хората с
+              книгата споделят какво са сготвили, питат за хранене и тренировки и
+              си помагат. Аз качвам видеа, в които обяснявам за здраве, хранене и
+              уелнес.
+            </p>
+          </div>
+          <ul className="community-list">
+            <li>
+              <b>Споделяш какво си сготвил</b>
+              <span>Снимки, твои варианти на рецептите и идеи за седмицата.</span>
+            </li>
+            <li>
+              <b>Питаш за хранене и тренировки</b>
+              <span>Мен и останалите членове, без да се губиш в коментари в Instagram.</span>
+            </li>
+            <li>
+              <b>Видеа от мен за здраве и уелнес</b>
+              <span>Хранене, сън, възстановяване и как да го направиш навик.</span>
+            </li>
+            <li>
+              <b>Само за хората с книгата</b>
+              <span>Затворена група: след покупката влизаш с един бутон от профила си.</span>
+            </li>
+          </ul>
+        </section>
+      </div>
+
+      <section className="menus-band reveal" id="menu">
+        <div className="sec-head">
+          <h2>Меню точно по твоите калории</h2>
+          <p>
+            Напиши колко калории искаш на ден и виж какво ще ядеш: закуска,
+            обяд, вечеря и нещо малко, все от рецептите в книгата.
+          </p>
+        </div>
+        {all.length > 0 && <MenuGenerator recipes={all} />}
+        <Link href="/menyuta" className="gen-more">
+          Още готови дни за 1500, 2000 и 2500 kcal
+        </Link>
+      </section>
 
       <section id="faq" className="faq reveal">
         <h2>Въпроси</h2>
