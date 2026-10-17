@@ -328,25 +328,30 @@ export function RecipeSheet({
                   <span className="step-n" aria-hidden="true">
                     {idx + 1}
                   </span>
-                  <span>
-                    {splitTimers(st).map((part, j) =>
-                      "seconds" in part ? (
-                        <button
-                          key={j}
-                          type="button"
-                          className="time-btn"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            startTimer(part.seconds, `Стъпка ${idx + 1} · ${part.text}`);
-                          }}
-                          aria-label={`Пусни таймер ${part.text}`}
-                        >
-                          ⏱ {part.text}
-                        </button>
-                      ) : (
-                        <span key={j}>{part.text}</span>
-                      )
-                    )}
+                  <span className="step-body">
+                    {/* One sentence per line: easier to follow on a phone. */}
+                    {sentences(st).map((line, k) => (
+                      <span key={k} className="step-line">
+                        {splitTimers(line).map((part, j) =>
+                          "seconds" in part ? (
+                            <button
+                              key={j}
+                              type="button"
+                              className="time-btn"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                startTimer(part.seconds, `Стъпка ${idx + 1} · ${part.text}`);
+                              }}
+                              aria-label={`Пусни таймер ${part.text}`}
+                            >
+                              ⏱ {part.text}
+                            </button>
+                          ) : (
+                            <span key={j}>{part.text}</span>
+                          )
+                        )}
+                      </span>
+                    ))}
                   </span>
                 </li>
               ))}
@@ -366,9 +371,7 @@ export function RecipeSheet({
               <a className="video-link" href={recipe.videoUrl} target="_blank" rel="noopener noreferrer">
                 ▶ Гледай видеото
               </a>
-            ) : (
-              <p className="video-soon">▶ Видео: скоро</p>
-            )}
+            ) : null}
           </>
         )}
 
@@ -408,6 +411,14 @@ export function RecipeSheet({
       </div>
     </div>
   );
+}
+
+/** Splits a step into sentences ("Свари ориза. Остави го 5 мин." → two lines). */
+function sentences(step: string): string[] {
+  return step
+    .split(/(?<=[.!?])\s+(?=[А-ЯA-Z])/u)
+    .map((x) => x.trim())
+    .filter(Boolean);
 }
 
 /** Short beep and vibration when a timer finishes. */
