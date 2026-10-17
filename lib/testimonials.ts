@@ -20,7 +20,7 @@ const BUILT_IN: Testimonial[] = [
   ["Стоян", "Паста с пилешко за кутии за работа", "stoyan-pasta-pile-kutii"],
   ["Симона", "Протеинови брауни", "simona-proteinovi-brauni"],
   ["Никол", "Паста със скариди", "nikol-pasta-skaridi"],
-  ["Сияна", "Запеканка за кутии за работа", "siyana-zapekanka-kutii"],
+  ["Сияна", "Царевична салата със сирене", "siyana-carevichna-salata"],
 ].map(([name, recipe, file]) => ({ name, recipe, text: "", photo: `/otzivi/${file}.jpg`, rating: 5 }));
 
 /** Отзивите от админа (най-новите първи), след тях вградените. */
