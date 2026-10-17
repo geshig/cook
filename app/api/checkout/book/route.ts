@@ -50,6 +50,11 @@ export async function POST(request: Request) {
       // service URL in Stripe → Settings → Public details.
       consent_collection: { terms_of_service: "required" },
       custom_text: {
+        submit: {
+          message: forTwo
+            ? "Веднага след плащането влизаш с този имейл, а линкът за втория човек идва в имейла ти. И двамата получавате 3 месеца нови рецепти безплатно."
+            : "Веднага след плащането влизаш в рецептите с този имейл. С книгата получаваш и 3 месеца нови рецепти безплатно, без карта.",
+        },
         terms_of_service_acceptance: {
           message: `Съгласен съм с [Условията](${siteUrl}/usloviya).`,
         },

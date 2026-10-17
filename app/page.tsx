@@ -15,12 +15,15 @@ import { COMMUNITY, CONTACT_EMAIL, SOCIALS, getSiteUrl } from "@/lib/site";
 
 const PREVIEW_TITLES = [
   "Пиле шаурма",
-  "Протеинов кейк в чаша",
-  "Купа с хрупкав ориз и сьомга",
   "Протеинова мусака",
-  "Пица с пълнена коричка",
-  "Протеинови брауни със сладък картоф",
+  "Блекнд пиле с броколи",
+  "Татзики салата с пилешко",
+  "Стек с чимичури",
+  "Протеинови бисквити с шоколадови капки",
 ];
+
+/** Photos that look the least real stay out of the landing page. */
+const NOT_ON_LANDING = /пица|калцоне/i;
 
 const CATEGORIES: [string, number][] = [
   ["Храна в кутии за работа (meal prep)", 16],
@@ -67,7 +70,7 @@ export default async function LandingPage() {
     }),
     getIntroVideo(),
   ]);
-  const withPhoto = all.filter((r) => r.photoUrl);
+  const withPhoto = all.filter((r) => r.photoUrl && !NOT_ON_LANDING.test(r.title));
   const preview = pickPreview(withPhoto);
   const previewIds = new Set(preview.map((r) => r.id));
   // Hero columns: photos not already in the preview grid, spread over the book.
@@ -162,10 +165,15 @@ export default async function LandingPage() {
             )
           )}
           <div className="hero-cta">
+            <ul className="hero-points">
+              <li><b>100+ рецепти</b> със снимка, калории и макроси</li>
+              <li><b>Дневни менюта</b> и храна в кутии за работа (meal prep)</li>
+              <li><b>Общност в Skool</b> и видеа от мен</li>
+              <li><b>Списък за пазаруване</b> и режим за готвене</li>
+            </ul>
             <p className="hero-lead">
-              100+ рецепти със снимка, калории и макроси, плюс дневни менюта,
-              общност в Skool, видеа и списък за пазаруване. За всеки, който
-              иска да яде вкусно и здравословно, не само за фитнес маниаци.
+              За всеки, който иска да яде вкусно и здравословно, не само за
+              фитнес маниаци.
             </p>
             <div className="hero-actions">
               <CheckoutButton kind="book" className="btn btn-cream" id="hero-cta" source="горе">

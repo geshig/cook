@@ -15,7 +15,8 @@ const csp = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' blob: data: https://*.supabase.co",
   "font-src 'self' data:",
-  "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://cloud.umami.is https://api-gateway.umami.dev",
+  // Umami Cloud sends stats to gateway.umami.is (older scripts: api-gateway.umami.dev).
+  "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://cloud.umami.is https://gateway.umami.is https://*.umami.is https://api-gateway.umami.dev",
   "media-src 'self' https://*.supabase.co",
   "worker-src 'self'",
   "manifest-src 'self'",
