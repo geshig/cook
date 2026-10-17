@@ -20,11 +20,12 @@ export default async function CalculatorPage() {
       <SiteHeader />
       <header className="app-header">
         <h1 className="display">Калкулатор за калории</h1>
-        <p>
-          Колко калории и протеин ти трябват на ден, какво е BMI-то ти и за
-          колко време стигаш желаното тегло. После с едно натискане получаваш
-          меню от рецептите точно за тези калории.
-        </p>
+        <ul className="header-points">
+          <li>Колко калории и протеин ти трябват на ден</li>
+          <li>BMI и нормалното тегло за твоя ръст</li>
+          <li>За колко време стигаш желаното тегло</li>
+          <li>Меню от рецептите точно за тези калории</li>
+        </ul>
       </header>
 
       <section className="calc-section">

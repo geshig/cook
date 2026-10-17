@@ -4304,3 +4304,101 @@ section.calc-section {
   color: var(--text-dim);
   margin: 0;
 }
+
+/* ---- phone reading: steps one sentence per line, wrapped nav, bullets ---- */
+
+.sheet ol.steps {
+  gap: 0;
+}
+
+.sheet ol.steps li {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line-soft);
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.sheet ol.steps li:last-child {
+  border-bottom: 0;
+}
+
+.step-body {
+  display: grid;
+  gap: 6px;
+}
+
+.step-line {
+  display: block;
+}
+
+.time-btn {
+  white-space: nowrap;
+  font-size: 0.92em;
+  padding: 1px 7px;
+  vertical-align: baseline;
+}
+
+.sheet .tips ul {
+  display: grid;
+  gap: 8px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.header-points {
+  list-style: none;
+  padding: 0;
+  margin: 14px 0 0;
+  display: grid;
+  gap: 8px;
+}
+
+.header-points li {
+  position: relative;
+  padding-left: 30px;
+  font-size: 17px;
+  line-height: 1.45;
+  color: var(--text-dim);
+}
+
+.header-points li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--accent)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E")
+    center / 12px no-repeat;
+}
+
+.inside-note b {
+  display: block;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.inside-note ul {
+  margin: 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 4px;
+}
+
+@media (max-width: 899px) {
+  /* all nav links visible: wrap instead of a hidden side-scroll */
+  .site-header nav {
+    flex-wrap: wrap;
+    overflow: visible;
+    gap: 6px 18px;
+  }
+  header.app-header {
+    padding-top: 26px;
+  }
+  header.app-header p {
+    font-size: 16px;
+  }
+}
