@@ -213,7 +213,7 @@ export default async function LandingPage() {
           <b>
             <CountUp to={16} />
           </b>
-          <span>са за кутии за работа (meal prep)</span>
+          <span>са кутии за работа (meal prep)</span>
         </div>
         <div>
           <b>
