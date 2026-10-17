@@ -10,7 +10,7 @@ export function getSiteUrl(): string {
 export const SOCIALS: { id: "instagram" | "youtube" | "tiktok" | "facebook"; label: string; href: string }[] = [
   { id: "instagram", label: "Instagram", href: "https://www.instagram.com/geshapov/" },
   { id: "tiktok", label: "TikTok", href: "https://www.tiktok.com/@geshapov" },
-  { id: "facebook", label: "Facebook", href: "" },
+  { id: "facebook", label: "Facebook", href: "https://www.facebook.com/profile.php?id=61594416230071" },
 ];
 
 export const CONTACT_EMAIL = "hello@geshapov.com";
