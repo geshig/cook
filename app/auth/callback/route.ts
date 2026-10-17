@@ -16,5 +16,7 @@ export async function GET(request: Request) {
     }
   }
 
-  return NextResponse.redirect(`${origin}/login?error=auth`);
+  // Usually: the link was opened in another browser than the one that asked
+  // for it. Back to login with a clear message, keeping where they were going.
+  return NextResponse.redirect(`${origin}/login?error=auth${next !== "/recipes" ? `&next=${encodeURIComponent(next)}` : ""}`);
 }

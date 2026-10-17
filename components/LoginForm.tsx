@@ -6,7 +6,12 @@ import { createBrowserSupabase } from "@/lib/supabase/browser";
 
 export function LoginForm() {
   // /login?email=... (after checkout) pre-fills the address the buyer paid with.
-  const [email, setEmail] = useState(useSearchParams().get("email") ?? "");
+  const params = useSearchParams();
+  const [email, setEmail] = useState(params.get("email") ?? "");
+  // /login?next=/podarak/CODE: come back there after the email link.
+  const rawNext = params.get("next") ?? "";
+  const next = /^\/(?![\/\\])/.test(rawNext) ? rawNext : "";
+  const failed = params.get("error") === "auth";
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
     "idle"
   );
@@ -18,7 +23,7 @@ export function LoginForm() {
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
+        emailRedirectTo: `${window.location.origin}/auth/callback${next ? `?next=${encodeURIComponent(next)}` : ""}`,
       },
     });
     setStatus(error ? "error" : "sent");
@@ -34,6 +39,12 @@ export function LoginForm() {
         Въведи имейла, с който плати книгата или абонамента — ще ти изпратя
         линк за вход, без парола.
       </p>
+
+      {failed && status === "idle" && (
+        <div className="lead-note" style={{ color: "var(--rust)", marginBottom: 14 }}>
+          Линкът за вход не сработи или е изтекъл. Въведи имейла си и ще ти пратя нов.
+        </div>
+      )}
 
       {status === "sent" ? (
         <div className="lead-success" style={{ display: "block" }}>

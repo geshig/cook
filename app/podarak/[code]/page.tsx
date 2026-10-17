@@ -11,8 +11,14 @@ export const metadata: Metadata = {
   robots: { index: false },
 };
 
-export default async function GiftPage({ params }: { params: Promise<{ code: string }> }) {
-  const { code: raw } = await params;
+export default async function GiftPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ code: string }>;
+  searchParams: Promise<{ auto?: string }>;
+}) {
+  const [{ code: raw }, sp] = await Promise.all([params, searchParams]);
   const code = decodeURIComponent(raw).toUpperCase();
   const [access, status] = await Promise.all([getAccess(), giftStatus(code)]);
 
@@ -29,7 +35,7 @@ export default async function GiftPage({ params }: { params: Promise<{ code: str
               калории и макроси, дневни менюта и 3 месеца нови рецепти
               безплатно. Влизаш със своя имейл и всичко е твое.
             </p>
-            <GiftRedeemButton code={code} signedIn={!!access.email} />
+            <GiftRedeemButton code={code} signedIn={!!access.email} auto={sp.auto === "1"} />
             {access.email && <p className="gift-as">Ще го отключа за {access.email}.</p>}
           </>
         )}

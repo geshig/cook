@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -16,16 +16,40 @@ async function redeem(code: string): Promise<{ ok: boolean; error?: string; owne
 }
 
 /** On /podarak/CODE: claim now if signed in, otherwise remember it and sign in. */
-export function GiftRedeemButton({ code, signedIn }: { code: string; signedIn: boolean }) {
+export function GiftRedeemButton({ code, signedIn, auto = false }: { code: string; signedIn: boolean; auto?: boolean }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
+  const started = useRef(false);
+
+  async function claim() {
+    setBusy(true);
+    const r = await redeem(code);
+    if (r.ok) {
+      try {
+        localStorage.removeItem(KEY);
+      } catch {}
+      router.push("/recipes?gift=ok");
+    } else {
+      setMsg(r.error ?? "Нещо се обърка.");
+      setBusy(false);
+    }
+  }
+
+  // Back from the email link (…?auto=1): take the gift without another tap.
+  useEffect(() => {
+    if (signedIn && auto && !started.current) {
+      started.current = true;
+      claim();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [signedIn, auto]);
 
   if (!signedIn) {
     return (
       <Link
         className="btn"
-        href="/login"
+        href={`/login?next=${encodeURIComponent(`/podarak/${code}?auto=1`)}`}
         onClick={() => {
           try {
             localStorage.setItem(KEY, code);
@@ -38,23 +62,7 @@ export function GiftRedeemButton({ code, signedIn }: { code: string; signedIn: b
   }
   return (
     <>
-      <button
-        className="btn"
-        disabled={busy}
-        onClick={async () => {
-          setBusy(true);
-          const r = await redeem(code);
-          if (r.ok) {
-            try {
-              localStorage.removeItem(KEY);
-            } catch {}
-            router.push("/recipes?gift=ok");
-          } else {
-            setMsg(r.error ?? "Нещо се обърка.");
-            setBusy(false);
-          }
-        }}
-      >
+      <button className="btn" disabled={busy} onClick={claim}>
         {busy ? "Отключвам…" : "Вземи подаръка"}
       </button>
       {msg && <p className="gift-msg">{msg}</p>}
