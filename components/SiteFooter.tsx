@@ -34,6 +34,7 @@ export function SiteFooter() {
           <h3>Кухнята</h3>
           <Link href="/recipes">Рецептите</Link>
           <Link href="/menyuta">Дневни менюта</Link>
+          <Link href="/kalkulator">Калкулатор за калории</Link>
           <Link href="/produkti">Продуктите, с които готвя</Link>
           <Link href="/spisak">Списък за пазаруване</Link>
         </nav>

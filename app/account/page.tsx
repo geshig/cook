@@ -65,7 +65,19 @@ export default async function AccountPage({
           )}
         </div>
         {access.purchasedBook && (
-          <div style={{ marginTop: 24 }}>
+          <div style={{ marginTop: 24, display: "grid", gap: 14 }}>
+            <div className="community-card">
+              <div>
+                <b>Калкулатор за калории</b>
+                <p>
+                  Колко калории и протеин ти трябват, BMI и за колко време стигаш
+                  желаното тегло. После меню точно за тези калории.
+                </p>
+              </div>
+              <Link className="btn" href="/kalkulator">
+                Отвори калкулатора
+              </Link>
+            </div>
             <CommunityCard />
           </div>
         )}
