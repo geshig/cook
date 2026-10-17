@@ -119,7 +119,7 @@ a {
 
 .site-header .logo {
   font-family: var(--font-body), "Manrope", system-ui, sans-serif;
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 800;
   letter-spacing: 0.1em;
   color: var(--accent);
@@ -152,6 +152,19 @@ a {
 
 .site-header nav a:hover {
   color: var(--amber);
+}
+
+@media (min-width: 900px) {
+  .site-header {
+    padding: 26px 32px 0;
+  }
+  .site-header .logo {
+    font-size: 22px;
+  }
+  .site-header nav {
+    gap: 22px;
+    font-size: 15px;
+  }
 }
 
 /* ---------- app header ---------- */
@@ -3547,8 +3560,43 @@ section.for-whom {
   padding-bottom: 34px;
 }
 
+.hero-points {
+  list-style: none;
+  display: grid;
+  gap: 10px;
+  margin: 0 0 16px;
+  padding: 0;
+}
+
+.hero-points li {
+  position: relative;
+  padding-left: 32px;
+  font-size: 17px;
+  line-height: 1.45;
+  color: var(--on-deep-dim);
+}
+
+.hero-points li b {
+  color: var(--on-deep);
+  font-weight: 700;
+}
+
+.hero-points li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 2px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--olive-light)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232a3320' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E")
+    center / 14px no-repeat;
+}
+
 .hero-cta .hero-lead {
   margin-top: 0;
+  font-size: 15px;
 }
 
 .hero.has-video {
