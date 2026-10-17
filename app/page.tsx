@@ -7,6 +7,8 @@ import { PayBadges } from "@/components/PayBadges";
 import { getAccess } from "@/lib/access";
 import { getPublicRecipes, type PublicRecipe } from "@/lib/publicRecipes";
 import { MenuGenerator } from "@/components/MenuGenerator";
+import { IntroVideo } from "@/components/IntroVideo";
+import { getIntroVideo } from "@/lib/settings";
 import { CheckoutButton } from "@/components/CheckoutButton";
 import { SiteHeader } from "@/components/SiteHeader";
 import { COMMUNITY, CONTACT_EMAIL, SOCIALS, getSiteUrl } from "@/lib/site";
@@ -55,12 +57,13 @@ function pickPreview(withPhoto: PublicRecipe[]) {
 export default async function LandingPage() {
   // Photos are decorative — if Supabase is briefly unreachable, the funnel
   // (checkout) must still render and take payments.
-  const [access, all] = await Promise.all([
+  const [access, all, intro] = await Promise.all([
     getAccess(),
     getPublicRecipes().catch((err) => {
       console.error("Failed to load recipe preview:", err);
       return [] as PublicRecipe[];
     }),
+    getIntroVideo(),
   ]);
   const withPhoto = all.filter((r) => r.photoUrl);
   const preview = pickPreview(withPhoto);
@@ -171,6 +174,8 @@ export default async function LandingPage() {
           )}
         </section>
       </div>
+
+      {intro && <IntroVideo url={intro.url} poster={intro.poster} />}
 
       <section className="stats reveal" aria-label="Книгата в числа">
         <div>

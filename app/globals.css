@@ -3462,3 +3462,90 @@ section.for-whom {
   border-radius: 12px;
   padding: 10px 12px;
 }
+
+.review figcaption.review-cooked {
+  margin: 12px 14px 14px;
+  font-size: 14px;
+  color: var(--text-dim);
+}
+
+.review-cooked b {
+  color: var(--text);
+}
+
+.review-cooked span {
+  display: block;
+  margin-top: 2px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.review-stars {
+  margin: 12px 14px 0;
+  color: #d4a017;
+  font-size: 16px;
+  letter-spacing: 2px;
+}
+
+.review-stars span {
+  color: var(--line);
+}
+
+.review-stars + figcaption.review-cooked,
+.review-stars + blockquote {
+  margin-top: 4px;
+}
+
+.admin-form select {
+  font: inherit;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+}
+
+/* ---- intro video ---- */
+
+section.intro-video {
+  max-width: 1000px;
+  display: grid;
+  gap: 16px;
+  padding-top: 28px;
+}
+
+.intro-copy h2 {
+  font-size: clamp(26px, 6vw, 36px);
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+
+.intro-copy p {
+  color: var(--text-dim);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.intro-frame {
+  border-radius: 22px;
+  overflow: hidden;
+  background: var(--olive-deep);
+  max-width: 420px;
+  width: 100%;
+  justify-self: center;
+}
+
+.intro-frame video {
+  display: block;
+  width: 100%;
+  max-height: 78vh;
+  background: var(--olive-deep);
+}
+
+@media (min-width: 860px) {
+  section.intro-video {
+    grid-template-columns: 1fr 380px;
+    align-items: center;
+    gap: 40px;
+  }
+}

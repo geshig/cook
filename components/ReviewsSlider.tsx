@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
-type Item = { id?: number; name: string; recipe: string; text: string; photo: string };
+type Item = { id?: number; name: string; recipe: string; text: string; photo: string; rating: number | null };
 
 /** Swipeable slideshow: one card at a time on phones, arrows and dots, gentle autoplay. */
 export function ReviewsSlider({ items }: { items: Item[] }) {
@@ -49,11 +49,26 @@ export function ReviewsSlider({ items }: { items: Item[] }) {
             <div className="review-photo">
               <Image src={t.photo} alt={`${t.recipe || "Ястие"}, сготвено от ${t.name}`} fill sizes="(min-width: 640px) 300px, 80vw" />
             </div>
-            <blockquote>„{t.text}“</blockquote>
-            <figcaption>
-              <b>{t.name}</b>
-              {t.recipe && <> · {t.recipe}</>}
-            </figcaption>
+            {t.rating && (
+              <div className="review-stars" aria-label={`${t.rating} от 5 звезди`}>
+                {"★".repeat(t.rating)}
+                <span>{"★".repeat(5 - t.rating)}</span>
+              </div>
+            )}
+            {t.text ? (
+              <>
+                <blockquote>„{t.text}“</blockquote>
+                <figcaption>
+                  <b>{t.name}</b>
+                  {t.recipe && <> · {t.recipe}</>}
+                </figcaption>
+              </>
+            ) : (
+              <figcaption className="review-cooked">
+                <b>{t.name}</b> сготви
+                {t.recipe && <span>{t.recipe}</span>}
+              </figcaption>
+            )}
           </figure>
         ))}
       </div>

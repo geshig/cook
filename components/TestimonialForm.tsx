@@ -56,8 +56,16 @@ export function TestimonialForm() {
         <input name="recipe" id="t-recipe" placeholder="Бърз миш-маш" />
       </label>
       <label>
-        Какво казва
-        <textarea name="body" id="t-body" required rows={3} placeholder="Направих го за 15 минути и всички си облизаха пръстите." />
+        Какво казва (по желание, само негови думи)
+        <textarea name="body" id="t-body" rows={3} placeholder="Направих го за 15 минути и всички си облизаха пръстите." />
+      </label>
+      <label>
+        Оценка (само ако човекът ти я е дал)
+        <select name="rating" id="t-rating" defaultValue="">
+          <option value="">Без звезди</option>
+          <option value="5">★★★★★ 5 от 5</option>
+          <option value="4">★★★★ 4 от 5</option>
+        </select>
       </label>
       <label>
         Снимка на ястието
