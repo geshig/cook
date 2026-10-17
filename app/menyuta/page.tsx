@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { CheckoutButton } from "@/components/CheckoutButton";
 import Image from "next/image";
 import { getAccess, hasBookAccess } from "@/lib/access";
 import { getPublicRecipes } from "@/lib/publicRecipes";
@@ -82,9 +83,9 @@ export default async function MenusPage() {
         {!owner && (
           <div className="menu-cta">
             <p>Всички рецепти от менютата са в книгата, със снимка, продукти и стъпки.</p>
-            <Link className="btn" href="/#pricing">
+            <CheckoutButton kind="book" className="btn" source="менюта">
               Купи книгата — 47 €
-            </Link>
+            </CheckoutButton>
           </div>
         )}
         <p className="menu-note">

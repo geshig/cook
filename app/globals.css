@@ -2897,7 +2897,7 @@ section.faq {
   color: var(--accent);
 }
 
-.footer-col a.footer-btn {
+.footer-col .footer-btn {
   color: var(--on-accent);
   padding: 11px 20px;
   font-size: 14px;

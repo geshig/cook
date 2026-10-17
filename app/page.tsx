@@ -168,9 +168,9 @@ export default async function LandingPage() {
               иска да яде вкусно и здравословно, не само за фитнес маниаци.
             </p>
             <div className="hero-actions">
-              <a href="#pricing" className="btn btn-cream" id="hero-cta" data-umami-event="Купи: горе">
+              <CheckoutButton kind="book" className="btn btn-cream" id="hero-cta" source="горе">
                 Купи книгата за 47 €
-              </a>
+              </CheckoutButton>
               <Link href="/menyuta" className="btn btn-outline-cream">
                 Виж дневните менюта
               </Link>
@@ -473,9 +473,9 @@ export default async function LandingPage() {
         <div className="final-copy">
           <h2>Сготви първата рецепта още тази вечер</h2>
           <p>100+ рецепти с макросите, менюта за цялата седмица, общността в Skool и 3 месеца нови рецепти отгоре.</p>
-          <a href="#pricing" className="btn btn-cream">
+          <CheckoutButton kind="book" className="btn btn-cream" source="край">
             Купи книгата за 47 €
-          </a>
+          </CheckoutButton>
         </div>
       </div>
 

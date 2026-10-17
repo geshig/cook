@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CheckoutButton } from "@/components/CheckoutButton";
 import { CONTACT_EMAIL, SOCIALS } from "@/lib/site";
 import { SocialIcon } from "./SocialIcon";
 
@@ -48,9 +49,9 @@ export function SiteFooter() {
         <div className="footer-col">
           <h3>Книгата</h3>
           <p className="footer-offer">100+ рецепти за 47 € и 3 месеца нови рецепти безплатно.</p>
-          <Link href="/#pricing" className="btn footer-btn" data-umami-event="Купи: футър">
+          <CheckoutButton kind="book" className="btn footer-btn" source="футър">
             Купи книгата
-          </Link>
+          </CheckoutButton>
           <ul className="footer-pay" aria-label="Начини на плащане">
             {PAY.map((p) => (
               <li key={p}>{p}</li>

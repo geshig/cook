@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { CheckoutButton } from "@/components/CheckoutButton";
 import Image from "next/image";
 import { getAccess, hasBookAccess } from "@/lib/access";
 import {
@@ -168,9 +169,9 @@ export default async function RecipesPage({
               ? `Не виждам платена книга или абонамент за ${access.email}. Купи книгата, за да влезеш в пълния каталог.`
               : "Купи книгата или влез, ако вече си я взел, за да отвориш пълния каталог с рецепти."}
           </p>
-          <Link className="btn" href="/#pricing">
-            Купи книгата — 47€
-          </Link>
+          <CheckoutButton kind="book" className="btn" source="рецепти">
+            Купи книгата — 47 €
+          </CheckoutButton>
           {!access.email && (
             <Link className="btn btn-ghost" href="/login">
               Вече платих, вход

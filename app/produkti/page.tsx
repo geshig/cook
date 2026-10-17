@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { CheckoutButton } from "@/components/CheckoutButton";
 import Image from "next/image";
 import { getProducts, safeLink } from "@/lib/products";
 import { getAccess, hasBookAccess } from "@/lib/access";
@@ -61,9 +62,9 @@ export default async function ProductsPage() {
         {!owner && (
           <div className="menu-cta" style={{ textAlign: "center", marginTop: 36 }}>
             <p>Всички рецепти с тези продукти са в книгата.</p>
-            <Link className="btn" href="/#pricing">
-              Купи книгата — 47€
-            </Link>
+            <CheckoutButton kind="book" className="btn" source="продукти">
+              Купи книгата — 47 €
+            </CheckoutButton>
           </div>
         )}
       </section>
