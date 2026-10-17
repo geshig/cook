@@ -13,6 +13,7 @@ export default async function AdminProducts() {
           Продукти
         </Link>
         <Link href="/admin/video">Видео</Link>
+        <Link href="/admin/podaraci">Подаръци</Link>
       </div>
       <h1 className="display" style={{ fontSize: 34, marginBottom: 6 }}>
         Продукти ({items.length})

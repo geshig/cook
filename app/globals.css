@@ -4402,3 +4402,50 @@ section.calc-section {
     font-size: 16px;
   }
 }
+
+/* ---- Админ → Подаръци ---- */
+.gift-made {
+  margin-top: 18px;
+  padding: 16px;
+  border-radius: 16px;
+  background: var(--tint);
+  display: grid;
+  gap: 8px;
+}
+
+.gift-table {
+  display: grid;
+  gap: 6px;
+}
+
+.gift-made-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 14px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--card);
+  border: 1px solid var(--line-soft);
+  font-size: 14px;
+}
+
+.gift-made-row > span {
+  font-weight: 700;
+  min-width: 200px;
+}
+
+.gift-made-row code {
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.gift-made-row em {
+  margin-left: auto;
+  font-style: normal;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.gift-made-row em.taken { color: var(--accent); }
+.gift-made-row em.free { color: var(--sage); }
