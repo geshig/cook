@@ -49,11 +49,20 @@ export function ReviewsSlider({ items }: { items: Item[] }) {
             <div className="review-photo">
               <Image src={t.photo} alt={`${t.recipe || "Ястие"}, сготвено от ${t.name}`} fill sizes="(min-width: 640px) 300px, 80vw" />
             </div>
-            <blockquote>„{t.text}“</blockquote>
-            <figcaption>
-              <b>{t.name}</b>
-              {t.recipe && <> · {t.recipe}</>}
-            </figcaption>
+            {t.text ? (
+              <>
+                <blockquote>„{t.text}“</blockquote>
+                <figcaption>
+                  <b>{t.name}</b>
+                  {t.recipe && <> · {t.recipe}</>}
+                </figcaption>
+              </>
+            ) : (
+              <figcaption className="review-cooked">
+                <b>{t.name}</b> сготви
+                {t.recipe && <span>{t.recipe}</span>}
+              </figcaption>
+            )}
           </figure>
         ))}
       </div>

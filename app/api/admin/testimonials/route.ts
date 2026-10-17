@@ -13,8 +13,8 @@ export async function POST(request: Request) {
   const recipe = String(form?.get("recipe") ?? "").trim();
   const body = String(form?.get("body") ?? "").trim();
   const photo = form?.get("photo");
-  if (!name || !body || !(photo instanceof File) || photo.size === 0) {
-    return NextResponse.json({ error: "Попълни име, текст и снимка." }, { status: 400 });
+  if (!name || !(photo instanceof File) || photo.size === 0) {
+    return NextResponse.json({ error: "Попълни име и снимка." }, { status: 400 });
   }
   if (photo.size > 4 * 1024 * 1024) {
     return NextResponse.json({ error: "Снимката е твърде голяма." }, { status: 413 });
@@ -28,7 +28,7 @@ export async function POST(request: Request) {
   if (upErr) return NextResponse.json({ error: `Качването не мина: ${upErr.message}` }, { status: 500 });
 
   const photoUrl = admin.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
-  const { error } = await admin.from("testimonials").insert({ name, recipe: recipe || null, body, photo_url: photoUrl });
+  const { error } = await admin.from("testimonials").insert({ name, recipe: recipe || null, body: body || "", photo_url: photoUrl });
   if (error) return NextResponse.json({ error: `Записът не мина: ${error.message}` }, { status: 500 });
   return NextResponse.json({ ok: true });
 }

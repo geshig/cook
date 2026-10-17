@@ -3462,3 +3462,21 @@ section.for-whom {
   border-radius: 12px;
   padding: 10px 12px;
 }
+
+.review figcaption.review-cooked {
+  margin: 12px 14px 14px;
+  font-size: 14px;
+  color: var(--text-dim);
+}
+
+.review-cooked b {
+  color: var(--text);
+}
+
+.review-cooked span {
+  display: block;
+  margin-top: 2px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent);
+}
