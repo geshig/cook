@@ -28,6 +28,30 @@ export default async function ProductsPage() {
       </header>
 
       <section className="products">
+        <ul className="shop-tips" aria-label="Как пазарувам">
+          <li>
+            <b>1</b>
+            <span>
+              <strong>Гледам протеина на 100 g</strong>
+              Колкото повече, толкова по-добре за същите калории.
+            </span>
+          </li>
+          <li>
+            <b>2</b>
+            <span>
+              <strong>Light и обезмаслено</strong>
+              Мляко, сирене и майонеза с по-малко мазнини, вкусът почти не се променя.
+            </span>
+          </li>
+          <li>
+            <b>3</b>
+            <span>
+              <strong>Подсладител вместо захар</strong>
+              В десертите и сосовете, без празни калории.
+            </span>
+          </li>
+        </ul>
+        <h2 className="products-h">По-особените продукти</h2>
         {items.length === 0 ? (
           <p className="products-empty">Скоро ще добавя продуктите тук.</p>
         ) : (

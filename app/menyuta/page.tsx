@@ -47,8 +47,11 @@ function DayCard({ day, recipes }: { day: MenuDay; recipes: MiniRecipe[] }) {
   );
 }
 
-export default async function MenusPage() {
-  const [access, recipes] = await Promise.all([getAccess(), getPublicRecipes()]);
+export default async function MenusPage({ searchParams }: { searchParams: Promise<{ kcal?: string }> }) {
+  const [access, recipes, sp] = await Promise.all([getAccess(), getPublicRecipes(), searchParams]);
+  // From the calorie calculator: /menyuta?kcal=1650#gen
+  const asked = Number(sp.kcal);
+  const initial = Number.isFinite(asked) && asked >= 1100 && asked <= 3500 ? Math.round(asked / 50) * 50 : 1400;
   const owner = hasBookAccess(access);
 
   return (
@@ -62,8 +65,11 @@ export default async function MenusPage() {
         </p>
       </header>
 
-      <section className="menu-gen-section">
-        <MenuGenerator recipes={recipes} />
+      <section className="menu-gen-section" id="gen">
+        <MenuGenerator key={initial} recipes={recipes} initial={initial} />
+        <Link href="/kalkulator" className="gen-more">
+          Не знаеш колко калории ти трябват? Калкулатор →
+        </Link>
       </section>
 
       {MENU_LEVELS.map((l) => (
