@@ -60,6 +60,14 @@ export function TestimonialForm() {
         <textarea name="body" id="t-body" rows={3} placeholder="Направих го за 15 минути и всички си облизаха пръстите." />
       </label>
       <label>
+        Оценка (само ако човекът ти я е дал)
+        <select name="rating" id="t-rating" defaultValue="">
+          <option value="">Без звезди</option>
+          <option value="5">★★★★★ 5 от 5</option>
+          <option value="4">★★★★ 4 от 5</option>
+        </select>
+      </label>
+      <label>
         Снимка на ястието
         <input name="photo" id="t-photo" type="file" accept="image/*" required />
       </label>

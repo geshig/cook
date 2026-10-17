@@ -8,7 +8,6 @@ export async function Testimonials() {
   return (
     <section className="reviews">
       <h2>Сготвено от вас</h2>
-      <p className="reviews-sub">Приятели и първи читатели, с техните снимки.</p>
       <ReviewsSlider items={items} />
     </section>
   );
