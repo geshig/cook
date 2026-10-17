@@ -73,6 +73,8 @@ const nextConfig: NextConfig = {
       go("/tt", "/", "tiktok", "bio"),
       go("/ttv", "/", "tiktok", "video"),
       go("/skool", "/", "skool", "community"),
+      go("/fb", "/", "facebook", "bio"),
+      go("/fbp", "/", "facebook", "post"),
       go("/menu", "/menyuta", "instagram", "post", "menyuta"),
       go("/dvama", "/#pricing", "instagram", "post", "za-dvama"),
     ];
