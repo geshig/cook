@@ -12,8 +12,24 @@ export type Testimonial = {
   rating: number | null;
 };
 
-/** Отзиви, добавени в /admin/otzivi. Празен списък, ако таблицата я няма. */
+/** Първите отзиви от приятели: снимките са в public/otzivi/. */
+const BUILT_IN: Testimonial[] = [
+  ["Александра", "Бърз миш-маш с яйца и извара", "aleksandra-mish-mash"],
+  ["Велизара", "Татзики салата с пилешко", "velizara-tatziki-salata"],
+  ["Георги", "Салата с нахут, едамаме и моцарела", "georgi-salata-nahut-edamame"],
+  ["Стоян", "Паста с пилешко за кутии за работа", "stoyan-pasta-pile-kutii"],
+  ["Симона", "Протеинови брауни", "simona-proteinovi-brauni"],
+  ["Никол", "Паста със скариди", "nikol-pasta-skaridi"],
+  ["Сияна", "Запеканка за кутии за работа", "siyana-zapekanka-kutii"],
+].map(([name, recipe, file]) => ({ name, recipe, text: "", photo: `/otzivi/${file}.jpg`, rating: 5 }));
+
+/** Отзивите от админа (най-новите първи), след тях вградените. */
 export async function getTestimonials(): Promise<Testimonial[]> {
+  const fromAdmin = await getAdminTestimonials();
+  return [...fromAdmin, ...BUILT_IN];
+}
+
+async function getAdminTestimonials(): Promise<Testimonial[]> {
   try {
     const { data, error } = await createAdminClient()
       .from("testimonials")
