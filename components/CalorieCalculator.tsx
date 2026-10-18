@@ -160,7 +160,7 @@ export function CalorieCalculator() {
               </p>
             </div>
 
-            <Link className="btn btn-cream calc-cta" href={`/menyuta?kcal=${r.target}#gen`}>
+            <Link className="btn btn-cream calc-cta" href={`/menyuta?kcal=${r.target}&protein=${r.proteinMin}#gen`}>
               Направи ми меню за {r.target} kcal
             </Link>
 

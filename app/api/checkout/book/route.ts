@@ -42,6 +42,8 @@ export async function POST(request: Request) {
       success_url: `${siteUrl}/recipes?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${siteUrl}/?checkout=cancelled`,
       locale: "bg",
+      // Always euro: no "pay in UAH/BGN…" currency switch (Stripe Adaptive Pricing).
+      adaptive_pricing: { enabled: false },
       // Карти (Visa, Mastercard, Revolut и т.н.) и Revolut Pay; Apple Pay и Google Pay
       // идват с картите, ако са включени в Stripe → Settings → Payment methods.
       payment_method_types: ["card", "revolut_pay"],

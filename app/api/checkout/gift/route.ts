@@ -34,6 +34,8 @@ export async function POST() {
       success_url: `${siteUrl}/account?gift=success`,
       cancel_url: `${siteUrl}/account`,
       locale: "bg",
+      // Always euro: no "pay in UAH/BGN…" currency switch (Stripe Adaptive Pricing).
+      adaptive_pricing: { enabled: false },
       payment_method_types: ["card", "revolut_pay"],
       consent_collection: { terms_of_service: "required" },
       custom_text: {
