@@ -1,9 +1,11 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import type { MenuRow } from "@/lib/menuMath";
 
 /** The list of meals in a day (shared by the sample menus and the generator). */
-export function MenuRows({ rows }: { rows: MenuRow[] }) {
+export function MenuRows({ rows, onSwap }: { rows: MenuRow[]; onSwap?: (index: number) => void }) {
   return (
     <ul className="menu-rows">
       {rows.map((r, i) => {
@@ -23,13 +25,18 @@ export function MenuRows({ rows }: { rows: MenuRow[] }) {
           </>
         );
         return (
-          <li key={i}>
+          <li key={i} className={onSwap ? "has-swap" : undefined}>
             {r.href ? (
               <Link href={r.href} className="menu-row">
                 {body}
               </Link>
             ) : (
               <div className="menu-row">{body}</div>
+            )}
+            {onSwap && (
+              <button type="button" className="menu-swap" onClick={() => onSwap(i)} aria-label={`Смени ${r.label}`} title="Смени с друго">
+                🔄
+              </button>
             )}
           </li>
         );

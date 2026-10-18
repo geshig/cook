@@ -20,6 +20,7 @@ const QUICK: Quick[] = [
   { id: "breakfast", label: "Закуска", test: (r) => r.tags.includes("закуска") },
   { id: "dessert", label: "Десерт", test: (r) => r.tags.includes("десерт") },
   { id: "snack", label: "Снакс", test: (r) => r.tags.some((t) => t.startsWith("снак")) },
+  { id: "slow", label: "Бавно готвене", test: (r) => r.tags.includes("бавно готвене") },
   { id: "fast", label: "До 30 мин", test: (r) => r.timeMinutes != null && r.timeMinutes <= 30 },
   { id: "protein", label: "40+ g протеин", test: (r) => (r.proteinG ?? 0) >= 40 },
   { id: "light", label: "До 400 kcal", test: (r) => r.kcal != null && r.kcal <= 400 && r.tags.length > 0 },
@@ -192,7 +193,7 @@ export function RecipeApp({
           <input
             type="search"
             id="recipe-search"
-            placeholder="Търси: пиле, сьомга, котидж…"
+            placeholder="Търси или напиши какво имаш: пиле ориз броколи…"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             aria-label="Търси рецепта по име или продукт"
@@ -200,7 +201,8 @@ export function RecipeApp({
           />
         </div>
         <div className="tagbar" role="group" aria-label="Бързи филтри">
-          {QUICK.map((x) => (
+          {/* Hide a chip until at least one recipe has it (e.g. slow cooking). */}
+          {QUICK.filter((x) => x.id === "all" || x.id === "fav" || recipes.some((r) => x.test(r, fav))).map((x) => (
             <button
               type="button"
               key={x.id}

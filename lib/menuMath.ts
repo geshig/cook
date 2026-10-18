@@ -143,3 +143,43 @@ export function generateDay(
   }
   return [...head, ...mid, ...tail];
 }
+
+
+/**
+ * 🔄 next to one dish: replace just that line with something similar that
+ * still fits under the day's target. Returns the same rows if nothing fits.
+ */
+export function swapRow(recipes: MiniRecipe[], rows: MenuRow[], index: number, target: number, rnd: () => number = Math.random): MenuRow[] {
+  const row = rows[index];
+  if (!row) return rows;
+  const others = rows.reduce((a, r, i) => (i === index ? a : a + r.kcal), 0);
+  const budget = target - others;
+  const pick = <T,>(a: T[]) => a[Math.floor(rnd() * a.length)];
+  const used = new Set(rows.map((r) => r.label));
+  let next: MenuRow | null = null;
+
+  if (row.href) {
+    const ok = recipes.filter((r) => r.kcal != null && r.kcal > 0 && r.proteinG != null && !has(r, "сос", "мариновка"));
+    const pool =
+      row.meal === "Закуска"
+        ? ok.filter((r) => has(r, "закуска") && r.kcal! >= 180)
+        : row.meal === "Обяд" || row.meal === "Вечеря"
+          ? ok.filter((r) => !has(r, "закуска", "десерт", "снакс", "гарнитура") && r.kcal! >= 250)
+          : ok.filter((r) => has(r, "десерт", "снакс", "гарнитура") && !has(r, "закуска") && r.kcal! <= 320);
+    const qty = row.note?.startsWith("1.5") ? 1.5 : 1;
+    const fits = pool.filter(
+      (r) => !used.has(r.title) && r.kcal! * qty <= budget && r.kcal! * qty >= row.kcal * 0.6
+    );
+    if (fits.length) next = recipeRow(row.meal, pick(fits), qty);
+  } else {
+    const fits = EXTRAS.filter((x) => !used.has(x.name) && x.kcal <= budget);
+    if (fits.length) {
+      const x = pick(fits);
+      next = extraRow(row.meal, x.name, x.kcal, x.protein);
+    }
+  }
+  if (!next) return rows;
+  const out = rows.slice();
+  out[index] = next;
+  return out;
+}
