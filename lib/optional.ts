@@ -24,7 +24,7 @@ export function ingredientNote(text: string): Note | null {
   for (const [re, note] of RULES) {
     if (!re.test(name)) continue;
     // "сол, черен пипер, люти люспи": only part of the line is optional.
-    if (note.tag === "optional" && (/,/.test(name) || /^(щипка )?сол\b/i.test(name) || /магданоз/i.test(name))) return null;
+    if (note.tag === "optional" && (/,/.test(name) || /^(щипка )?сол(\s|$)/i.test(name) || /магданоз/i.test(name))) return null;
     return note;
   }
   return null;
