@@ -192,3 +192,56 @@ ${links.map((l) => `<p style="margin:0 0 10px"><a href="${esc(l)}" style="displa
 </div></body></html>`;
   return send({ to: opts.email, subject: one ? "Подаръкът ти е готов 🎁" : "Подаръците ти са готови 🎁", html, text, idempotencyKey: `gift-${opts.sessionId}` });
 }
+
+const wrap = (body: string) =>
+  `<div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;color:#2b2a26;font-size:16px;line-height:1.6">${body}<p style="margin-top:26px;font-size:13px;color:#8a8a80">Не искаш такива имейли? Отговори ми с „стоп“ и спирам.</p></div>`;
+
+/** 7 days after the purchase: ask what they cooked (real testimonials). */
+export async function sendReviewRequest(email: string): Promise<boolean> {
+  const site = getSiteUrl();
+  const text = [
+    "Здравей! Мина седмица, откакто взе „Кухнята на Геша“.",
+    "Какво сготви досега? Ще се радвам да ми пратиш снимка и няколко думи: какво ти хареса, какво се получи.",
+    "Просто отговори на този имейл. Ако ми разрешиш, ще сложа снимката ти сред „Сготвено от вас“ на сайта.",
+    "А ако нещо не ти се е получило, пак ми пиши, ще ти помогна.",
+    `Рецептите: ${site}/recipes`,
+    "Геша",
+  ].join("\n\n");
+  const html = wrap(
+    `<p>Здравей! Мина седмица, откакто взе „Кухнята на Геша“.</p>
+<p><b>Какво сготви досега?</b> Ще се радвам да ми пратиш снимка и няколко думи: какво ти хареса, какво се получи.</p>
+<p>Просто отговори на този имейл. Ако ми разрешиш, ще сложа снимката ти сред „Сготвено от вас“ на сайта.</p>
+<p>А ако нещо не ти се е получило, пак ми пиши, ще ти помогна.</p>
+<p><a href="${site}/recipes" style="display:inline-block;padding:12px 22px;background:#6b7f3a;color:#fff;border-radius:100px;text-decoration:none;font-weight:bold">Към рецептите</a></p>
+<p>Геша</p>`
+  );
+  return send({ to: email, subject: "Какво сготви тази седмица? 📸", html, text, idempotencyKey: `review-${email}` });
+}
+
+/** Monday: the recipes added last week, to people with an active bonus or subscription. */
+export async function sendNewRecipes(
+  email: string,
+  recipes: { id: number; title: string; kcal: number | null; proteinG: number | null }[],
+  weekKey: string
+): Promise<boolean> {
+  const site = getSiteUrl();
+  const line = (r: (typeof recipes)[number]) =>
+    `${r.title}${r.kcal != null ? ` · ${r.kcal} kcal` : ""}${r.proteinG != null ? ` · ${r.proteinG} g протеин` : ""}`;
+  const n = recipes.length;
+  const subject = n === 1 ? `Нова рецепта тази седмица: ${recipes[0].title}` : `${n} нови рецепти тази седмица 🍽️`;
+  const text = [
+    "Здравей! Ето какво добавих тази седмица:",
+    recipes.map((r) => `• ${line(r)} — ${site}/recipes?r=${r.id}`).join("\n"),
+    "Приятно готвене!",
+    "Геша",
+  ].join("\n\n");
+  const html = wrap(
+    `<p>Здравей! Ето какво добавих тази седмица:</p>
+<ul style="padding-left:20px">${recipes
+      .map((r) => `<li style="margin:6px 0"><a href="${site}/recipes?r=${r.id}" style="color:#6b7f3a;font-weight:bold">${esc(r.title)}</a>${r.kcal != null ? ` · ${r.kcal} kcal` : ""}${r.proteinG != null ? ` · ${r.proteinG} g протеин` : ""}</li>`)
+      .join("")}</ul>
+<p><a href="${site}/recipes" style="display:inline-block;padding:12px 22px;background:#6b7f3a;color:#fff;border-radius:100px;text-decoration:none;font-weight:bold">Отвори рецептите</a></p>
+<p>Приятно готвене!<br>Геша</p>`
+  );
+  return send({ to: email, subject, html, text, idempotencyKey: `new-${weekKey}-${email}` });
+}
