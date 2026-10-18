@@ -13,7 +13,7 @@ export const TRIAL_DAYS = 90;
 export async function startFreeTrial(
   stripe: Stripe,
   admin: SupabaseClient,
-  opts: { email: string; customerId: string; idempotencyKey: string }
+  opts: { email: string; customerId: string; idempotencyKey: string; paymentMethodId?: string | null }
 ): Promise<{ ok: boolean; trialEnd: string | null; error?: string }> {
   const priceId = process.env.STRIPE_PRICE_SUBSCRIPTION?.trim();
   if (!priceId) return { ok: false, trialEnd: null, error: "STRIPE_PRICE_SUBSCRIPTION липсва" };
@@ -25,6 +25,10 @@ export async function startFreeTrial(
       customer: opts.customerId,
       items: [{ price: priceId }],
       trial_period_days: days,
+      // With the card from the book purchase it renews at 5,99 €/month after
+      // the bonus (disclosed at checkout, reminder email before); without a
+      // card (gifts, Revolut Pay) it simply ends.
+      ...(opts.paymentMethodId ? { default_payment_method: opts.paymentMethodId } : {}),
       trial_settings: { end_behavior: { missing_payment_method: "cancel" } },
       payment_settings: { save_default_payment_method: "on_subscription" },
       metadata: { kind: "book_bonus" },
