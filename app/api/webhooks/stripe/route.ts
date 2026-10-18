@@ -111,13 +111,32 @@ export async function POST(request: Request) {
           .maybeSingle();
         const fresh = !row?.subscription_status || row.subscription_status === "inactive";
         let trialEnd: string | null = null;
+        let autoRenew = false;
         if (fresh && customerId) {
           try {
+            // The card saved at checkout (setup_future_usage) renews the
+            // bonus after it ends; Revolut Pay has none, so it just ends.
+            let paymentMethodId: string | null = null;
+            try {
+              const piId = typeof session.payment_intent === "string" ? session.payment_intent : session.payment_intent?.id;
+              if (piId) {
+                const pi = await stripe.paymentIntents.retrieve(piId);
+                const pm = typeof pi.payment_method === "string" ? pi.payment_method : pi.payment_method?.id;
+                if (pm && pi.setup_future_usage === "off_session") {
+                  await stripe.customers.update(customerId, { invoice_settings: { default_payment_method: pm } });
+                  paymentMethodId = pm;
+                }
+              }
+            } catch (e) {
+              console.error("saved card lookup failed:", e instanceof Error ? e.message : e);
+            }
             const r = await startFreeTrial(stripe, admin, {
               email,
               customerId,
               idempotencyKey: `book-bonus-${session.id}`,
+              paymentMethodId,
             });
+            autoRenew = r.ok && !!paymentMethodId;
             trialEnd = r.trialEnd;
             if (!r.ok) console.error("free trial not started:", r.error);
           } catch (e) {
@@ -146,6 +165,7 @@ export async function POST(request: Request) {
             paidAt: session.created,
             amount: `${total.toFixed(2).replace(".", ",")} €`,
             trialEnd,
+            autoRenew,
             sessionId: session.id,
             giftCodes,
           });
