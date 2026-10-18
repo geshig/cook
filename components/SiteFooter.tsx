@@ -49,7 +49,7 @@ export function SiteFooter() {
 
         <div className="footer-col">
           <h3>Книгата</h3>
-          <p className="footer-offer">100+ рецепти за 47 € и 3 месеца нови рецепти безплатно.</p>
+          <p className="footer-offer">100+ рецепти за 47 € и бонус с нови рецепти безплатно.</p>
           <CheckoutButton kind="book" className="btn footer-btn" source="футър">
             Купи книгата
           </CheckoutButton>

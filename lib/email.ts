@@ -175,7 +175,7 @@ export async function sendGiftEmail(opts: { email: string; codes: string[]; sess
     "",
     ...links,
     "",
-    "Който отвори линка, влиза със своя имейл и получава всичките 100+ рецепти и 3 месеца нови рецепти безплатно, точно като теб.",
+    "Който отвори линка, влиза със своя имейл и получава всичките 100+ рецепти и същия бонус с нови рецепти, точно като теб.",
     `Линковете ги виждаш и в Профил: ${site}/account`,
     "",
     "Геша",
@@ -186,7 +186,7 @@ export async function sendGiftEmail(opts: { email: string; codes: string[]; sess
 <p style="margin:0 0 14px;line-height:1.6">Здравей,</p>
 <p style="margin:0 0 14px;line-height:1.6">${one ? "Благодаря ти! Ето линка за подаръка. Прати го на човека, на когото подаряваш книгата:" : "Благодаря ти! Ето линковете за подаръците. Всеки е за един човек:"}</p>
 ${links.map((l) => `<p style="margin:0 0 10px"><a href="${esc(l)}" style="display:inline-block;background:#6b7f3a;color:#fff;text-decoration:none;font-weight:700;padding:11px 18px;border-radius:100px">🎁 ${esc(l.replace(/^https?:\/\//, ""))}</a></p>`).join("")}
-<p style="margin:16px 0 14px;line-height:1.6">Който отвори линка, влиза със своя имейл и получава всичките 100+ рецепти и 3 месеца нови рецепти безплатно, точно като теб.</p>
+<p style="margin:16px 0 14px;line-height:1.6">Който отвори линка, влиза със своя имейл и получава всичките 100+ рецепти и същия бонус с нови рецепти, точно като теб.</p>
 <p style="margin:0 0 14px;line-height:1.6">Линковете ги виждаш и в <a href="${site}/account" style="color:#6b7f3a">Профил</a>.</p>
 <p style="margin:0 0 14px;line-height:1.6">Геша</p>
 </div></body></html>`;

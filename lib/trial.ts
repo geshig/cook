@@ -1,6 +1,7 @@
 import "server-only";
 import type Stripe from "stripe";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { bonusDaysNow } from "./launch";
 
 export const TRIAL_DAYS = 90;
 
@@ -17,11 +18,13 @@ export async function startFreeTrial(
   const priceId = process.env.STRIPE_PRICE_SUBSCRIPTION?.trim();
   if (!priceId) return { ok: false, trialEnd: null, error: "STRIPE_PRICE_SUBSCRIPTION липсва" };
 
+  // First 100 paying buyers: 90 days; after that 30 (see lib/launch.ts).
+  const days = await bonusDaysNow(admin);
   const sub = await stripe.subscriptions.create(
     {
       customer: opts.customerId,
       items: [{ price: priceId }],
-      trial_period_days: TRIAL_DAYS,
+      trial_period_days: days,
       trial_settings: { end_behavior: { missing_payment_method: "cancel" } },
       payment_settings: { save_default_payment_method: "on_subscription" },
       metadata: { kind: "book_bonus" },

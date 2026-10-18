@@ -11,7 +11,7 @@ export function BonusBanner({ trialEndsAt }: { trialEndsAt: string | null }) {
     return (
       <div className="bonus">
         <div className="bonus-text">
-          <b>🎁 Твоите 3 месеца нови рецепти са активни до {bgDate(trialEndsAt)}</b>
+          <b>🎁 Твоите безплатни нови рецепти са активни до {bgDate(trialEndsAt)}</b>
           <span>
             Всяка седмица добавям 2–4 нови рецепти и ги виждаш веднага. Безплатно е,
             без карта. Ако искаш да продължиш след {bgDate(trialEndsAt)}, добави карта и
@@ -25,10 +25,10 @@ export function BonusBanner({ trialEndsAt }: { trialEndsAt: string | null }) {
   return (
     <div className="bonus">
       <div className="bonus-text">
-        <b>🎁 Твоят бонус: 3 месеца новите рецепти безплатно</b>
+        <b>🎁 Твоят бонус: новите рецепти безплатно</b>
         <span>
-          Всяка седмица 2–4 нови рецепти. Активира се с един клик, без карта. След 3-те
-          месеца продължаваш за 5,99 € на месец само ако добавиш карта.
+          Всяка седмица 2–4 нови рецепти. Активира се с един клик, без карта. След бонуса
+          продължаваш за 5,99 € на месец само ако добавиш карта.
         </span>
       </div>
       <ActivateTrialButton>Активирай бонуса</ActivateTrialButton>

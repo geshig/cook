@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import type Stripe from "stripe";
 import { startFreeTrial } from "@/lib/trial";
 import { sendGiftEmail, sendPurchaseEmail } from "@/lib/email";
@@ -98,6 +99,8 @@ export async function POST(request: Request) {
           .eq("email", email)
           .is("book_purchased_at", null);
         if (tErr) console.error("book_purchased_at update failed:", tErr.message);
+        // The "first 100" counter on the landing page.
+        revalidateTag("buyers", "max");
 
         // The book's bonus: 3 months of new recipes, started automatically and
         // without a card. Only for people who never had a subscription.

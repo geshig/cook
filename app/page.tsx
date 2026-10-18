@@ -9,6 +9,7 @@ import { getPublicRecipes, type PublicRecipe } from "@/lib/publicRecipes";
 import { MenuGenerator } from "@/components/MenuGenerator";
 import { IntroVideo } from "@/components/IntroVideo";
 import { getIntroVideo } from "@/lib/settings";
+import { getLaunchOffer, FIRST_BUYERS } from "@/lib/launch";
 import { CheckoutButton } from "@/components/CheckoutButton";
 import { SiteHeader } from "@/components/SiteHeader";
 import { COMMUNITY, CONTACT_EMAIL, SOCIALS, getSiteUrl } from "@/lib/site";
@@ -47,7 +48,7 @@ const FEATURES: { icon: string; title: string; text: string }[] = [
   { icon: "M12 8v4l3 2M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z", title: "Режим за готвене", text: "Екранът не заспива, таймерите са в самите стъпки." },
   { icon: "M6 6h15l-1.5 9h-12zM6 6 5 3H2M9 20a1 1 0 1 0 0 .01M18 20a1 1 0 1 0 0 .01", title: "Списък за пазаруване", text: "Продуктите от рецептата влизат в списъка с едно натискане." },
   { icon: "M4 5h16v15H4zM4 10h16M9 3v4M15 3v4", title: "Дневни менюта", text: "Меню по твоите калории и храна в кутии за работа (meal prep)." },
-  { icon: "M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z", title: "Нови рецепти всяка седмица", text: "По 2–4 седмично. Първите 3 месеца са подарък с книгата." },
+  { icon: "M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z", title: "Нови рецепти всяка седмица", text: "По 2–4 седмично. Първите месеци са подарък с книгата." },
   { icon: "M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2M10 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM21 20v-2a4 4 0 0 0-3-3.9M16 2.1a4 4 0 0 1 0 7.8", title: "Общност в Skool", text: "Споделяш, питаш и винаги ти отговарям лично." },
   { icon: "M7 3h10a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM9 7h6M9 12h.01M12 12h.01M15 12h.01M9 16h.01M12 16h.01M15 16h.01", title: "Калкулатор за калории", text: "Въвеждаш ръст, тегло и цел и виждаш колко калории ти трябват и за колко време стигаш целта." },
   { icon: "M3 6h13v12H3zM16 10l5-3v10l-5-3", title: "Видеа от мен", text: "За хранене, здраве и уелнес, и как да стане навик." },
@@ -63,14 +64,20 @@ function pickPreview(withPhoto: PublicRecipe[]) {
 export default async function LandingPage() {
   // Photos are decorative — if Supabase is briefly unreachable, the funnel
   // (checkout) must still render and take payments.
-  const [access, all, intro] = await Promise.all([
+  const [access, all, intro, offer] = await Promise.all([
     getAccess(),
     getPublicRecipes().catch((err) => {
       console.error("Failed to load recipe preview:", err);
       return [] as PublicRecipe[];
     }),
     getIntroVideo(),
+    getLaunchOffer(),
   ]);
+  // Real counter: first 100 paying buyers get 3 months, then 1 month.
+  const first = offer.left > 0;
+  const bonusLine = first
+    ? `3 месеца нови рецепти безплатно за първите ${FIRST_BUYERS} купувачи`
+    : "1 месец нови рецепти безплатно";
   const withPhoto = all.filter((r) => r.photoUrl && !NOT_ON_LANDING.test(r.title));
   const preview = pickPreview(withPhoto);
   const previewIds = new Set(preview.map((r) => r.id));
@@ -185,13 +192,25 @@ export default async function LandingPage() {
               </Link>
             </div>
             <PayBadges dark />
-            <p className="hero-bonus">
+            <div className="hero-bonus">
               <span aria-hidden="true">🎁</span>
               <span>
-                <b>Бонус: 3 месеца нови рецепти безплатно</b>
-                По 2–4 нови рецепти всяка седмица.
+                {first ? (
+                  <>
+                    <b>Бонус за първите {FIRST_BUYERS} купувачи: 3 месеца нови рецепти безплатно</b>
+                    Остават <strong>{offer.left} от {FIRST_BUYERS}</strong> места · по 2–4 нови рецепти всяка седмица.
+                    <i className="bonus-bar" aria-hidden="true">
+                      <i style={{ width: `${((FIRST_BUYERS - offer.left) / FIRST_BUYERS) * 100}%` }} />
+                    </i>
+                  </>
+                ) : (
+                  <>
+                    <b>Бонус: 1 месец нови рецепти безплатно</b>
+                    По 2–4 нови рецепти всяка седмица.
+                  </>
+                )}
               </span>
-            </p>
+            </div>
           </div>
         </section>
       </div>
@@ -217,9 +236,9 @@ export default async function LandingPage() {
         </div>
         <div>
           <b>
-            <CountUp to={3} suffix=" месеца" />
+            <CountUp to={first ? 3 : 1} suffix={first ? " месеца" : " месец"} />
           </b>
-          <span>нови рецепти подарък</span>
+          <span>{first ? `нови рецепти подарък за първите ${FIRST_BUYERS}` : "нови рецепти подарък"}</span>
         </div>
       </section>
 
@@ -339,8 +358,8 @@ export default async function LandingPage() {
             <li>Всички рецепти в книгата остават твои завинаги</li>
             <li>Достъп до затворената общност в Skool и видеата ми за здраве и уелнес</li>
             <li>
-              <b>Бонус:</b> 3 месеца новите рецепти безплатно, 2–4 нови всяка
-              седмица
+              <b>Бонус:</b> {bonusLine}, по 2–4 нови всяка седмица
+              {first && <> (остават {offer.left})</>}
             </li>
           </ul>
           <CheckoutButton kind="book" className="btn" source="цена">
@@ -367,7 +386,7 @@ export default async function LandingPage() {
         </div>
         {access.purchasedBook && !access.hadSubscription && (
           <div className="upsell-note">
-            Имаш книгата? Бонусът ти чака: 3 месеца новите рецепти безплатно.{" "}
+            Имаш книгата? Бонусът ти чака: новите рецепти безплатно.{" "}
             <CheckoutButton kind="subscription" className="upsell-link">
               Активирай бонуса
             </CheckoutButton>
@@ -449,8 +468,8 @@ export default async function LandingPage() {
             a: "Да, на всяко устройство. Влизаш с имейла си и рецептите са там. На телефона можеш да добавиш сайта на началния екран и се отваря като приложение.",
           },
           {
-            q: "Какво е бонусът от 3 месеца?",
-            a: "Всяка седмица добавям 2–4 нови рецепти. С покупката на книгата получаваш автоматично 3 месеца безплатен достъп до тях, без карта. След това продължаваш само ако искаш. Книгата си остава твоя завинаги.",
+            q: "Какъв е бонусът с новите рецепти?",
+            a: `Всяка седмица добавям 2–4 нови рецепти. Първите ${FIRST_BUYERS} купувачи получават автоматично 3 месеца безплатен достъп до тях, а след това бонусът е 1 месец. Без карта. След това продължаваш само ако искаш. Книгата си остава твоя завинаги.`,
           },
           {
             q: "Какво е калкулаторът за калории?",
@@ -504,14 +523,14 @@ export default async function LandingPage() {
         </div>
         <div className="final-copy">
           <h2>Сготви първата рецепта още тази вечер</h2>
-          <p>100+ рецепти с макросите, менюта за цялата седмица, калкулатор за калории, общността в Skool и 3 месеца нови рецепти отгоре.</p>
+          <p>100+ рецепти с макросите, менюта за цялата седмица, калкулатор за калории, общността в Skool и {first ? "3 месеца" : "1 месец"} нови рецепти отгоре.</p>
           <CheckoutButton kind="book" className="btn btn-cream" source="край">
             Купи книгата за 47 €
           </CheckoutButton>
         </div>
       </div>
 
-      <StickyBuy />
+      <StickyBuy note={first ? `+ 3 месеца нови рецепти · остават ${offer.left} от ${FIRST_BUYERS}` : "+ 1 месец нови рецепти безплатно"} />
     </>
   );
 }
