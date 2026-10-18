@@ -138,12 +138,18 @@ export function ShoppingList() {
       {!merged && list.map((e) => (
         <div key={e.recipeId} className="shop-recipe">
           <div className="shop-head">
-            <Link href={`/recipes?r=${e.recipeId}`} className="shop-title">
-              {e.title}
-            </Link>
-            <span className="shop-portions">
-              {e.portions} {e.portions === 1 ? "порция" : "порции"}
-            </span>
+            {e.recipeId > 0 ? (
+              <Link href={`/recipes?r=${e.recipeId}`} className="shop-title">
+                {e.title}
+              </Link>
+            ) : (
+              <span className="shop-title">{e.title}</span>
+            )}
+            {e.recipeId > 0 && (
+              <span className="shop-portions">
+                {e.portions} {e.portions === 1 ? "порция" : "порции"}
+              </span>
+            )}
             <button
               type="button"
               className="link-btn"

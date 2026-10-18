@@ -438,7 +438,7 @@ export default async function LandingPage() {
             обяд, вечеря и нещо малко, все от рецептите в книгата.
           </p>
         </div>
-        {all.length > 0 && <MenuGenerator recipes={all} />}
+        {all.length > 0 && <MenuGenerator recipes={all} canShop={access.purchasedBook || access.subscriptionActive} />}
         <Link href="/menyuta" className="gen-more">
           Още готови дни за 1500, 2000 и 2500 kcal
         </Link>

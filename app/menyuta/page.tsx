@@ -68,7 +68,7 @@ export default async function MenusPage({ searchParams }: { searchParams: Promis
       </header>
 
       <section className="menu-gen-section" id="gen">
-        <MenuGenerator key={`${initial}-${initialProtein}`} recipes={recipes} initial={initial} initialProtein={initialProtein} />
+        <MenuGenerator key={`${initial}-${initialProtein}`} recipes={recipes} initial={initial} initialProtein={initialProtein} canShop={owner} />
         <Link href="/kalkulator" className="gen-more">
           Не знаеш колко калории ти трябват? Калкулатор →
         </Link>

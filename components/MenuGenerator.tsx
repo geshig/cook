@@ -2,7 +2,11 @@
 
 import { useMemo, useState } from "react";
 import { generateDay, swapRow, totals, type MenuRow, type MiniRecipe } from "@/lib/menuMath";
+import Link from "next/link";
 import { MenuRows } from "./MenuRows";
+import { parseIngredients } from "@/lib/recipeText";
+import { scaleLine } from "@/lib/scale";
+import { addToShopping } from "@/lib/shopping";
 import { track } from "@/lib/track";
 
 const PRESETS = [1200, 1400, 1600, 1800, 2000, 2500];
@@ -24,11 +28,17 @@ export function MenuGenerator({
   recipes,
   initial = 1400,
   initialProtein = null,
+  canShop = false,
 }: {
   recipes: MiniRecipe[];
   initial?: number;
   initialProtein?: number | null;
+  /** Book owners: „Моята седмица“ can go straight to the shopping list. */
+  canShop?: boolean;
 }) {
+  const [mode, setMode] = useState<"day" | "week">("day");
+  const [shopMsg, setShopMsg] = useState<string | null>(null);
+  const [shopping, setShopping] = useState(false);
   const [target, setTarget] = useState(initial);
   const [draft, setDraft] = useState(String(initial));
   const [protein, setProtein] = useState<number | null>(initialProtein);
@@ -44,6 +54,63 @@ export function MenuGenerator({
   const key = `${target}-${protein}-${meals}-${round}`;
   const [edit, setEdit] = useState<{ key: string; rows: MenuRow[] } | null>(null);
   const rows = edit?.key === key ? edit.rows : base;
+  const week = useMemo(
+    () =>
+      mode === "week"
+        ? Array.from({ length: 7 }, (_, d) =>
+            generateDay(recipes, target, seeded(target * 7919 + (protein ?? 0) * 31 + meals * 7 + round * 977 + d * 101), protein, meals)
+          )
+        : [],
+    [mode, recipes, target, protein, meals, round]
+  );
+
+  async function shopWeek() {
+    setShopping(true);
+    setShopMsg(null);
+    const portions = new Map<number, { title: string; n: number }>();
+    const extras = new Map<string, number>();
+    for (const day of week)
+      for (const r of day) {
+        const id = Number(r.href?.match(/r=(\d+)/)?.[1]);
+        const n = r.note?.startsWith("1.5") ? 1.5 : 1;
+        if (id) portions.set(id, { title: r.label, n: (portions.get(id)?.n ?? 0) + n });
+        else extras.set(r.label, (extras.get(r.label) ?? 0) + 1);
+      }
+    try {
+      const res = await fetch(`/api/menu-ingredients?ids=${[...portions.keys()].join(",")}`);
+      const data = (await res.json()) as {
+        recipes?: { id: number; title: string; servings: number | null; ingredients: string | null }[];
+        error?: string;
+      };
+      if (!res.ok || !data.recipes) throw new Error(data.error ?? "");
+      for (const rec of data.recipes) {
+        const n = portions.get(rec.id)?.n ?? 1;
+        const factor = rec.servings ? n / rec.servings : n;
+        addToShopping({
+          recipeId: rec.id,
+          title: rec.title,
+          portions: n,
+          lines: parseIngredients(rec.ingredients).map((l) => {
+            const x = scaleLine(l, factor);
+            return x.kind === "header" ? { amount: "", text: x.text, group: true } : { amount: x.amount, text: x.text };
+          }),
+        });
+      }
+      if (extras.size)
+        addToShopping({
+          recipeId: -7,
+          title: "Междинни храни за седмицата",
+          portions: 1,
+          lines: [...extras].map(([name, k]) => ({ amount: k > 1 ? `×${k}` : "", text: name })),
+        });
+      setShopMsg(`Добавих ${data.recipes.length} рецепти${extras.size ? " и междинните храни" : ""} в списъка.`);
+      track("Седмица: в списъка");
+    } catch (e) {
+      setShopMsg(e instanceof Error && e.message ? e.message : "Не успях. Опитай пак.");
+    }
+    setShopping(false);
+  }
+
   function swap(i: number) {
     setEdit({ key, rows: swapRow(recipes, rows, i, target) });
     track("Меню: смени ястие");
@@ -137,7 +204,55 @@ export function MenuGenerator({
         </div>
       </form>
 
-      {rows.length > 0 && (
+      <div className="gen-mode" role="group" aria-label="Ден или седмица">
+        <button type="button" className={"tag" + (mode === "day" ? " active" : "")} onClick={() => setMode("day")}>
+          Един ден
+        </button>
+        <button type="button" className={"tag" + (mode === "week" ? " active" : "")} onClick={() => setMode("week")}>
+          📅 Моята седмица
+        </button>
+      </div>
+
+      {mode === "week" && week.length > 0 && (
+        <div className="gen-week">
+          <div className="gen-week-head">
+            {canShop ? (
+              <button type="button" className="btn" onClick={shopWeek} disabled={shopping}>
+                {shopping ? "Добавям…" : "🛒 Всичко за седмицата в списъка"}
+              </button>
+            ) : (
+              <p className="gen-note">Списъкът за пазаруване за цялата седмица е за хората с книгата.</p>
+            )}
+            <button type="button" className="link-btn" onClick={() => setRound((r) => r + 1)}>
+              🔄 Друга седмица
+            </button>
+          </div>
+          {shopMsg && (
+            <p className="gen-note">
+              {shopMsg} <Link href="/spisak">Виж списъка →</Link>
+            </p>
+          )}
+          {week.map((day, d) => {
+            const dt = totals(day);
+            return (
+              <details key={d} className="menu-day" open={d === 0}>
+                <summary>
+                  <div className="menu-day-top">
+                    <h3>{["Понеделник", "Вторник", "Сряда", "Четвъртък", "Петък", "Събота", "Неделя"][d]}</h3>
+                    <div className="menu-total">
+                      <span>{dt.kcal} kcal</span>
+                      <span>{dt.protein} g протеин</span>
+                    </div>
+                  </div>
+                </summary>
+                <MenuRows rows={day} />
+              </details>
+            );
+          })}
+        </div>
+      )}
+
+      {mode === "day" && rows.length > 0 && (
         <div className="gen-result" aria-live="polite">
           <div className="gen-head">
             <div className="menu-total">
