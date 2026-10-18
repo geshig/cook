@@ -198,10 +198,7 @@ export default async function LandingPage() {
                 {first ? (
                   <>
                     <b>Бонус за първите {FIRST_BUYERS} купувачи: 3 месеца нови рецепти безплатно</b>
-                    Остават <strong>{offer.left} от {FIRST_BUYERS}</strong> места · по 2–4 нови рецепти всяка седмица.
-                    <i className="bonus-bar" aria-hidden="true">
-                      <i style={{ width: `${((FIRST_BUYERS - offer.left) / FIRST_BUYERS) * 100}%` }} />
-                    </i>
+                    По 2–4 нови рецепти всяка седмица.
                   </>
                 ) : (
                   <>
@@ -359,7 +356,6 @@ export default async function LandingPage() {
             <li>Достъп до затворената общност в Skool и видеата ми за здраве и уелнес</li>
             <li>
               <b>Бонус:</b> {bonusLine}, по 2–4 нови всяка седмица
-              {first && <> (остават {offer.left})</>}
             </li>
           </ul>
           <CheckoutButton kind="book" className="btn" source="цена">
@@ -530,7 +526,7 @@ export default async function LandingPage() {
         </div>
       </div>
 
-      <StickyBuy note={first ? `+ 3 месеца нови рецепти · остават ${offer.left} от ${FIRST_BUYERS}` : "+ 1 месец нови рецепти безплатно"} />
+      <StickyBuy note={first ? `+ 3 месеца нови рецепти за първите ${FIRST_BUYERS}` : "+ 1 месец нови рецепти безплатно"} />
     </>
   );
 }
