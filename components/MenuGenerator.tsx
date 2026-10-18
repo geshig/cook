@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { generateDay, totals, type MiniRecipe } from "@/lib/menuMath";
+import { generateDay, swapRow, totals, type MenuRow, type MiniRecipe } from "@/lib/menuMath";
 import { MenuRows } from "./MenuRows";
 import { track } from "@/lib/track";
 
@@ -36,10 +36,18 @@ export function MenuGenerator({
   const [round, setRound] = useState(1);
   const [meals, setMeals] = useState(5);
 
-  const rows = useMemo(
+  const base = useMemo(
     () => generateDay(recipes, target, seeded(target * 7919 + (protein ?? 0) * 31 + meals * 7 + round), protein, meals),
     [recipes, target, protein, meals, round]
   );
+  // 🔄 on one dish changes only that line; a new menu starts fresh.
+  const key = `${target}-${protein}-${meals}-${round}`;
+  const [edit, setEdit] = useState<{ key: string; rows: MenuRow[] } | null>(null);
+  const rows = edit?.key === key ? edit.rows : base;
+  function swap(i: number) {
+    setEdit({ key, rows: swapRow(recipes, rows, i, target) });
+    track("Меню: смени ястие");
+  }
   const t = totals(rows);
 
   function apply(v: number, pRaw: string = pDraft) {
@@ -145,7 +153,7 @@ export function MenuGenerator({
               🔄 Друго меню
             </button>
           </div>
-          <MenuRows rows={rows} />
+          <MenuRows rows={rows} onSwap={swap} />
         </div>
       )}
     </div>

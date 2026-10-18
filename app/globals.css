@@ -4506,3 +4506,30 @@ section.calc-section {
   color: var(--text-dim);
   margin-right: 4px;
 }
+
+/* 🔄 swap one dish in the generated menu */
+.menu-rows li.has-swap {
+  position: relative;
+}
+
+.menu-rows li.has-swap .menu-row {
+  padding-right: 44px;
+}
+
+.menu-swap {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--card);
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.menu-swap:hover {
+  border-color: var(--accent);
+}
