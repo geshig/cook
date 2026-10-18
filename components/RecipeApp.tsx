@@ -1,5 +1,6 @@
 "use client";
 
+import { portionGrams } from "@/lib/portions";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import type { RecipeCard } from "@/lib/types";
@@ -343,6 +344,7 @@ export function RecipeApp({
             <h3>{r.title}</h3>
             <div className="meta">
               {r.timeMinutes != null && <span>⏱ {r.timeMinutes} мин</span>}
+              {portionGrams(r.title) && <span>≈ {portionGrams(r.title)} g</span>}
               {r.kcal != null && <span>{r.kcal} kcal</span>}
               {r.proteinG != null && <span className="p">{r.proteinG} g протеин</span>}
             </div>
