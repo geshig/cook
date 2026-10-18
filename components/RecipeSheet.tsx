@@ -9,6 +9,8 @@ import { splitTimers, formatClock } from "@/lib/timers";
 import { addToShopping } from "@/lib/shopping";
 import { readTargets, type Targets } from "@/lib/targets";
 import { cookedToday, toggleCookedToday } from "@/lib/cooked";
+import { ingredientNote } from "@/lib/optional";
+import { portionGrams } from "@/lib/portions";
 import { CheckoutButton } from "@/components/CheckoutButton";
 import { ActivateTrialButton } from "@/components/ActivateTrialButton";
 
@@ -219,6 +221,7 @@ export function RecipeSheet({
         <div className="meta">
           {recipe.timeMinutes != null && <span>⏱ {recipe.timeMinutes} мин</span>}
           {perPortion && <span>{recipe.kcal} kcal на порция</span>}
+          {portionGrams(recipe.title) && <span>⚖️ ≈ {portionGrams(recipe.title)} g порция</span>}
         </div>
         {targets && recipe.kcal != null && !locked && (
           <p className="day-share">
@@ -342,8 +345,19 @@ export function RecipeSheet({
                     onClick={() => toggle(gotIng, idx, setGotIng)}
                   >
                     <span className="tick" aria-hidden="true" />
-                    {it.amount ? <span className="ing-amount">{it.amount}</span> : null}
-                    <span>{it.text}</span>
+                    {it.amount ? <span className="ing-amount">{it.amount}</span> : <span className="ing-amount" />}
+                    <span className="ing-text">
+                      {it.text}
+                      {(() => {
+                        const n = ingredientNote(it.text);
+                        if (!n) return null;
+                        return n.tag === "optional" ? (
+                          <em className="ing-opt">по желание</em>
+                        ) : (
+                          <em className="ing-swap">{n.hint}</em>
+                        );
+                      })()}
+                    </span>
                   </li>
                 )
               )}

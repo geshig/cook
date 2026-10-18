@@ -4597,3 +4597,64 @@ section.calc-section {
   border: 1px solid var(--line);
   background: var(--bg);
 }
+
+/* ---- ingredients: easy to read on a phone ---- */
+.sheet ul.ingredients li {
+  align-items: baseline;
+  gap: 12px;
+  padding: 9px 0;
+  font-size: 16px;
+  line-height: 1.45;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.sheet .ing-amount {
+  min-width: 86px;
+  font-weight: 700;
+}
+
+.sheet .ing-text {
+  flex: 1;
+  color: var(--text);
+}
+
+.sheet .ing-opt,
+.sheet .ing-swap {
+  display: inline-block;
+  margin-left: 6px;
+  font-style: normal;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 1px 8px;
+  border-radius: 100px;
+  vertical-align: 1px;
+}
+
+.sheet .ing-opt {
+  background: var(--tint);
+  color: var(--sage);
+}
+
+.sheet .ing-swap {
+  display: block;
+  margin: 3px 0 0;
+  padding: 0;
+  font-weight: 400;
+  font-size: 13px;
+  color: var(--sage);
+}
+
+.sheet ul.ingredients li.ing-group {
+  margin-top: 16px;
+  padding-bottom: 4px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+}
+
+@media (max-width: 480px) {
+  .sheet .ing-amount {
+    min-width: 72px;
+  }
+}
