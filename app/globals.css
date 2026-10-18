@@ -4556,3 +4556,22 @@ section.calc-section {
 .gen-week details.menu-day > .menu-rows {
   padding: 0 16px 8px;
 }
+
+.day-share {
+  margin: 6px 0 0;
+  font-size: 14px;
+  color: var(--text-dim);
+}
+
+.day-share b {
+  color: var(--accent);
+}
+
+.cooked-streak {
+  margin: 0 auto 12px;
+  max-width: 1075px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  background: var(--tint);
+  font-size: 15px;
+}

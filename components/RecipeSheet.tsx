@@ -7,6 +7,8 @@ import { parseIngredients, parseSteps } from "@/lib/recipeText";
 import { defaultServings, scaleLine, splitTips } from "@/lib/scale";
 import { splitTimers, formatClock } from "@/lib/timers";
 import { addToShopping } from "@/lib/shopping";
+import { readTargets, type Targets } from "@/lib/targets";
+import { cookedToday, toggleCookedToday } from "@/lib/cooked";
 import { CheckoutButton } from "@/components/CheckoutButton";
 import { ActivateTrialButton } from "@/components/ActivateTrialButton";
 
@@ -36,6 +38,13 @@ export function RecipeSheet({
   const [toast, setToast] = useState<string | null>(null);
   const wake = useRef<WakeLock | null>(null);
   const sheetRef = useRef<HTMLDivElement>(null);
+
+  const [targets, setTargets] = useState<Targets | null>(null);
+  const [cooked, setCooked] = useState(false);
+  useEffect(() => {
+    setTargets(readTargets());
+    setCooked(cookedToday(recipe.id));
+  }, [recipe.id]);
 
   const lines = useMemo(() => {
     const factor = recipe.servings ? portions / recipe.servings : 1;
@@ -211,6 +220,17 @@ export function RecipeSheet({
           {recipe.timeMinutes != null && <span>⏱ {recipe.timeMinutes} мин</span>}
           {perPortion && <span>{recipe.kcal} kcal на порция</span>}
         </div>
+        {targets && recipe.kcal != null && !locked && (
+          <p className="day-share">
+            Една порция е <b>{Math.round((recipe.kcal / targets.kcal) * 100)}%</b> от твоите {targets.kcal} kcal
+            {recipe.proteinG != null && (
+              <>
+                {" "}и <b>{Math.round((recipe.proteinG / targets.protein) * 100)}%</b> от протеина за деня
+              </>
+            )}
+            .
+          </p>
+        )}
         {(recipe.proteinG != null || recipe.carbsG != null || recipe.fatG != null) && (
           <div className="macro-row">
             {recipe.proteinG != null && (
@@ -271,6 +291,18 @@ export function RecipeSheet({
               </button>
               <button type="button" className="chip-btn" onClick={addShopping}>
                 🛒 В списъка
+              </button>
+              <button
+                type="button"
+                className={"chip-btn" + (cooked ? " on" : "")}
+                aria-pressed={cooked}
+                onClick={() => {
+                  const now = toggleCookedToday(recipe.id);
+                  setCooked(now);
+                  if (now) say("Браво! Отбелязах, че си я сготвил днес 🔥");
+                }}
+              >
+                {cooked ? "✅ Сготвих я днес" : "✅ Сготвих го"}
               </button>
             </div>
             {cooking && (

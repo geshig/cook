@@ -15,6 +15,7 @@ import { RecipeApp } from "@/components/RecipeApp";
 import { SiteHeader } from "@/components/SiteHeader";
 import { CheckoutPending } from "@/components/CheckoutPending";
 import { BonusBanner } from "@/components/BonusBanner";
+import { CookedStreak } from "@/components/CookedStreak";
 import { CommunityCard } from "@/components/CommunityCard";
 import { TrackOnce } from "@/components/TrackOnce";
 import { PendingGift } from "@/components/GiftRedeem";
@@ -213,6 +214,7 @@ export default async function RecipesPage({
       )}
       {access.purchasedBook && COMMUNITY.url && (
         <section style={{ paddingBlock: "0 8px", maxWidth: 900 }}>
+          <CookedStreak />
           <CommunityCard />
         </section>
       )}

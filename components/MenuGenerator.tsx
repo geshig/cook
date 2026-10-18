@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { readTargets } from "@/lib/targets";
 import { generateDay, swapRow, totals, type MenuRow, type MiniRecipe } from "@/lib/menuMath";
 import Link from "next/link";
 import { MenuRows } from "./MenuRows";
@@ -37,6 +38,19 @@ export function MenuGenerator({
   canShop?: boolean;
 }) {
   const [mode, setMode] = useState<"day" | "week">("day");
+  // No numbers in the link → start from the calculator's saved targets.
+  useEffect(() => {
+    if (initial !== 1400 || initialProtein != null) return;
+    const t = readTargets();
+    if (t) {
+      const n = Math.min(3500, Math.max(1100, Math.round(t.kcal / 50) * 50));
+      setTarget(n);
+      setDraft(String(n));
+      setProtein(t.protein);
+      setPDraft(String(t.protein));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [shopMsg, setShopMsg] = useState<string | null>(null);
   const [shopping, setShopping] = useState(false);
   const [target, setTarget] = useState(initial);
