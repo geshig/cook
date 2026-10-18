@@ -16,7 +16,7 @@ import { COMMUNITY, CONTACT_EMAIL, SOCIALS, getSiteUrl } from "@/lib/site";
 
 const PREVIEW_TITLES = [
   "Пиле шаурма",
-  "Протеинова мусака",
+  "Хрупкаво пиле с лимон",
   "Блекнд пиле с броколи",
   "Паста със сьомга",
   "Стек с чимичури",

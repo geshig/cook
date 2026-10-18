@@ -93,7 +93,7 @@ export function generateDay(recipes: MiniRecipe[], target: number, rnd: () => nu
     const qd = big && rnd() < 0.5 ? 1.5 : 1;
     const kcal = b.kcal! + l.kcal! * ql + d.kcal! * qd + (s?.kcal ?? 0);
     const prot = b.proteinG! + l.proteinG! * ql + d.proteinG! * qd + (s?.proteinG ?? 0);
-    if (kcal > target + 60) continue;
+    if (kcal > target) continue; // the target is a hard cap
     const gap = target - kcal; // extras can fill up to ~350 kcal
     const score =
       (gap > 350 ? gap - 350 : 0) * 2 + gap * 0.15 + Math.max(0, prot - pMax) * 6 + Math.max(0, pMin - prot) * 4;
@@ -110,7 +110,7 @@ export function generateDay(recipes: MiniRecipe[], target: number, rnd: () => nu
   const pool = [...EXTRAS].sort(() => rnd() - 0.5);
   for (const x of pool) {
     if (target - sum < 70) break;
-    if (sum + x.kcal <= target + 40) {
+    if (sum + x.kcal <= target) {
       rows.push(extraRow("Снакс", x.name, x.kcal, x.protein));
       sum += x.kcal;
     }
