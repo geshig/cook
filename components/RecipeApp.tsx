@@ -19,6 +19,7 @@ const QUICK: Quick[] = [
   { id: "prep", label: "Кутии за работа", test: (r) => r.tags.includes("meal prep") },
   { id: "breakfast", label: "Закуска", test: (r) => r.tags.includes("закуска") },
   { id: "dessert", label: "Десерт", test: (r) => r.tags.includes("десерт") },
+  { id: "snack", label: "Снакс", test: (r) => r.tags.some((t) => t.startsWith("снак")) },
   { id: "fast", label: "До 30 мин", test: (r) => r.timeMinutes != null && r.timeMinutes <= 30 },
   { id: "protein", label: "40+ g протеин", test: (r) => (r.proteinG ?? 0) >= 40 },
   { id: "light", label: "До 400 kcal", test: (r) => r.kcal != null && r.kcal <= 400 && r.tags.length > 0 },
