@@ -1,4 +1,4 @@
-import { CheckoutButton } from "./CheckoutButton";
+import { GiftBuy } from "./GiftBuy";
 import { CopyLink } from "./CopyLink";
 import type { Gift } from "@/lib/gifts";
 import { giftLink } from "@/lib/gifts";
@@ -30,9 +30,7 @@ export function GiftCard({ gifts, justBought }: { gifts: Gift[]; justBought: boo
           ))}
         </ul>
       )}
-      <CheckoutButton kind="gift" className="btn" source="профил">
-        Подари втори достъп
-      </CheckoutButton>
+      <GiftBuy />
     </div>
   );
 }

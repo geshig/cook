@@ -4,7 +4,9 @@ import { getAccess } from "@/lib/access";
 import { GIFT_PRICE_CENTS } from "@/lib/gifts";
 
 /** Book owners buy a second access (27 €) for a friend; they get a gift link. */
-export async function POST() {
+export async function POST(request: Request) {
+  // How many gifts: chosen on our page (Stripe would show an abbreviated "К-во").
+  const qty = Math.min(5, Math.max(1, Math.round(Number(new URL(request.url).searchParams.get("qty")) || 1)));
   const access = await getAccess();
   if (!access.email) return NextResponse.json({ error: "Влез, за да подариш книгата." }, { status: 401 });
   if (!access.purchasedBook) {
@@ -26,8 +28,7 @@ export async function POST() {
               description: "Достъп до всички рецепти от книгата за един човек, с негов имейл. Получаваш линк, който му пращаш.",
             },
           },
-          quantity: 1,
-          adjustable_quantity: { enabled: true, minimum: 1, maximum: 5 },
+          quantity: qty,
         },
       ],
       metadata: { kind: "gift" },

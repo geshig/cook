@@ -4575,3 +4575,25 @@ section.calc-section {
   background: var(--tint);
   font-size: 15px;
 }
+
+.gift-buy {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.gift-buy label {
+  display: grid;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.gift-buy select {
+  font: inherit;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+}
