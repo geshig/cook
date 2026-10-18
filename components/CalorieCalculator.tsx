@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { ACTIVITY, GOALS, calculate, type Goal, type Sex } from "@/lib/calc";
 import { track } from "@/lib/track";
+import { saveTargets } from "@/lib/targets";
 
 const KEY = "kalkulator-v1";
 
@@ -65,6 +66,11 @@ export function CalorieCalculator() {
         : null,
     [valid, f.sex, age, height, weight, f.activity, f.goal, targetKg]
   );
+
+  // Remember the numbers for recipes ("% of your day") and the menu generator.
+  useEffect(() => {
+    if (r) saveTargets({ kcal: r.target, protein: r.proteinMin });
+  }, [r]);
 
   useEffect(() => {
     if (r && !tracked) {
