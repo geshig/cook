@@ -4449,3 +4449,24 @@ section.calc-section {
 
 .gift-made-row em.taken { color: var(--accent); }
 .gift-made-row em.free { color: var(--sage); }
+
+.hero-bonus strong {
+  color: var(--on-deep);
+}
+
+.bonus-bar {
+  display: block;
+  height: 6px;
+  margin-top: 8px;
+  border-radius: 6px;
+  background: rgba(244, 239, 225, 0.15);
+  overflow: hidden;
+}
+
+.bonus-bar > i {
+  display: block;
+  height: 100%;
+  min-width: 6px;
+  border-radius: 6px;
+  background: var(--olive-light);
+}

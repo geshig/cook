@@ -243,9 +243,9 @@ export function RecipeSheet({
             </p>
             {trialOffer ? (
               <>
-                <ActivateTrialButton className="cta">Активирай 3 месеца безплатно</ActivateTrialButton>
+                <ActivateTrialButton className="cta">Активирай бонуса безплатно</ActivateTrialButton>
                 <p className="paywall-note">
-                  Без карта. След 3-те месеца продължаваш за 5,99 € на месец само ако
+                  Без карта. След бонуса продължаваш за 5,99 € на месец само ако
                   добавиш карта. Рецептите от книгата остават твои.
                 </p>
               </>

@@ -7,7 +7,7 @@ import { CheckoutButton } from "@/components/CheckoutButton";
  * Phone-only buy bar: appears once the hero button has scrolled away and
  * hides again while the pricing card itself is on screen.
  */
-export function StickyBuy({ afterPx }: { afterPx?: number } = {}) {
+export function StickyBuy({ afterPx, note }: { afterPx?: number; note?: string } = {}) {
   const [heroGone, setHeroGone] = useState(false);
   const [pricingOn, setPricingOn] = useState(false);
 
@@ -40,7 +40,7 @@ export function StickyBuy({ afterPx }: { afterPx?: number } = {}) {
     <div className="sticky-buy">
       <div className="sticky-buy-text">
         <b>100+ рецепти · 47 €</b>
-        <span>+ 3 месеца нови рецепти безплатно</span>
+        <span>{note ?? "+ нови рецепти безплатно с книгата"}</span>
       </div>
       <CheckoutButton kind="book" className="btn" source="лента">
         Купи
