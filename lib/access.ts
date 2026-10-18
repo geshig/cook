@@ -38,7 +38,7 @@ export async function getAccess(): Promise<Access> {
     bookPurchasedAt: purchasedBook
       ? (subscriber?.book_purchased_at ?? subscriber?.created_at ?? null)
       : null,
-    hadSubscription: !!subscriber?.subscription_status && subscriber.subscription_status !== "inactive",
+    hadSubscription: isAdminUser || (!!subscriber?.subscription_status && subscriber.subscription_status !== "inactive"),
     trialEndsAt:
       subscriber?.trial_end && new Date(subscriber.trial_end).getTime() > Date.now()
         ? subscriber.trial_end

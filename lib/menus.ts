@@ -34,7 +34,20 @@ export const EXTRAS: { name: string; kcal: number; protein: number }[] = [
   { name: "Шепа бадеми (30 g)", kcal: 175, protein: 6 },
   { name: "Варен ориз (150 g)", kcal: 195, protein: 4 },
   { name: "Салата от сезонни зеленчуци със зехтин", kcal: 120, protein: 2 },
+  { name: "Скир или гръцко кисело мляко 0% (200 g)", kcal: 120, protein: 20 },
+  { name: "Котидж чийз (150 g)", kcal: 145, protein: 18 },
+  { name: "2 варени яйца", kcal: 140, protein: 12 },
+  { name: "Протеинов шейк с вода (1 доза)", kcal: 120, protein: 24 },
+  { name: "Кисело мляко 2% с мед и орехи", kcal: 190, protein: 9 },
+  { name: "Хумус (50 g) с моркови и краставица", kcal: 150, protein: 5 },
+  { name: "2 оризови вафли с котидж чийз", kcal: 150, protein: 11 },
+  { name: "Сирене (40 g) с домати и краставици", kcal: 140, protein: 7 },
+  { name: "Протеинов бар", kcal: 200, protein: 20 },
+  { name: "Шепа фъстъци (25 g)", kcal: 145, protein: 6 },
 ];
+
+/** Plain fruit: at most one per day, so snacks are not only apples. */
+export const FRUIT = new Set(["Ябълка", "Банан", "Портокал", "Горски плодове (150 g)"]);
 
 export const MENUS: MenuDay[] = [
   {
@@ -45,7 +58,7 @@ export const MENUS: MenuDay[] = [
       { meal: "Закуска", title: "Протеинов овес за през нощта (5 вкуса)", qty: 1, per: "порция" },
       { meal: "Закуска", extra: "Горски плодове (150 g)", qty: 1, kcal: 75, protein: 1 },
       { meal: "Обяд", title: "Купа с хрупкав ориз и сьомга", qty: 1, per: "порция" },
-      { meal: "Снакс", extra: "Ябълка", qty: 1, kcal: 95, protein: 0 },
+      { meal: "Междинно", extra: "Ябълка", qty: 1, kcal: 95, protein: 0 },
       { meal: "Вечеря", title: "Високопротеинова доматена супа с котидж чийз", qty: 1, per: "порция" },
       { meal: "Вечеря", extra: "Филия пълнозърнест хляб", qty: 1, kcal: 80, protein: 4 },
       { meal: "Десерт", title: "Протеинов кейк в чаша за 3 минути", qty: 1, per: "порция" },
@@ -60,7 +73,7 @@ export const MENUS: MenuDay[] = [
       { meal: "Закуска", extra: "Филия пълнозърнест хляб", qty: 1, kcal: 80, protein: 4 },
       { meal: "Обяд", title: "Крем супа от запечени броколи и фета", qty: 1, per: "порция" },
       { meal: "Обяд", extra: "Филия пълнозърнест хляб", qty: 1, kcal: 80, protein: 4 },
-      { meal: "Снакс", extra: "Ябълка", qty: 1, kcal: 95, protein: 0 },
+      { meal: "Междинно", extra: "Ябълка", qty: 1, kcal: 95, protein: 0 },
       { meal: "Вечеря", title: "Протеинова мусака", qty: 1, per: "порция" },
       { meal: "Вечеря", extra: "Салата от сезонни зеленчуци със зехтин", qty: 1, kcal: 120, protein: 2 },
       { meal: "Десерт", title: "SUPER F*CK протеинови брауни", qty: 1, per: "брауни" },
@@ -73,7 +86,7 @@ export const MENUS: MenuDay[] = [
     items: [
       { meal: "Закуска", title: "Киш с тортиля", qty: 2, per: "порция" },
       { meal: "Обяд", title: "Паста със сьомга, печен чесън и чери домати", qty: 1, per: "порция" },
-      { meal: "Снакс", extra: "Портокал", qty: 1, kcal: 60, protein: 1 },
+      { meal: "Междинно", extra: "Портокал", qty: 1, kcal: 60, protein: 1 },
       { meal: "Вечеря", title: "Запеканка с тиквички, яйца и котидж чийз", qty: 1, per: "порция" },
       { meal: "Вечеря", extra: "Салата от сезонни зеленчуци със зехтин", qty: 1, kcal: 120, protein: 2 },
       { meal: "Десерт", title: "Брауни с чийзкейк и фъстъчено масло", qty: 1, per: "парче" },
@@ -86,7 +99,7 @@ export const MENUS: MenuDay[] = [
     items: [
       { meal: "Закуска", title: "Закуска-бейгъл с яйца, пуешко и сирене", qty: 1, per: "порция" },
       { meal: "Обяд", title: "Купи с мексиканско пиле, царевична салата и ориз с лайм", qty: 1, per: "порция" },
-      { meal: "Снакс", extra: "Банан", qty: 1, kcal: 105, protein: 1 },
+      { meal: "Междинно", extra: "Банан", qty: 1, kcal: 105, protein: 1 },
       { meal: "Вечеря", title: "Тостадас със стек, гуакамоле и чипотле сос", qty: 2, per: "тостада" },
     ],
   },
@@ -98,8 +111,8 @@ export const MENUS: MenuDay[] = [
       { meal: "Закуска", title: "Шоколадов пудинг с чиа и фурми", qty: 1, per: "порция" },
       { meal: "Обяд", title: "Портокалово пиле с черен пипер, ориз с чесново масло и хрупкава салата", qty: 1, per: "порция" },
       { meal: "Вечеря", title: "Корейски пържен ориз с говеждо и сос Yum Yum", qty: 1, per: "порция" },
-      { meal: "Снакс", extra: "Ябълка", qty: 1, kcal: 95, protein: 0 },
-      { meal: "Снакс", extra: "Шепа бадеми (30 g)", qty: 1, kcal: 175, protein: 6 },
+      { meal: "Междинно", extra: "Ябълка", qty: 1, kcal: 95, protein: 0 },
+      { meal: "Междинно", extra: "Шепа бадеми (30 g)", qty: 1, kcal: 175, protein: 6 },
     ],
   },
   {
@@ -122,8 +135,8 @@ export const MENUS: MenuDay[] = [
     items: [
       { meal: "Закуска", title: "Хрупкави картофи и кремообразни бъркани яйца", qty: 1, per: "порция" },
       { meal: "Обяд", title: "Турска паста с кайма, чеснов сос с мента и чили масло", qty: 1, per: "порция" },
-      { meal: "Снакс", extra: "Портокал", qty: 1, kcal: 60, protein: 1 },
-      { meal: "Снакс", extra: "Шепа бадеми (30 g)", qty: 1, kcal: 175, protein: 6 },
+      { meal: "Междинно", extra: "Портокал", qty: 1, kcal: 60, protein: 1 },
+      { meal: "Междинно", extra: "Шепа бадеми (30 g)", qty: 1, kcal: 175, protein: 6 },
       { meal: "Вечеря", title: "Бургер купи \"Animal Style\" с хрупкави картофки", qty: 1, per: "порция" },
       { meal: "Вечеря", extra: "Банан", qty: 1, kcal: 105, protein: 1 },
     ],
@@ -149,8 +162,8 @@ export const MENUS: MenuDay[] = [
     items: [
       { meal: "Закуска", title: "Бурито с бъфало пиле и протеинов рънч", qty: 1, per: "бурито" },
       { meal: "Обяд", title: "Блекнд пиле с броколи и ориз на бульон", qty: 1, per: "порция" },
-      { meal: "Снакс", extra: "Ябълка", qty: 1, kcal: 95, protein: 0 },
-      { meal: "Снакс", extra: "Шепа бадеми (30 g)", qty: 1, kcal: 175, protein: 6 },
+      { meal: "Междинно", extra: "Ябълка", qty: 1, kcal: 95, protein: 0 },
+      { meal: "Междинно", extra: "Шепа бадеми (30 g)", qty: 1, kcal: 175, protein: 6 },
       { meal: "Вечеря", title: "Пиле с мед и чили, подправен ориз и салса от ананас и авокадо", qty: 1, per: "порция" },
       { meal: "Десерт", title: "Брауни чийзкейк барове без печене", qty: 1, per: "бар" },
     ],
@@ -164,7 +177,7 @@ export const MENUS: MenuDay[] = [
       { meal: "Закуска", extra: "Банан", qty: 1, kcal: 105, protein: 1 },
       { meal: "Закуска", extra: "Филия пълнозърнест хляб", qty: 1, kcal: 80, protein: 4 },
       { meal: "Обяд", title: "Купа с пилешки фахитас, мексикански ориз, боб и пико де гайо", qty: 1, per: "порция" },
-      { meal: "Снакс", extra: "Шепа бадеми (30 g)", qty: 1, kcal: 175, protein: 6 },
+      { meal: "Междинно", extra: "Шепа бадеми (30 g)", qty: 1, kcal: 175, protein: 6 },
       { meal: "Вечеря", title: "Донбури със свинско филе, глазиран сос и жълтък", qty: 1, per: "порция" },
       { meal: "Десерт", title: "Хрупкав чипс от котидж чийз с люто-медена глазура", qty: 1, per: "цялата партида" },
     ],
@@ -177,8 +190,8 @@ export const MENUS: MenuDay[] = [
       { meal: "Закуска", title: "Киш с картофена основа и белтъци", qty: 2, per: "порция" },
       { meal: "Закуска", extra: "Кафе с мляко", qty: 1, kcal: 60, protein: 3 },
       { meal: "Обяд", title: "Хрупкаво пиле Нашвил хот с мак енд чийз", qty: 1, per: "порция" },
-      { meal: "Снакс", title: "Хрупкави картофени резени в air fryer", qty: 1, per: "порция" },
-      { meal: "Снакс", extra: "Банан", qty: 1, kcal: 105, protein: 1 },
+      { meal: "Междинно", title: "Хрупкави картофени резени в air fryer", qty: 1, per: "порция" },
+      { meal: "Междинно", extra: "Банан", qty: 1, kcal: 105, protein: 1 },
       { meal: "Вечеря", title: "Пица с пълнена коричка и пеперони", qty: 1, per: "половин пица" },
       { meal: "Десерт", title: "Протеинови бисквити с шоколадови капки", qty: 2, per: "бисквита" },
       { meal: "Десерт", extra: "Тъмен шоколад (20 g)", qty: 1, kcal: 115, protein: 2 },

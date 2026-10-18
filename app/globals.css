@@ -4474,3 +4474,35 @@ section.calc-section {
   border-radius: 6px;
   background: var(--olive-light);
 }
+
+.gen-p-label {
+  display: block;
+  margin-top: 12px;
+}
+
+.gen-p-label small {
+  font-weight: 400;
+  color: var(--sage);
+}
+
+.gen-note {
+  flex-basis: 100%;
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.gen-meals {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.gen-meals > span {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-dim);
+  margin-right: 4px;
+}

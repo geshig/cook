@@ -75,10 +75,11 @@ export function calculate(i: CalcInput): CalcResult {
   if (floored) target = floor;
   target = round(target, 50);
 
-  // Protein from a healthy-range weight, so it stays sensible at a high BMI.
-  const refKg = Math.min(i.weightKg, 25 * m * m);
-  const proteinMin = round(refKg * 1.6, 5);
-  const proteinMax = round(refKg * 2.0, 5);
+  // At least 2 g per kg of body weight (capped at the weight for BMI 30,
+  // so it stays sensible at a very high weight).
+  const refKg = Math.min(i.weightKg, 30 * m * m);
+  const proteinMin = round(refKg * 2.0, 5);
+  const proteinMax = round(refKg * 2.2, 5);
 
   const perWeek = ((target - tdee) * 7) / 7700;
   let weeksToTarget: number | null = null;
