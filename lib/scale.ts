@@ -50,6 +50,10 @@ function formatAmount(x: number, unit: string): { value: string; unit: string } 
     if (x < 1) return { value: String(Math.round((x * 1000) / 5) * 5), unit: unit === "кг" ? "g" : "ml" };
     return { value: decimal(x, 2), unit };
   }
+  // Spoons: no "¼ ч.л." — a pinch, or tablespoons turned into teaspoons.
+  if (unit === "с.л." && x < 1) return formatAmount(x * 3, "ч.л.");
+  if (unit === "ч.л." && x < 0.3) return { value: "щипка", unit: "" };
+  if (unit === "ч.л." && x >= 3 && Math.abs(x / 3 - Math.round(x / 3)) < 0.01) return { value: quarter(x / 3), unit: "с.л." };
   const value = quarter(x);
   if (value === "1" && /^скилидк/.test(unit)) return { value, unit: "скилидка" };
   if (value === "1" && unit === "стръка") return { value, unit: "стрък" };
@@ -88,13 +92,32 @@ export function scaleLine(line: string, factor: number): IngredientLine {
 
 const MEAL_TAGS = ["обяд", "вечеря", "закуска", "снак"];
 
+/** Countable lines (eggs, onions, garlic…) that would become ¼ or ⅓ at p portions. */
+function awkward(lines: string[], factor: number): boolean {
+  for (const raw of lines) {
+    const m = raw.trim().match(LEAD);
+    const a = m ? toNumber(m[1], m[2]) : null;
+    if (!m || a === null) continue;
+    const rest = raw.trim().slice(m[0].length).trim();
+    const u = rest.split(/\s+/)[0] ?? "";
+    const countable = u === "бр." || /^скилидк/.test(u) || !(METRIC.has(u) || /\.$/.test(u));
+    if (!countable) continue;
+    const x = a * factor;
+    const frac = x - Math.floor(x);
+    if (x < 0.5 || (frac > 0.01 && Math.abs(frac - 0.5) > 0.01)) return true;
+  }
+  return false;
+}
+
 /** Колко порции да показва рецептата при отваряне. */
-export function defaultServings(servings: number | null, tags: string[]): number {
+export function defaultServings(servings: number | null, tags: string[], ingredientLines: string[] = []): number {
   const s = servings && servings > 0 ? servings : 1;
   const isMeal = tags.some((t) => MEAL_TAGS.includes(t));
   if (tags.includes("десерт") || !isMeal) return s; // десерти, сосове, мариновки: цялата партида
-  if (s >= 6) return 2; // мъфини, бурито, калцоне и др. за фризера
-  return 1;
+  const start = s >= 6 ? 2 : 1; // мъфини, бурито, калцоне и др. за фризера
+  // Супи, запеканки и др.: толкова порции, че яйцата и лукът да са цели.
+  for (let p = start; p < s; p++) if (!awkward(ingredientLines, p / s)) return p;
+  return s;
 }
 
 /** Отделя стъпките от съветите ("Съвет: ..."). */

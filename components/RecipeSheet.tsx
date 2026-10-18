@@ -32,7 +32,7 @@ export function RecipeSheet({
   trialOffer: boolean;
 }) {
   const locked = recipe.ingredients === null && recipe.steps === null;
-  const [portions, setPortions] = useState(() => defaultServings(recipe.servings, recipe.tags));
+  const [portions, setPortions] = useState(() => defaultServings(recipe.servings, recipe.tags, parseIngredients(recipe.ingredients)));
   const [gotIng, setGotIng] = useState<Set<number>>(new Set());
   const [doneSteps, setDoneSteps] = useState<Set<number>>(new Set());
   const [cooking, setCooking] = useState(false);
