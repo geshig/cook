@@ -3954,9 +3954,13 @@ section.calc-section {
   gap: 18px;
 }
 
+.calc > * {
+  min-width: 0;
+}
+
 @media (min-width: 900px) {
   .calc {
-    grid-template-columns: 1.1fr 0.9fr;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
     align-items: start;
   }
   .calc-out {
