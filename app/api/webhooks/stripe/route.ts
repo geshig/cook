@@ -214,6 +214,37 @@ export async function POST(request: Request) {
       break;
     }
 
+    // Full refund of the book (47 €): take the book back, stop the bonus,
+    // and free the place in "first 100". Gift (27 €) refunds are ignored.
+    case "charge.refunded": {
+      const charge = event.data.object as Stripe.Charge;
+      if (!charge.refunded) break; // partial refund: keep access
+      if (charge.amount < 4000) break; // not the book
+      const customerId = typeof charge.customer === "string" ? charge.customer : charge.customer?.id;
+      const email = (charge.billing_details?.email ?? charge.receipt_email ?? "").toLowerCase();
+      const match = customerId
+        ? admin.from("subscribers").update({ purchased_book: false }).eq("stripe_customer_id", customerId)
+        : email
+          ? admin.from("subscribers").update({ purchased_book: false }).eq("email", email)
+          : null;
+      if (match) {
+        const { error } = await match;
+        if (error) console.error("refund: revoke failed:", error.message);
+      }
+      if (customerId) {
+        try {
+          const subs = await stripe.subscriptions.list({ customer: customerId, status: "all", limit: 10 });
+          for (const sub of subs.data) {
+            if (["trialing", "active", "past_due"].includes(sub.status)) await stripe.subscriptions.cancel(sub.id);
+          }
+        } catch (e) {
+          console.error("refund: cancel subscription failed:", e instanceof Error ? e.message : e);
+        }
+      }
+      revalidateTag("buyers", "max");
+      break;
+    }
+
     case "customer.subscription.updated":
     case "customer.subscription.deleted": {
       const subscription = event.data.object as Stripe.Subscription;
