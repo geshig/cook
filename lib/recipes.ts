@@ -253,3 +253,18 @@ export async function deleteRecipe(id: number): Promise<void> {
   const { error } = await admin.from("recipes").delete().eq("id", id);
   if (error) throw error;
 }
+
+/** Ingredients of several recipes at once, for „Моята седмица“ → shopping list. */
+export async function getIngredientsFor(
+  ids: number[],
+  access: Access
+): Promise<{ id: number; title: string; servings: number | null; ingredients: string | null }[]> {
+  if (!ids.length) return [];
+  const { data } = await createAdminClient()
+    .from("recipes")
+    .select("id, title, servings, ingredients, is_locked, created_at")
+    .in("id", ids.slice(0, 60));
+  return ((data ?? []) as unknown as RecipeRow[])
+    .filter((r) => canOpen(r, access))
+    .map((r) => ({ id: r.id, title: r.title, servings: r.servings, ingredients: r.ingredients }));
+}

@@ -4533,3 +4533,26 @@ section.calc-section {
 .menu-swap:hover {
   border-color: var(--accent);
 }
+
+.gen-mode {
+  display: flex;
+  gap: 8px;
+  margin: 18px 0 10px;
+}
+
+.gen-week {
+  display: grid;
+  gap: 10px;
+}
+
+.gen-week-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.gen-week details.menu-day > .menu-rows {
+  padding: 0 16px 8px;
+}
