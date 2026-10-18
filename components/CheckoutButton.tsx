@@ -10,6 +10,7 @@ export function CheckoutButton({
   source,
   forTwo,
   id,
+  query,
 }: {
   kind: "book" | "subscription" | "gift";
   className?: string;
@@ -18,6 +19,8 @@ export function CheckoutButton({
   /** Book + a second access for a friend in one payment. */
   forTwo?: boolean;
   id?: string;
+  /** Extra query string, e.g. "qty=2". */
+  query?: string;
   children: React.ReactNode;
 }) {
   const [loading, setLoading] = useState(false);
@@ -26,7 +29,8 @@ export function CheckoutButton({
     setLoading(true);
     track(kind === "book" ? "Плащане: старт" : kind === "gift" ? "Подарък: старт" : "Абонамент: старт", { от: source ?? "друго" });
     try {
-      const res = await fetch(`/api/checkout/${kind}${forTwo ? "?for=2" : ""}`, { method: "POST" });
+      const qs = [forTwo ? "for=2" : "", query ?? ""].filter(Boolean).join("&");
+      const res = await fetch(`/api/checkout/${kind}${qs ? `?${qs}` : ""}`, { method: "POST" });
       const data = await res.json();
       if (data.url) {
         window.location.href = data.url;
