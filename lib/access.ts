@@ -27,11 +27,13 @@ export async function getAccess(): Promise<Access> {
     .eq("email", user.email.toLowerCase())
     .maybeSingle();
 
-  const purchasedBook = subscriber?.purchased_book ?? false;
+  // Admins (ADMIN_EMAILS) see everything, to check recipes, list and calculator.
+  const isAdminUser = isAdmin({ email: user.email } as Access);
+  const purchasedBook = (subscriber?.purchased_book ?? false) || isAdminUser;
   return {
     email: user.email,
     purchasedBook,
-    subscriptionActive: subscriber?.subscription_status === "active",
+    subscriptionActive: subscriber?.subscription_status === "active" || isAdminUser,
     // Older rows have no purchase date: fall back to when the row was created.
     bookPurchasedAt: purchasedBook
       ? (subscriber?.book_purchased_at ?? subscriber?.created_at ?? null)

@@ -114,7 +114,7 @@ export function CalorieCalculator() {
           <label>
             <span>Желано тегло</span>
             <div className="calc-in">
-              <input inputMode="decimal" placeholder="по желание" value={f.target} onChange={(e) => set("target", e.target.value)} />
+              <input inputMode="decimal" placeholder="60" value={f.target} onChange={(e) => set("target", e.target.value)} />
               <i>kg</i>
             </div>
           </label>
