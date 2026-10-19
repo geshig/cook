@@ -27,6 +27,34 @@ export async function countPaidBuyers(admin: SupabaseClient): Promise<number> {
   }).length;
 }
 
+/**
+ * Bonus length for one book owner, decided by when they bought: the first 100
+ * paying buyers keep 90 days even if they claim the bonus later. Gift
+ * recipients and admins get whatever applies right now.
+ */
+export async function bonusDaysFor(admin: SupabaseClient, email: string): Promise<number> {
+  try {
+    const me = email.toLowerCase();
+    const [{ data: buyers }, { data: gifts }] = await Promise.all([
+      admin.from("subscribers").select("*").eq("purchased_book", true).limit(5000),
+      admin.from("gift_codes").select("redeemed_by").not("redeemed_by", "is", null).limit(5000),
+    ]);
+    const giftEmails = new Set((gifts ?? []).map((g) => String(g.redeemed_by).toLowerCase()));
+    const admins = new Set(
+      (process.env.ADMIN_EMAILS ?? "").split(",").map((e) => e.trim().toLowerCase()).filter(Boolean)
+    );
+    const paid = (buyers ?? [])
+      .map((b) => ({ e: String(b.email).toLowerCase(), t: String(b.book_purchased_at ?? b.created_at ?? "") }))
+      .filter((b) => !giftEmails.has(b.e) && !admins.has(b.e))
+      .sort((a, b) => a.t.localeCompare(b.t));
+    const rank = paid.findIndex((b) => b.e === me);
+    if (rank === -1) return await bonusDaysNow(admin);
+    return rank < FIRST_BUYERS ? BONUS_DAYS_FIRST : BONUS_DAYS_LATER;
+  } catch {
+    return BONUS_DAYS_FIRST;
+  }
+}
+
 /** Trial length for someone who just got the book (they are already counted). */
 export async function bonusDaysNow(admin: SupabaseClient): Promise<number> {
   try {
@@ -52,3 +80,9 @@ export const getLaunchOffer = unstable_cache(
   ["launch-offer-v1"],
   { revalidate: 60, tags: ["buyers"] }
 );
+
+/** 3 or 1: how many free months this owner can still claim (for banners). */
+export async function bonusMonthsFor(email: string | null): Promise<3 | 1> {
+  if (!email) return 3;
+  return (await bonusDaysFor(createAdminClient(), email)) >= 90 ? 3 : 1;
+}

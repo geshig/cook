@@ -4979,3 +4979,9 @@ main.about {
     height: 175px;
   }
 }
+
+/* Unclaimed bonus: stands out a little more than the running one. */
+.bonus.bonus-claim {
+  border: 2px solid var(--accent);
+  box-shadow: 0 10px 30px -18px rgba(107, 127, 58, 0.6);
+}

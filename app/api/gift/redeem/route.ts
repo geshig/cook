@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import { getAccess } from "@/lib/access";
-import { getStripe } from "@/lib/stripe";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { startFreeTrial } from "@/lib/trial";
 
 /** The friend, signed in with their own email, turns a gift code into the book. */
 export async function POST(request: Request) {
@@ -42,22 +40,6 @@ export async function POST(request: Request) {
   }
   await admin.from("subscribers").update({ book_purchased_at: new Date().toISOString() }).eq("email", email).is("book_purchased_at", null);
 
-  // Same bonus as a buyer: 3 months of new recipes, no card. Best-effort.
-  try {
-    const { data: row } = await admin
-      .from("subscribers")
-      .select("stripe_customer_id, subscription_status")
-      .eq("email", email)
-      .maybeSingle();
-    if (!row?.subscription_status || row.subscription_status === "inactive") {
-      const stripe = getStripe();
-      let customerId = row?.stripe_customer_id as string | null | undefined;
-      if (!customerId) customerId = (await stripe.customers.create({ email })).id;
-      await startFreeTrial(stripe, admin, { email, customerId, idempotencyKey: `gift-bonus-${code}` });
-    }
-  } catch (e) {
-    console.error("gift trial failed:", e instanceof Error ? e.message : e);
-  }
-
+  // Same bonus as a buyer: they claim it on the site (recipes page).
   return NextResponse.json({ ok: true });
 }

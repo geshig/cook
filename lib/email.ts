@@ -60,9 +60,8 @@ export async function sendPurchaseEmail(opts: {
   email: string;
   paidAt: number; // unix seconds
   amount: string; // "47,00 €"
-  trialEnd: string | null;
-  /** The card from the purchase continues the bonus at 5,99 €/month. */
-  autoRenew?: boolean;
+  /** Free months of new recipes the buyer can claim (3 for the first 100). */
+  bonusMonths: 3 | 1;
   sessionId: string;
   giftCodes?: string[];
 }): Promise<boolean> {
@@ -70,7 +69,8 @@ export async function sendPurchaseEmail(opts: {
   const giftLinks = (opts.giftCodes ?? []).map((c) => `${site}/podarak/${c}`);
   const login = `${site}/login?email=${encodeURIComponent(opts.email)}`;
   const paid = bgDate(opts.paidAt * 1000);
-  const until = opts.trialEnd ? bgDate(opts.trialEnd) : null;
+  const months = opts.bonusMonths === 3 ? "3 месеца" : "1 месец";
+  const claim = `${site}/recipes#bonus`;
 
   const text = [
     "Здравей,",
@@ -82,16 +82,10 @@ export async function sendPurchaseEmail(opts: {
     `2. Напиши този имейл: ${opts.email}`,
     "3. Ще ти пратя линк за вход, без парола. Сайтът те помни на устройството.",
     "",
-    ...(until
-      ? [
-          "БОНУС: НОВИ РЕЦЕПТИ БЕЗПЛАТНО",
-          `Всяка седмица добавям 2–4 нови рецепти. Имаш ги безплатно до ${until}.`,
-          opts.autoRenew
-            ? `След ${until} абонаментът продължава автоматично за 5,99 € на месец с картата, с която плати. Ще ти напомня 7 дни преди това. Ако не искаш да продължи, спри го от „Профил“ преди тази дата и няма да платиш нищо.`
-            : "Ако искаш да продължиш след това, добавяш карта от „Профил“ и абонаментът е 5,99 € на месец, докато не го спреш. Ако не добавиш карта, просто спира, без такси.",
-          "",
-        ]
-      : []),
+    `🎁 ТВОЯТ БОНУС: ${months.toUpperCase()} НОВИ РЕЦЕПТИ БЕЗПЛАТНО`,
+    `Всяка седмица добавям 2–4 нови рецепти. С книгата имаш ${months} достъп до тях безплатно. Вземи ги с едно натискане: ${claim}`,
+    "След безплатния период е 5,99 € на месец, само ако не спреш абонамента. Спираш го по всяко време от „Профил“.",
+    "",
     ...(COMMUNITY.url
       ? [
           "ОБЩНОСТТА В SKOOL",
@@ -126,17 +120,12 @@ ${p("Благодаря ти, че взе „Кухнята на Геша“! П
 <p style="margin:20px 0 22px"><a href="${esc(login)}" style="display:inline-block;background:#6b7f3a;color:#fff;text-decoration:none;font-weight:700;padding:13px 24px;border-radius:100px">Влез в рецептите</a></p>
 ${h("КАК ВЛИЗАШ")}
 ${p(`Влизаш с този имейл: <b>${esc(opts.email)}</b>. Пращам ти линк за вход, без парола, и сайтът те помни на устройството.`)}
-${
-  until
-    ? h("БОНУС: НОВИ РЕЦЕПТИ БЕЗПЛАТНО") +
-      p(`Всяка седмица добавям 2–4 нови рецепти. Имаш ги безплатно до <b>${esc(until)}</b>.`) +
-      p(
-        opts.autoRenew
-          ? `След ${esc(until)} абонаментът продължава автоматично за <b>5,99 € на месец</b> с картата, с която плати. Ще ти напомня 7 дни преди това. Ако не искаш да продължи, спри го от „Профил“ преди тази дата и няма да платиш нищо.`
-          : "Ако искаш да продължиш след това, добавяш карта от „Профил“ и абонаментът е 5,99 € на месец, докато не го спреш. Ако не добавиш карта, просто спира, без такси."
-      )
-    : ""
-}
+<div style="margin:24px 0 8px;padding:18px;background:#27311b;border-radius:16px;color:#f4efe1">
+<p style="margin:0 0 6px;font-size:17px;font-weight:800">🎁 Твоят бонус: ${months} нови рецепти безплатно</p>
+<p style="margin:0 0 14px;line-height:1.55;color:#dcd8c8">Всяка седмица добавям 2–4 нови рецепти. Вземи ги с едно натискане.</p>
+<a href="${esc(claim)}" style="display:inline-block;background:#f4efe1;color:#27311b;text-decoration:none;font-weight:800;padding:12px 22px;border-radius:100px">Вземи ${months} безплатно</a>
+<p style="margin:12px 0 0;font-size:12px;line-height:1.5;color:#bdb9a8">След безплатния период е 5,99 € на месец, само ако не спреш абонамента. Спираш го по всяко време от „Профил“.</p>
+</div>
 ${
   COMMUNITY.url
     ? h("ОБЩНОСТТА В SKOOL") +
