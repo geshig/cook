@@ -1,11 +1,16 @@
 import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
+import { shortLinkTarget } from "@/lib/shortLinks";
 
 // Refreshes the Supabase auth session cookie on every request so Server
 // Components always see a valid (non-expired) session. This does not gate
 // access to any route — access decisions happen in lib/access.ts against
 // the `subscribers` table, not against whether a session cookie exists.
 export async function proxy(request: NextRequest) {
+  // Short links (/ig, /tt…): straight to the page with only our utm tags.
+  const short = shortLinkTarget(request.nextUrl);
+  if (short) return NextResponse.redirect(short, 307);
+
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient(
