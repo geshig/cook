@@ -4660,14 +4660,15 @@ section.calc-section {
 }
 
 /* Designed intro cover (public/intro-poster.jpg): photo on top, cream title
-   panel below; the play button sits on the seam at 1260/1920 of the height. */
+   panel below; the play button sits on the seam (1340/1920 of the height),
+   left of Homie so it never covers his face. */
 .hero-video.branded .hero-video-play {
   background: none;
 }
 .hero-video.branded .hero-video-btn {
   position: absolute;
-  left: 50%;
-  top: 65.625%;
+  left: 27%;
+  top: 69.79%;
   transform: translate(-50%, -50%);
   width: 76px;
   height: 76px;
