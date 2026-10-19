@@ -444,6 +444,23 @@ export default async function LandingPage() {
         </Link>
       </section>
 
+      <section className="about-teaser reveal">
+        <div className="about-teaser-photo">
+          <Image src="/za-men.jpg" alt="Геша и Хоуми с готварски шапки" fill sizes="140px" />
+        </div>
+        <div>
+          <h2 className="display">Кой готви</h2>
+          <p>
+            Аз съм Геша. Обичам да тренирам, но не искам да ям едно и също
+            всеки ден. Затова готвя любимите си ястия с повече протеин, а
+            Хоуми, моята овчарка, ги опитва първи.
+          </p>
+          <Link href="/za-men" className="about-teaser-link">
+            Повече за мен и рецептурника →
+          </Link>
+        </div>
+      </section>
+
       <section id="faq" className="faq reveal">
         <h2>Въпроси</h2>
         {[
