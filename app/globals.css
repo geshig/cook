@@ -4660,18 +4660,18 @@ section.calc-section {
 }
 
 /* Designed intro cover (public/intro-poster.jpg): photo on top, cream title
-   panel below; the play button sits on the seam (1340/1920 of the height),
+   panel below; the play button sits on the seam (1440/1920 of the height),
    left of Homie so it never covers his face. */
 .hero-video.branded .hero-video-play {
   background: none;
 }
 .hero-video.branded .hero-video-btn {
   position: absolute;
-  left: 27%;
-  top: 69.79%;
+  left: 25%;
+  top: 75%;
   transform: translate(-50%, -50%);
-  width: 76px;
-  height: 76px;
+  width: 64px;
+  height: 64px;
   background: var(--olive-deep);
   color: #fff;
   box-shadow: 0 0 0 5px var(--bg), 0 12px 28px rgba(0, 0, 0, 0.3);
