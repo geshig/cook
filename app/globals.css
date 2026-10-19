@@ -4658,3 +4658,34 @@ section.calc-section {
     min-width: 72px;
   }
 }
+
+/* Designed intro cover (public/intro-poster.jpg): photo on top, cream title
+   panel below; the play button sits on the seam at 1260/1920 of the height. */
+.hero-video.branded .hero-video-play {
+  background: none;
+}
+.hero-video.branded .hero-video-btn {
+  position: absolute;
+  left: 50%;
+  top: 65.625%;
+  transform: translate(-50%, -50%);
+  width: 76px;
+  height: 76px;
+  background: var(--olive-deep);
+  color: #fff;
+  box-shadow: 0 0 0 5px var(--bg), 0 12px 28px rgba(0, 0, 0, 0.3);
+}
+.hero-video.branded .hero-video-btn::before,
+.hero-video.branded .hero-video-btn::after {
+  border-color: var(--olive-deep);
+}
+.hero-video.branded {
+  background: var(--bg);
+}
+
+@media (max-width: 899px) {
+  /* Keep the full 9:16 cover visible: shrink the width instead of cropping. */
+  .hero-video.branded {
+    width: min(100%, 400px, calc(66vh * 9 / 16));
+  }
+}
