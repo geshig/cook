@@ -4738,3 +4738,41 @@ section.calc-section {
     display: none;
   }
 }
+
+/* Label above the intro video; the wrapper takes the video's place in the grid. */
+.hero-video-wrap {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  width: 100%;
+}
+.hero-video-label {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 16px;
+  border-radius: 100px;
+  background: rgba(244, 239, 225, 0.1);
+  border: 1px solid rgba(244, 239, 225, 0.22);
+  color: var(--on-deep);
+  font-size: 15px;
+  font-weight: 700;
+}
+.hero-video-label span {
+  color: var(--olive-light);
+  font-size: 12px;
+}
+@media (min-width: 900px) {
+  .hero-video-wrap {
+    grid-area: media;
+    align-self: center;
+    width: auto;
+  }
+  .hero-video-label {
+    font-size: 16px;
+  }
+}
+.hero-video-wrap .hero-video {
+  grid-area: auto;
+}

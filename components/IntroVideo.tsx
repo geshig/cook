@@ -29,6 +29,10 @@ export function IntroVideo({ url, poster: uploaded }: { url: string; poster: str
   }
 
   return (
+    <div className="hero-video-wrap">
+      <p className="hero-video-label">
+        <span aria-hidden="true">▶</span> Изгледай, преди да продължиш
+      </p>
     <div className={"hero-video" + (branded ? " branded" : "") + (playing ? " is-playing" : "")}>
       <video ref={ref} src={url} controls={playing} playsInline preload="none" />
       {!playing && (
@@ -47,6 +51,7 @@ export function IntroVideo({ url, poster: uploaded }: { url: string; poster: str
           </button>
         </>
       )}
+    </div>
     </div>
   );
 }
