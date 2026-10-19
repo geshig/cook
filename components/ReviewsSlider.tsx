@@ -5,96 +5,67 @@ import Image from "next/image";
 
 type Item = { id?: number; name: string; recipe: string; text: string; photo: string; rating: number | null };
 
-/** Swipeable slideshow: one card at a time on phones, arrows and dots, gentle autoplay. */
+/**
+ * „Сготвено от вас“ as a slow, endless strip of cards. It starts moving only
+ * once it scrolls into view, pauses while a finger or the mouse is on it, and
+ * stays still (and swipeable) for people who prefer reduced motion.
+ */
 export function ReviewsSlider({ items }: { items: Item[] }) {
-  const row = useRef<HTMLDivElement>(null);
-  const [active, setActive] = useState(0);
-  const [paused, setPaused] = useState(false);
-
-  function go(i: number) {
-    const el = row.current;
-    if (!el) return;
-    const n = (i + items.length) % items.length;
-    const card = el.children[n] as HTMLElement | undefined;
-    if (card) el.scrollTo({ left: card.offsetLeft - el.offsetLeft, behavior: "smooth" });
-  }
+  const box = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+  const [held, setHeld] = useState(false);
 
   useEffect(() => {
-    const el = row.current;
+    const el = box.current;
     if (!el) return;
-    const onScroll = () => {
-      const w = (el.children[0] as HTMLElement | undefined)?.offsetWidth ?? 1;
-      setActive(Math.round(el.scrollLeft / (w + 12)));
-    };
-    el.addEventListener("scroll", onScroll, { passive: true });
-    return () => el.removeEventListener("scroll", onScroll);
+    const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), { threshold: 0.25 });
+    io.observe(el);
+    return () => io.disconnect();
   }, []);
 
-  useEffect(() => {
-    if (paused || items.length < 2 || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const t = window.setTimeout(() => go(active + 1), 6000);
-    return () => window.clearTimeout(t);
-  });
+  const card = (t: Item, i: number, copy: boolean) => (
+    <figure key={(copy ? "c" : "") + (t.id ?? i)} className="review" aria-hidden={copy || undefined}>
+      <div className="review-photo">
+        <Image src={t.photo} alt={copy ? "" : `${t.recipe || "Ястие"}, сготвено от ${t.name}`} fill sizes="280px" />
+      </div>
+      {t.rating && (
+        <div className="review-stars" aria-label={`${t.rating} от 5 звезди`}>
+          {"★".repeat(t.rating)}
+          <span>{"★".repeat(5 - t.rating)}</span>
+        </div>
+      )}
+      {t.text ? (
+        <>
+          <blockquote>„{t.text}“</blockquote>
+          <figcaption>
+            <b>{t.name}</b>
+            {t.recipe && <> · {t.recipe}</>}
+          </figcaption>
+        </>
+      ) : (
+        <figcaption className="review-cooked">
+          <b>{t.name}</b> сготви
+          {t.recipe && <span>{t.recipe}</span>}
+        </figcaption>
+      )}
+    </figure>
+  );
 
   return (
     <div
-      className="slider"
-      onPointerDown={() => setPaused(true)}
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
+      ref={box}
+      className={"marquee" + (visible && !held ? " running" : "")}
+      style={{ ["--marquee-time" as string]: `${Math.max(24, items.length * 5)}s` }}
+      onPointerDown={() => setHeld(true)}
+      onPointerUp={() => setHeld(false)}
+      onPointerCancel={() => setHeld(false)}
+      onMouseEnter={() => setHeld(true)}
+      onMouseLeave={() => setHeld(false)}
     >
-      <div className="reviews-row" ref={row}>
-        {items.map((t, i) => (
-          <figure key={t.id ?? i} className="review" aria-roledescription="слайд" aria-label={`${i + 1} от ${items.length}`}>
-            <div className="review-photo">
-              <Image src={t.photo} alt={`${t.recipe || "Ястие"}, сготвено от ${t.name}`} fill sizes="(min-width: 640px) 300px, 80vw" />
-            </div>
-            {t.rating && (
-              <div className="review-stars" aria-label={`${t.rating} от 5 звезди`}>
-                {"★".repeat(t.rating)}
-                <span>{"★".repeat(5 - t.rating)}</span>
-              </div>
-            )}
-            {t.text ? (
-              <>
-                <blockquote>„{t.text}“</blockquote>
-                <figcaption>
-                  <b>{t.name}</b>
-                  {t.recipe && <> · {t.recipe}</>}
-                </figcaption>
-              </>
-            ) : (
-              <figcaption className="review-cooked">
-                <b>{t.name}</b> сготви
-                {t.recipe && <span>{t.recipe}</span>}
-              </figcaption>
-            )}
-          </figure>
-        ))}
+      <div className="marquee-track">
+        {items.map((t, i) => card(t, i, false))}
+        {items.length > 1 && items.map((t, i) => card(t, i, true))}
       </div>
-      {items.length > 1 && (
-        <div className="slider-nav">
-          <button type="button" className="icon-btn" aria-label="Предишен отзив" onClick={() => { setPaused(true); go(active - 1); }}>
-            ←
-          </button>
-          <div className="dots" role="tablist" aria-label="Отзиви">
-            {items.map((_, i) => (
-              <button
-                key={i}
-                type="button"
-                role="tab"
-                aria-selected={i === active}
-                aria-label={`Отзив ${i + 1}`}
-                className={"dot" + (i === active ? " on" : "")}
-                onClick={() => { setPaused(true); go(i); }}
-              />
-            ))}
-          </div>
-          <button type="button" className="icon-btn" aria-label="Следващ отзив" onClick={() => { setPaused(true); go(active + 1); }}>
-            →
-          </button>
-        </div>
-      )}
     </div>
   );
 }

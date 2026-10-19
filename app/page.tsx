@@ -173,7 +173,7 @@ export default async function LandingPage() {
           )}
           <div className="hero-cta">
             <ul className="hero-points">
-              <li><b>100+ рецепти</b> със снимка, калории и макроси</li>
+              <li><b>100+ рецепти</b> с калории, макроси и порции по избор</li>
               <li><b>Дневни менюта</b> и храна в кутии за работа (meal prep)</li>
               <li><b>Общност в Skool</b> и видеа от мен</li>
               <li><b>Калкулатор за калории</b> и списък за пазаруване</li>
