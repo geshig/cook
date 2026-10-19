@@ -5,34 +5,55 @@ function bgDate(iso: string) {
   return new Date(iso).toLocaleDateString("bg-BG", { day: "numeric", month: "long", year: "numeric" });
 }
 
-/** Book owners: their 3 free months, either running or ready to start with one click. */
-export function BonusBanner({ trialEndsAt }: { trialEndsAt: string | null }) {
+/**
+ * Book owners: the free months of new recipes, either running or waiting to be
+ * claimed. Claiming opens a Stripe page with 0 € today and the price after it.
+ */
+export function BonusBanner({
+  trialEndsAt,
+  months = 3,
+  justClaimed = false,
+}: {
+  trialEndsAt: string | null;
+  months?: 3 | 1;
+  /** Back from Stripe; the webhook may need a few seconds to confirm. */
+  justClaimed?: boolean;
+}) {
+  const period = months === 3 ? "3 месеца" : "1 месец";
   if (trialEndsAt) {
     return (
-      <div className="bonus">
+      <div className="bonus" id="bonus">
         <div className="bonus-text">
-          <b>🎁 Твоите безплатни нови рецепти са активни до {bgDate(trialEndsAt)}</b>
+          <b>🎁 Новите рецепти са безплатни за теб до {bgDate(trialEndsAt)}</b>
           <span>
-            Всяка седмица добавям 2–4 нови рецепти и ги виждаш веднага. Ако си платил
-            книгата с карта, след {bgDate(trialEndsAt)} абонаментът продължава за 5,99 € на
-            месец със същата карта, а ако не искаш, спри го от „Управлявай“ преди това.
-            Без карта просто спира, без такси.
+            Всяка седмица добавям 2–4 нови рецепти и ги виждаш веднага. След {bgDate(trialEndsAt)} абонаментът е
+            5,99 € на месец, ако не го спреш. Спираш го с едно натискане от „Управлявай“.
           </span>
         </div>
         <ManageBillingButton label="Управлявай" className="btn" />
       </div>
     );
   }
+  if (justClaimed) {
+    return (
+      <div className="bonus" id="bonus">
+        <div className="bonus-text">
+          <b>🎉 Бонусът ти е взет</b>
+          <span>Активира се до минута. Презареди страницата, ако още не виждаш новите рецепти.</span>
+        </div>
+      </div>
+    );
+  }
   return (
-    <div className="bonus">
+    <div className="bonus bonus-claim" id="bonus">
       <div className="bonus-text">
-        <b>🎁 Твоят бонус: новите рецепти безплатно</b>
+        <b>🎁 Вземи {period} нови рецепти безплатно</b>
         <span>
-          Всяка седмица 2–4 нови рецепти. Активира се с един клик, без карта. След бонуса
-          продължаваш за 5,99 € на месец само ако добавиш карта.
+          Всяка седмица 2–4 нови рецепти. Днес плащаш 0 €. След безплатния период е 5,99 € на месец, а
+          ако не искаш, го спираш по всяко време.
         </span>
       </div>
-      <ActivateTrialButton>Активирай бонуса</ActivateTrialButton>
+      <ActivateTrialButton>Вземи ги безплатно</ActivateTrialButton>
     </div>
   );
 }

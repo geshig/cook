@@ -47,9 +47,6 @@ export async function POST(request: Request) {
       // Карти (Visa, Mastercard, Revolut и т.н.) и Revolut Pay; Apple Pay и Google Pay
       // идват с картите, ако са включени в Stripe → Settings → Payment methods.
       payment_method_types: ["card", "revolut_pay"],
-      // Keep the card (incl. Apple Pay / Google Pay) so the free bonus can
-      // continue at 5,99 €/month when it ends, unless the buyer stops it.
-      payment_method_options: { card: { setup_future_usage: "off_session" } },
       // Digital content: the buyer must expressly agree that access starts now
       // and that this waives the 14-day withdrawal right. Requires a Terms of
       // service URL in Stripe → Settings → Public details.
@@ -57,8 +54,8 @@ export async function POST(request: Request) {
       custom_text: {
         submit: {
           message: forTwo
-            ? "Веднага след плащането влизаш с този имейл, а линкът за втория човек идва в имейла ти. И двамата получавате безплатен бонус с нови рецепти. Твоят продължава след това за 5,99 € на месец със същата карта, освен ако го спреш от „Профил“."
-            : "Веднага след плащането влизаш в рецептите с този имейл. С книгата получаваш и безплатен бонус с нови рецепти. След него абонаментът продължава автоматично за 5,99 € на месец със същата карта, освен ако го спреш от „Профил“. Ще ти напомня по имейл 7 дни преди това.",
+            ? "Веднага след плащането влизаш с този имейл, а линкът за втория човек идва в имейла ти. И двамата получавате и бонус: нови рецепти безплатно, активирате го в сайта."
+            : "Веднага след плащането влизаш в рецептите с този имейл. Еднократно плащане. С книгата получаваш и бонус: нови рецепти безплатно, активираш го в сайта.",
         },
         terms_of_service_acceptance: {
           message: `Съгласен съм с [Условията](${siteUrl}/usloviya).`,

@@ -20,6 +20,7 @@ import { CommunityCard } from "@/components/CommunityCard";
 import { TrackOnce } from "@/components/TrackOnce";
 import { PendingGift } from "@/components/GiftRedeem";
 import { COMMUNITY } from "@/lib/site";
+import { bonusMonthsFor } from "@/lib/launch";
 
 type SP = Promise<{ [key: string]: string | string[] | undefined }>;
 
@@ -198,6 +199,9 @@ export default async function RecipesPage({
     g.names.push(t.name);
   }
 
+  const bonusMonths: 3 | 1 =
+    access.purchasedBook && !access.hadSubscription ? await bonusMonthsFor(access.email) : 3;
+
   return (
     <>
       <SiteHeader />
@@ -207,9 +211,13 @@ export default async function RecipesPage({
         <h1 className="display">Рецептите</h1>
         <p>{recipes.length} рецепти · търси, филтрирай и запазвай любими</p>
       </header>
-      {access.purchasedBook && (!access.hadSubscription || access.trialEndsAt) && (
+      {access.purchasedBook && (!access.hadSubscription || access.trialEndsAt || sp.bonus === "active") && (
         <section style={{ paddingBlock: 0, maxWidth: 900 }}>
-          <BonusBanner trialEndsAt={access.trialEndsAt} />
+          <BonusBanner
+            trialEndsAt={access.trialEndsAt}
+            months={bonusMonths}
+            justClaimed={sp.bonus === "active"}
+          />
         </section>
       )}
       {access.purchasedBook && COMMUNITY.url && (

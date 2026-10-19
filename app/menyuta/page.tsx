@@ -3,6 +3,8 @@ import Link from "next/link";
 import { CheckoutButton } from "@/components/CheckoutButton";
 import Image from "next/image";
 import { getAccess, hasBookAccess } from "@/lib/access";
+import { BonusBanner } from "@/components/BonusBanner";
+import { bonusMonthsFor } from "@/lib/launch";
 import { getPublicRecipes } from "@/lib/publicRecipes";
 import { MENUS, MENU_LEVELS, type MenuDay } from "@/lib/menus";
 import { rowsFor, totals, type MiniRecipe } from "@/lib/menuMath";
@@ -55,6 +57,8 @@ export default async function MenusPage({ searchParams }: { searchParams: Promis
   const askedP = Number(sp.protein);
   const initialProtein = Number.isFinite(askedP) && askedP >= 40 && askedP <= 300 ? Math.round(askedP) : null;
   const owner = hasBookAccess(access);
+  const claimable = access.purchasedBook && !access.hadSubscription;
+  const months = claimable ? await bonusMonthsFor(access.email) : 3;
 
   return (
     <>
@@ -66,6 +70,11 @@ export default async function MenusPage({ searchParams }: { searchParams: Promis
           книгата. Или избери някой от готовите дни по-долу.
         </p>
       </header>
+      {claimable && (
+        <section style={{ paddingBlock: 0, maxWidth: 900 }}>
+          <BonusBanner trialEndsAt={null} months={months} />
+        </section>
+      )}
 
       <section className="menu-gen-section" id="gen">
         <MenuGenerator key={`${initial}-${initialProtein}`} recipes={recipes} initial={initial} initialProtein={initialProtein} canShop={owner} />

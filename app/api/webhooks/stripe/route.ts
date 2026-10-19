@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
 import type Stripe from "stripe";
-import { startFreeTrial } from "@/lib/trial";
 import { sendGiftEmail, sendPurchaseEmail } from "@/lib/email";
 import { createGiftCodes } from "@/lib/gifts";
+import { bonusDaysFor } from "@/lib/launch";
 import { getStripe } from "@/lib/stripe";
 import { createAdminClient } from "@/lib/supabase/admin";
 
@@ -102,48 +102,13 @@ export async function POST(request: Request) {
         // The "first 100" counter on the landing page.
         revalidateTag("buyers", "max");
 
-        // The book's bonus: 3 months of new recipes, started automatically and
-        // without a card. Only for people who never had a subscription.
-        const { data: row } = await admin
-          .from("subscribers")
-          .select("subscription_status")
-          .eq("email", email)
-          .maybeSingle();
-        const fresh = !row?.subscription_status || row.subscription_status === "inactive";
-        let trialEnd: string | null = null;
-        let autoRenew = false;
-        if (fresh && customerId) {
-          try {
-            // The card saved at checkout (setup_future_usage) renews the
-            // bonus after it ends; Revolut Pay has none, so it just ends.
-            let paymentMethodId: string | null = null;
-            try {
-              const piId = typeof session.payment_intent === "string" ? session.payment_intent : session.payment_intent?.id;
-              if (piId) {
-                const pi = await stripe.paymentIntents.retrieve(piId);
-                const pm = typeof pi.payment_method === "string" ? pi.payment_method : pi.payment_method?.id;
-                if (pm && pi.setup_future_usage === "off_session") {
-                  await stripe.customers.update(customerId, { invoice_settings: { default_payment_method: pm } });
-                  paymentMethodId = pm;
-                }
-              }
-            } catch (e) {
-              console.error("saved card lookup failed:", e instanceof Error ? e.message : e);
-            }
-            const r = await startFreeTrial(stripe, admin, {
-              email,
-              customerId,
-              idempotencyKey: `book-bonus-${session.id}`,
-              paymentMethodId,
-            });
-            autoRenew = r.ok && !!paymentMethodId;
-            trialEnd = r.trialEnd;
-            if (!r.ok) console.error("free trial not started:", r.error);
-          } catch (e) {
-            // Never fail the purchase over the bonus; it can be activated later.
-            console.error("free trial failed:", e instanceof Error ? e.message : e);
-          }
-        }
+        // The book's bonus is not started here: the buyer claims it on the
+        // site (Stripe page with 0 € today and the price after it). The
+        // email says how long their free period will be.
+        let bonusDays = 90;
+        try {
+          bonusDays = await bonusDaysFor(admin, email);
+        } catch {}
 
         // Bought for two: one gift link for the friend.
         let giftCodes: string[] = [];
@@ -164,8 +129,7 @@ export async function POST(request: Request) {
             email,
             paidAt: session.created,
             amount: `${total.toFixed(2).replace(".", ",")} €`,
-            trialEnd,
-            autoRenew,
+            bonusMonths: bonusDays >= 90 ? 3 : 1,
             sessionId: session.id,
             giftCodes,
           });
@@ -187,6 +151,7 @@ export async function POST(request: Request) {
 
       if (session.mode === "subscription") {
         let currentPeriodEnd: string | null = null;
+        let trialEnd: string | null = null;
         if (typeof session.subscription === "string") {
           const subscription = await stripe.subscriptions.retrieve(
             session.subscription
@@ -195,6 +160,10 @@ export async function POST(request: Request) {
           currentPeriodEnd = periodEndSeconds
             ? new Date(periodEndSeconds * 1000).toISOString()
             : null;
+          trialEnd =
+            subscription.status === "trialing" && subscription.trial_end
+              ? new Date(subscription.trial_end * 1000).toISOString()
+              : null;
         }
 
         const { error } = await admin.from("subscribers").upsert(
@@ -210,6 +179,8 @@ export async function POST(request: Request) {
           console.error("subscribers upsert (subscription) failed:", error.message);
           return NextResponse.json({ error: "db" }, { status: 500 });
         }
+        // The claimed bonus: its end date drives the banner. Best-effort.
+        await admin.from("subscribers").update({ trial_end: trialEnd }).eq("email", email);
       }
       break;
     }
@@ -245,6 +216,7 @@ export async function POST(request: Request) {
       break;
     }
 
+    case "customer.subscription.created":
     case "customer.subscription.updated":
     case "customer.subscription.deleted": {
       const subscription = event.data.object as Stripe.Subscription;
