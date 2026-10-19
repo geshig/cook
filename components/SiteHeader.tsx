@@ -5,9 +5,10 @@ export async function SiteHeader() {
   const access = await getAccess();
 
   return (
-    <div className="site-header">
+    <div className={"site-header" + (access.email ? "" : " guest")}>
       <Link href="/" className="display logo">
-        КУХНЯТА НА ГЕША
+        КУХНЯТА <br className="logo-br" />
+        НА ГЕША
       </Link>
       <nav aria-label="Основна навигация">
         {access.email ? (
@@ -24,6 +25,7 @@ export async function SiteHeader() {
           <>
             <Link href="/menyuta">Менюта</Link>
             <Link href="/produkti">Продукти</Link>
+            <Link href="/za-men">За мен</Link>
             <Link href="/login">Вход</Link>
           </>
         )}
