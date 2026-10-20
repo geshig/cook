@@ -14,6 +14,7 @@ export default async function AdminVideo() {
           Видео
         </Link>
         <Link href="/admin/podaraci">Подаръци</Link>
+        <Link href="/admin/statistika">Статистика</Link>
       </div>
       <h1 className="display" style={{ fontSize: 34, marginBottom: 6 }}>
         Видео на началната страница

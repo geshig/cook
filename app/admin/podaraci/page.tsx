@@ -14,6 +14,7 @@ export default async function AdminGifts() {
         <Link href="/admin/podaraci" className="on">
           Подаръци
         </Link>
+        <Link href="/admin/statistika">Статистика</Link>
       </div>
       <h1 className="display" style={{ fontSize: 34, marginBottom: 6 }}>
         Безплатен достъп
