@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
-import { CheckoutButton } from "@/components/CheckoutButton";
-import { PayBadges } from "@/components/PayBadges";
+import { ValueStack } from "@/components/ValueStack";
+import { EmailCapture } from "@/components/EmailCapture";
+import { StickyBuy } from "@/components/StickyBuy";
+import { getLaunchOffer } from "@/lib/launch";
 import { getPublicRecipes } from "@/lib/publicRecipes";
 import { getAccess, hasBookAccess } from "@/lib/access";
 
@@ -36,17 +37,10 @@ const STEPS = [
   "За глазура прецеди остатъка от мариновката, свари го 2 минути и намажи готовото пиле.",
 ];
 
-const INSIDE = [
-  "100+ рецепти с калории и макроси на всяка порция",
-  "Над половината стават за до 30 минути",
-  "Избираш порциите, количествата се смятат сами",
-  "Дневни менюта, калкулатор за калории и списък за пазаруване",
-];
-
 export default async function ChickenMagnetPage() {
   const [recipes, access] = await Promise.all([getPublicRecipes(), getAccess()]);
-  // Logged-in or not, the page always ends with the book offer.
   void hasBookAccess(access);
+  const months: 3 | 1 = (await getLaunchOffer()).left > 0 ? 3 : 1;
   const chicken = recipes
     .filter((r) => r.photoUrl && /пиле|пилешк/i.test(r.title) && !/мариновка/i.test(r.title))
     .slice(0, 4);
@@ -70,6 +64,9 @@ export default async function ChickenMagnetPage() {
               Това е рецепта №64 от „Кухнята на Геша“, точно както е в книгата. Сладко, солено и леко пикантно,
               а пилето остава сочно и в air fryer, и във фурна.
             </p>
+            <a href="#oferta" className="magnet-jump">
+              📖 Виж и останалите 100+ рецепти ↓
+            </a>
           </div>
           <div className="magnet-photo">
             <Image src="/recipes/pile-portokal-real.jpg" alt="Пиле с портокалова и соева мариновка в тигана" fill priority sizes="(min-width: 900px) 420px, 92vw" />
@@ -99,42 +96,30 @@ export default async function ChickenMagnetPage() {
           <p className="magnet-tip">💡 Соевият сос е солен, затова не соли месото.</p>
         </section>
 
-        <section className="magnet-cta">
-          {(
-            <>
-              <p className="about-kicker">Хареса ли ти?</p>
-              <h2 className="display">Това е 1 от 100+ рецепти в книгата</h2>
-              <ul className="about-list">
-                {INSIDE.map((t) => (
-                  <li key={t}>{t}</li>
-                ))}
-              </ul>
-              {chicken.length > 0 && (
-                <div className="magnet-more" aria-label="Още рецепти с пиле от книгата">
-                  {chicken.map((r) => (
-                    <figure key={r.id}>
-                      <div>
-                        <Image src={r.photoUrl!} alt="" fill sizes="(min-width: 900px) 160px, 45vw" />
-                      </div>
-                      <figcaption>{r.title}</figcaption>
-                    </figure>
-                  ))}
-                </div>
-              )}
-              <div className="magnet-buy">
-                <CheckoutButton kind="book" className="btn" source="магнит пиле">
-                  Вземи книгата за 47 €
-                </CheckoutButton>
-                <Link href="/" className="btn btn-ghost">
-                  Виж какво има вътре
-                </Link>
-              </div>
-              <p className="magnet-small">Еднократно плащане. Влизаш веднага с имейла си.</p>
-              <PayBadges />
-            </>
+        <section className="magnet-offer" id="oferta">
+          <p className="magnet-bridge">
+            Хареса ли ти? <b>Тази рецепта е 1 от 100+ в книгата.</b>
+          </p>
+          {chicken.length > 0 && (
+            <div className="magnet-more" aria-label="Още рецепти с пиле от книгата">
+              {chicken.map((r) => (
+                <figure key={r.id}>
+                  <div>
+                    <Image src={r.photoUrl!} alt="" fill sizes="(min-width: 900px) 160px, 45vw" />
+                  </div>
+                  <figcaption>{r.title}</figcaption>
+                </figure>
+              ))}
+            </div>
           )}
+          <ValueStack bonusMonths={months} source="магнит пиле" title="Вземи всички 100+ рецепти" />
+        </section>
+
+        <section className="magnet-capture">
+          <EmailCapture source="pile" />
         </section>
       </main>
+      <StickyBuy afterPx={900} note="Още 100+ рецепти като тази" />
     </>
   );
 }

@@ -5154,3 +5154,174 @@ main.magnet {
     padding: 36px;
   }
 }
+
+/* ---------- Всичко за 47 € (landing + free recipes) ---------- */
+section.value-sec {
+  max-width: 980px;
+  padding-top: 26px;
+  padding-bottom: 10px;
+}
+.value h2 {
+  margin: 0 0 14px;
+  font-size: clamp(28px, 6.5vw, 40px);
+  line-height: 1.1;
+}
+.value-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.value-grid li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 12px;
+  background: var(--card);
+  border: 1px solid var(--line-soft);
+  border-radius: 14px;
+  font-size: 14px;
+  line-height: 1.35;
+  color: var(--text-dim);
+}
+.value-grid b {
+  display: block;
+  margin-bottom: 2px;
+  font-size: 15px;
+  color: var(--text);
+}
+.value-ico {
+  flex: 0 0 auto;
+  font-size: 22px;
+  line-height: 1;
+}
+.value-note {
+  margin: 10px 2px 14px;
+  font-size: 14px;
+  color: var(--text-dim);
+}
+.value-buy {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--olive-deep);
+  color: var(--on-deep);
+  border-radius: 18px;
+}
+.value-price {
+  display: grid;
+}
+.value-price b {
+  font-size: 32px;
+  line-height: 1;
+}
+.value-price span {
+  font-size: 13px;
+  color: var(--on-deep-dim);
+}
+.value-btn {
+  background: var(--on-deep);
+  color: var(--olive-deep);
+  white-space: nowrap;
+}
+.value-bonus {
+  margin: 10px 2px;
+  font-size: 15px;
+}
+@media (max-width: 380px) {
+  .value-grid li {
+    padding: 10px;
+    font-size: 13px;
+  }
+  .value-ico {
+    font-size: 19px;
+  }
+}
+@media (min-width: 900px) {
+  .value-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .value-grid li {
+    flex-direction: column;
+    padding: 16px;
+  }
+  .value-buy {
+    padding: 18px 24px;
+  }
+}
+
+/* free recipe page: offer + email */
+.magnet-jump {
+  display: inline-block;
+  margin-top: 14px;
+  font-weight: 700;
+  color: var(--olive-light);
+  text-decoration: none;
+}
+.magnet-offer {
+  max-width: 980px;
+  margin: 40px auto 0;
+  padding: 0;
+}
+.magnet-bridge {
+  margin: 0 0 12px;
+  font-size: 18px;
+}
+.magnet-capture {
+  max-width: 680px;
+  margin: 30px auto 0;
+  padding: 0;
+}
+.capture {
+  padding: 18px;
+  border: 1px dashed var(--line);
+  border-radius: 18px;
+  background: var(--card);
+}
+.capture h3 {
+  margin: 0 0 4px;
+  font-size: 19px;
+}
+.capture p {
+  margin: 0 0 12px;
+  font-size: 15px;
+  color: var(--text-dim);
+}
+.capture form {
+  display: flex;
+  gap: 8px;
+}
+.capture input {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 14px;
+  border-radius: 100px;
+  border: 1px solid var(--line);
+  font: inherit;
+  font-size: 16px;
+  background: #fff;
+}
+.capture small {
+  display: block;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--text-dim);
+  line-height: 1.4;
+}
+.capture-done {
+  padding: 16px;
+  border-radius: 14px;
+  background: var(--tint);
+  font-weight: 700;
+}
+@media (max-width: 899px) {
+  /* the full list is right below in "Всичко за 47 €" */
+  .hero-points {
+    display: none;
+  }
+}
