@@ -17,7 +17,7 @@ const BUILT_IN: Testimonial[] = [
   ["Александра", "Бърз миш-маш с яйца и извара", "aleksandra-mish-mash"],
   ["Велизара", "Татзики салата с пилешко", "velizara-tatziki-salata"],
   ["Георги", "Салата с нахут, едамаме и моцарела", "georgi-salata-nahut-edamame"],
-  ["Стоян", "Паста с пилешко за кутии за работа", "stoyan-pasta-pile-kutii"],
+  ["Стоян", "Пиле с ориз в кутия за работа", "stoyan-pasta-pile-kutii"],
   ["Симона", "Протеинови брауни", "simona-proteinovi-brauni"],
   ["Никол", "Паста със скариди", "nikol-pasta-skaridi"],
   ["Сияна", "Царевична салата със сирене", "siyana-carevichna-salata"],

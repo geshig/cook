@@ -13,7 +13,8 @@ type Item = { id?: number; name: string; recipe: string; text: string; photo: st
 export function ReviewsSlider({ items }: { items: Item[] }) {
   const box = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
-  const [held, setHeld] = useState(false);
+  const held = useRef(false);
+  const resumeAt = useRef(0);
 
   useEffect(() => {
     const el = box.current;
@@ -22,6 +23,41 @@ export function ReviewsSlider({ items }: { items: Item[] }) {
     io.observe(el);
     return () => io.disconnect();
   }, []);
+
+  // Gentle auto-scroll on a normal scroll container, so a finger can always
+  // swipe it; it pauses while touched and resumes a few seconds later.
+  useEffect(() => {
+    const el = box.current;
+    if (!el || !visible || items.length < 2) return;
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let raf = 0;
+    let last = performance.now();
+    let acc = 0;
+    const tick = (now: number) => {
+      const dt = Math.min(64, now - last);
+      last = now;
+      if (!held.current && now > resumeAt.current) {
+        acc += dt * 0.035;
+        if (acc >= 1) {
+          const step = Math.floor(acc);
+          acc -= step;
+          const half = el.scrollWidth / 2;
+          el.scrollLeft = el.scrollLeft + step >= half ? el.scrollLeft + step - half : el.scrollLeft + step;
+        }
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [visible, items.length]);
+
+  const hold = () => {
+    held.current = true;
+  };
+  const release = () => {
+    held.current = false;
+    resumeAt.current = performance.now() + 3500;
+  };
 
   const card = (t: Item, i: number, copy: boolean) => (
     <figure key={(copy ? "c" : "") + (t.id ?? i)} className="review" aria-hidden={copy || undefined}>
@@ -54,13 +90,17 @@ export function ReviewsSlider({ items }: { items: Item[] }) {
   return (
     <div
       ref={box}
-      className={"marquee" + (visible && !held ? " running" : "")}
-      style={{ ["--marquee-time" as string]: `${Math.max(24, items.length * 5)}s` }}
-      onPointerDown={() => setHeld(true)}
-      onPointerUp={() => setHeld(false)}
-      onPointerCancel={() => setHeld(false)}
-      onMouseEnter={() => setHeld(true)}
-      onMouseLeave={() => setHeld(false)}
+      className="marquee"
+      onPointerDown={hold}
+      onPointerUp={release}
+      onPointerCancel={release}
+      onTouchStart={hold}
+      onTouchEnd={release}
+      onMouseEnter={hold}
+      onMouseLeave={release}
+      onWheel={() => {
+        resumeAt.current = performance.now() + 3500;
+      }}
     >
       <div className="marquee-track">
         {items.map((t, i) => card(t, i, false))}

@@ -4700,43 +4700,26 @@ section.calc-section {
   z-index: 2;
 }
 
-/* „Сготвено от вас“: endless strip, moves once in view. */
+/* „Сготвено от вас“: swipeable strip that drifts by itself once in view. */
 .marquee {
-  overflow: hidden;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
   margin: 0 -16px;
   padding: 4px 16px 8px;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 16px, #000 calc(100% - 16px), transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+  -webkit-overflow-scrolling: touch;
+}
+.marquee::-webkit-scrollbar {
+  display: none;
 }
 .marquee-track {
   display: flex;
   gap: 12px;
   width: max-content;
-  animation: marquee var(--marquee-time, 35s) linear infinite;
-  animation-play-state: paused;
-}
-.marquee.running .marquee-track {
-  animation-play-state: running;
 }
 .marquee .review {
   flex: 0 0 min(72vw, 280px);
   scroll-snap-align: none;
-}
-@keyframes marquee {
-  to {
-    transform: translateX(calc(-50% - 6px));
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .marquee {
-    overflow-x: auto;
-  }
-  .marquee-track {
-    animation: none;
-  }
-  .marquee .review[aria-hidden="true"] {
-    display: none;
-  }
 }
 
 /* Label above the intro video; the wrapper takes the video's place in the grid. */
