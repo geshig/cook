@@ -70,7 +70,7 @@ export default async function ChickenMagnetPage() {
             </p>
           </div>
           <div className="magnet-photo">
-            <Image src="/recipes/orange-soy-chicken-marinade.jpg" alt="Пиле с портокалова и соева глазура" fill priority sizes="(min-width: 900px) 420px, 92vw" />
+            <Image src="/recipes/pile-portokal-real.jpg" alt="Пиле с портокалова и соева мариновка в тигана" fill priority sizes="(min-width: 900px) 420px, 92vw" />
           </div>
         </section>
 
