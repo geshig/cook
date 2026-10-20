@@ -175,9 +175,9 @@ export default async function LandingPage() {
               <CheckoutButton kind="book" className="btn btn-cream" id="hero-cta" source="горе">
                 Купи книгата за 47 €
               </CheckoutButton>
-              <Link href="/menyuta" className="btn btn-outline-cream">
-                Виж дневните менюта
-              </Link>
+              <a href="#vatre" className="btn btn-outline-cream">
+                Какво има вътре ↓
+              </a>
             </div>
             <PayBadges dark />
             <div className="hero-bonus">
@@ -200,7 +200,7 @@ export default async function LandingPage() {
         </section>
       </div>
 
-      <section className="value-sec">
+      <section className="value-sec" id="vatre">
         <ValueStack bonusMonths={first ? 3 : 1} source="всичко за 47" />
       </section>
 
@@ -386,9 +386,6 @@ export default async function LandingPage() {
           </p>
         </div>
         {all.length > 0 && <MenuGenerator recipes={all} canShop={access.purchasedBook || access.subscriptionActive} />}
-        <Link href="/menyuta" className="gen-more">
-          Още готови дни за 1500, 2000 и 2500 kcal
-        </Link>
       </section>
 
       <section className="about-teaser reveal">
