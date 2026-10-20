@@ -5352,3 +5352,18 @@ html {
     text-align: center;
   }
 }
+
+/* main buy button in the offer block: bigger and easy to hit */
+.value-btn {
+  font-size: 20px;
+  font-weight: 800;
+  padding: 18px 30px;
+  min-height: 62px;
+  box-shadow: 0 8px 22px -8px rgba(0, 0, 0, 0.45);
+}
+@media (min-width: 900px) {
+  .value-btn {
+    font-size: 21px;
+    padding: 20px 40px;
+  }
+}
