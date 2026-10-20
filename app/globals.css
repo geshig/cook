@@ -5329,9 +5329,9 @@ section.value-sec {
 /* book cover with Homie */
 .value-cover {
   flex: 0 0 auto;
-  width: 64px;
+  width: 82px;
   height: auto;
-  margin: -26px 0 -8px -4px;
+  margin: -44px 0 -10px -6px;
   transform: rotate(-4deg);
 }
 .value-price {
@@ -5356,4 +5356,16 @@ html {
 }
 #vatre {
   scroll-margin-top: 12px;
+}
+@media (max-width: 560px) {
+  /* phone: cover + price on top, a full-width buy button under them */
+  .value-buy {
+    flex-wrap: wrap;
+    row-gap: 14px;
+    margin-top: 34px;
+  }
+  .value-btn {
+    flex: 1 0 100%;
+    text-align: center;
+  }
 }

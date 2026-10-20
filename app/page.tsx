@@ -172,31 +172,6 @@ export default async function LandingPage() {
               <br />
               Не само за фитнес маниаци.
             </p>
-            <div className="hero-actions">
-              <CheckoutButton kind="book" className="btn btn-cream" id="hero-cta" source="горе">
-                Купи книгата за 47 €
-              </CheckoutButton>
-              <a href="#vatre" className="btn btn-outline-cream">
-                Какво има вътре ↓
-              </a>
-            </div>
-            <PayBadges dark />
-            <div className="hero-bonus">
-              <span aria-hidden="true">🎁</span>
-              <span>
-                {first ? (
-                  <>
-                    <b>Бонус за първите {FIRST_BUYERS} закупили: 3 месеца нови рецепти безплатно</b>
-                    По 2–4 нови рецепти всяка седмица.
-                  </>
-                ) : (
-                  <>
-                    <b>Бонус: 1 месец нови рецепти безплатно</b>
-                    По 2–4 нови рецепти всяка седмица.
-                  </>
-                )}
-              </span>
-            </div>
           </div>
         </section>
       </div>
@@ -496,7 +471,7 @@ export default async function LandingPage() {
         </div>
       </div>
 
-      <StickyBuy note={first ? `+ 3 месеца нови рецепти за първите ${FIRST_BUYERS}` : "+ 1 месец нови рецепти безплатно"} />
+      <StickyBuy afterPx={2100} note={first ? `+ 3 месеца нови рецепти за първите ${FIRST_BUYERS}` : "+ 1 месец нови рецепти безплатно"} />
     </>
   );
 }
