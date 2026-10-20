@@ -285,6 +285,7 @@ export default async function LandingPage() {
 
       <section id="pricing" className="pricing reveal">
         <div className="price-card">
+          <Image className="price-cover" src="/book-cover.png" alt="Книгата „Кухнята на Геша“ с Хоуми на корицата" width={260} height={337} sizes="160px" />
           <div className="tag">Всичко това за</div>
           <div className="amount">
             47 € <span>еднократно</span>

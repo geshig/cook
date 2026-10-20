@@ -5325,3 +5325,29 @@ section.value-sec {
     display: none;
   }
 }
+
+/* book cover with Homie */
+.value-cover {
+  flex: 0 0 auto;
+  width: 64px;
+  height: auto;
+  margin: -26px 0 -8px -4px;
+  transform: rotate(-4deg);
+}
+.value-price {
+  flex: 1;
+  min-width: 0;
+}
+.price-cover {
+  display: block;
+  width: 150px;
+  height: auto;
+  margin: 0 auto 10px;
+  transform: rotate(-3deg);
+}
+@media (min-width: 900px) {
+  .value-cover {
+    width: 86px;
+    margin: -34px 4px -10px 0;
+  }
+}

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { CheckoutButton } from "@/components/CheckoutButton";
 import { PayBadges } from "@/components/PayBadges";
 
@@ -44,6 +45,7 @@ export function ValueStack({
       </ul>
       <p className="value-note">Не е PDF: отваря се в телефона като приложение, без да теглиш нищо.</p>
       <div className="value-buy">
+        <Image className="value-cover" src="/book-cover.png" alt="Книгата „Кухнята на Геша“ с Хоуми на корицата" width={260} height={337} sizes="90px" />
         <div className="value-price">
           <b>47 €</b>
           <span>еднократно, достъп завинаги</span>
