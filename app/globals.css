@@ -5351,3 +5351,9 @@ section.value-sec {
     margin: -34px 4px -10px 0;
   }
 }
+html {
+  scroll-behavior: smooth;
+}
+#vatre {
+  scroll-margin-top: 12px;
+}
