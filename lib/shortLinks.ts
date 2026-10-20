@@ -18,6 +18,13 @@ export const SHORT_LINKS: Record<string, Short> = {
   "/fbp": { dest: "/", source: "facebook", medium: "post" },
   "/menu": { dest: "/menyuta", source: "instagram", medium: "post", campaign: "menyuta" },
   "/dvama": { dest: "/#pricing", source: "instagram", medium: "post", campaign: "za-dvama" },
+  // Pinned comments under videos.
+  "/k": { dest: "/", source: "instagram", medium: "comment" },
+  "/kf": { dest: "/", source: "facebook", medium: "comment" },
+  "/kt": { dest: "/", source: "tiktok", medium: "comment" },
+  // ManyChat DM links (free chicken recipe).
+  "/pi": { dest: "/pile", source: "instagram", medium: "manychat", campaign: "pile" },
+  "/pf": { dest: "/pile", source: "facebook", medium: "manychat", campaign: "pile" },
 };
 
 /** The full redirect URL for a short link, or null if the path is not one. */
