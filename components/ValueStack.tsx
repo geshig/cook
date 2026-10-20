@@ -48,7 +48,7 @@ export function ValueStack({
         <Image className="value-cover" src="/book-cover.png" alt="Книгата „Кухнята на Геша“ с Хоуми на корицата" width={260} height={337} sizes="90px" />
         <div className="value-price">
           <b>47 €</b>
-          <span>еднократно, достъп завинаги</span>
+          <span>еднократно · под 0,50 € на рецепта</span>
         </div>
         <CheckoutButton kind="book" className="btn value-btn" source={source}>
           Купи книгата
