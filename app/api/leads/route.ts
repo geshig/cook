@@ -5,8 +5,9 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function POST(request: Request) {
   let email: unknown;
+  let source: unknown;
   try {
-    ({ email } = await request.json());
+    ({ email, source } = await request.json());
   } catch {
     return NextResponse.json({ error: "Невалидна заявка" }, { status: 400 });
   }
@@ -16,9 +17,11 @@ export async function POST(request: Request) {
   }
 
   const admin = createAdminClient();
-  const { error } = await admin
-    .from("leads")
-    .upsert({ email: email.toLowerCase().trim() }, { onConflict: "email" });
+  const clean = email.toLowerCase().trim();
+  const src = typeof source === "string" && /^[a-z0-9-]{1,30}$/.test(source) ? source : "landing";
+  let { error } = await admin.from("leads").upsert({ email: clean, source: src }, { onConflict: "email" });
+  // Older tables have no "source" column: store the email anyway.
+  if (error) ({ error } = await admin.from("leads").upsert({ email: clean }, { onConflict: "email" }));
 
   if (error) {
     console.error("Failed to store lead:", error);

@@ -1,8 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { StickyBuy } from "@/components/StickyBuy";
+import { ValueStack } from "@/components/ValueStack";
 import { Testimonials } from "@/components/Testimonials";
-import { CountUp } from "@/components/CountUp";
 import { PayBadges } from "@/components/PayBadges";
 import { getAccess } from "@/lib/access";
 import { getPublicRecipes, type PublicRecipe } from "@/lib/publicRecipes";
@@ -42,18 +42,6 @@ const CATEGORIES: [string, number][] = [
 ];
 
 /** What you get, in the words of someone cooking — each one is a real feature. */
-const FEATURES: { icon: string; title: string; text: string }[] = [
-  { icon: "M4 19h16M7 16V9m5 7V5m5 11v-4", title: "Калории и макроси", text: "На всяка порция: калории, протеин, въглехидрати, мазнини." },
-  { icon: "M12 5v14M5 12h14", title: "Порциите се смятат сами", text: "За един или за шестима: натискаш + и всичко се преизчислява." },
-  { icon: "M12 8v4l3 2M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z", title: "Режим за готвене", text: "Екранът не заспива, таймерите са в самите стъпки." },
-  { icon: "M6 6h15l-1.5 9h-12zM6 6 5 3H2M9 20a1 1 0 1 0 0 .01M18 20a1 1 0 1 0 0 .01", title: "Списък за пазаруване", text: "Продуктите от рецептата влизат в списъка с едно натискане." },
-  { icon: "M4 5h16v15H4zM4 10h16M9 3v4M15 3v4", title: "Дневни менюта", text: "Меню по твоите калории и храна в кутии за работа (meal prep)." },
-  { icon: "M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z", title: "Нови рецепти всяка седмица", text: "По 2–4 седмично. Първите месеци са подарък с книгата." },
-  { icon: "M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2M10 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM21 20v-2a4 4 0 0 0-3-3.9M16 2.1a4 4 0 0 1 0 7.8", title: "Общност в Skool", text: "Споделяш, питаш и винаги ти отговарям лично." },
-  { icon: "M7 3h10a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM9 7h6M9 12h.01M12 12h.01M15 12h.01M9 16h.01M12 16h.01M15 16h.01", title: "Калкулатор за калории", text: "Въвеждаш ръст, тегло и цел и виждаш колко калории ти трябват и за колко време стигаш целта." },
-  { icon: "M3 6h13v12H3zM16 10l5-3v10l-5-3", title: "Видеа от мен", text: "За хранене, здраве и уелнес, и как да стане навик." },
-];
-
 function pickPreview(withPhoto: PublicRecipe[]) {
   const picked = PREVIEW_TITLES.map((t) => withPhoto.find((r) => r.title.startsWith(t))).filter(
     (r): r is PublicRecipe => !!r
@@ -212,50 +200,8 @@ export default async function LandingPage() {
         </section>
       </div>
 
-      <section className="stats reveal" aria-label="Книгата в числа">
-        <div>
-          <b>
-            <CountUp to={100} suffix="+" />
-          </b>
-          <span>рецепти</span>
-        </div>
-        <div>
-          <b>
-            <CountUp to={30} suffix=" мин" />
-          </b>
-          <span>за толкова стават над половината рецепти</span>
-        </div>
-        <div>
-          <b>
-            <CountUp to={16} />
-          </b>
-          <span>са кутии за работа (meal prep)</span>
-        </div>
-        <div>
-          <b>
-            <CountUp to={first ? 3 : 1} suffix={first ? " месеца" : " месец"} />
-          </b>
-          <span>{first ? `нови рецепти подарък за първите ${FIRST_BUYERS}` : "нови рецепти подарък"}</span>
-        </div>
-      </section>
-
-
-      <section className="features reveal">
-        <div className="sec-head">
-          <h2>Какво получаваш</h2>
-          <p>Не е PDF, а кухня в телефона: отваря се в браузъра, без приложение.</p>
-        </div>
-        <ul className="feature-grid">
-          {FEATURES.map((f) => (
-            <li key={f.title}>
-              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d={f.icon} />
-              </svg>
-              <h3>{f.title}</h3>
-              <p>{f.text}</p>
-            </li>
-          ))}
-        </ul>
+      <section className="value-sec">
+        <ValueStack bonusMonths={first ? 3 : 1} source="всичко за 47" />
       </section>
 
       <Testimonials />
