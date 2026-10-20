@@ -5,7 +5,7 @@ import Image from "next/image";
 import { track } from "@/lib/track";
 
 /** Default cover: Gesha and Homie in chef's hats, with the title baked in. */
-const BRANDED_POSTER = "/intro-poster.jpg";
+const BRANDED_POSTER = "/intro-poster-v3.jpg";
 
 /**
  * Gesha's short personal video, placed inside the hero so it is the first
