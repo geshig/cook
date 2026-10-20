@@ -4985,3 +4985,172 @@ main.about {
   border: 2px solid var(--accent);
   box-shadow: 0 10px 30px -18px rgba(107, 127, 58, 0.6);
 }
+
+/* ---------- free recipe pages (ManyChat) ---------- */
+main.magnet {
+  max-width: 1080px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 18px 16px 56px;
+}
+.magnet-hero {
+  max-width: none;
+  margin: 0;
+  display: grid;
+  gap: 22px;
+  background: var(--olive-deep);
+  color: var(--on-deep);
+  border-radius: 28px;
+  padding: 28px 22px 22px;
+}
+.magnet-hero h1 {
+  margin: 0 0 14px;
+  font-size: clamp(32px, 8vw, 54px);
+  line-height: 1.08;
+}
+.magnet-hero h1 span {
+  color: var(--olive-light);
+  font-style: italic;
+}
+.magnet-copy > p:not(.about-kicker) {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--on-deep-dim);
+}
+.magnet-meta {
+  list-style: none;
+  margin: 0 0 16px;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.magnet-meta li {
+  padding: 6px 12px;
+  border-radius: 100px;
+  background: rgba(244, 239, 225, 0.1);
+  border: 1px solid rgba(244, 239, 225, 0.2);
+  font-size: 14px;
+  font-weight: 700;
+}
+.magnet-photo {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #000;
+}
+.magnet-photo img {
+  object-fit: cover;
+}
+.magnet-recipe {
+  max-width: 680px;
+  margin: 36px auto 0;
+}
+.magnet-recipe h2 {
+  margin: 0 0 14px;
+  font-size: clamp(28px, 6vw, 38px);
+}
+.magnet-ing {
+  list-style: none;
+  margin: 0 0 30px;
+  padding: 0;
+  display: grid;
+  gap: 2px;
+}
+.magnet-ing li {
+  display: grid;
+  grid-template-columns: 112px 1fr;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line-soft);
+  font-size: 17px;
+}
+.magnet-ing b {
+  color: var(--accent);
+}
+.magnet-ing small {
+  display: block;
+  font-size: 14px;
+  color: var(--text-dim);
+}
+.magnet-steps {
+  margin: 0;
+  padding-left: 22px;
+  display: grid;
+  gap: 14px;
+  font-size: 17px;
+  line-height: 1.6;
+}
+.magnet-tip {
+  margin: 22px 0 0;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: var(--tint);
+  font-size: 16px;
+}
+.magnet-cta {
+  max-width: 760px;
+  margin: 44px auto 0;
+  padding: 26px 22px;
+  background: var(--card);
+  border: 2px solid var(--accent);
+  border-radius: 24px;
+}
+.magnet-cta h2 {
+  margin: 0 0 12px;
+  font-size: clamp(28px, 6vw, 38px);
+}
+.magnet-more {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0 0 22px;
+}
+.magnet-more figure {
+  margin: 0;
+}
+.magnet-more figure > div {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--card-hi);
+}
+.magnet-more img {
+  object-fit: cover;
+}
+.magnet-more figcaption {
+  margin-top: 6px;
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--text-dim);
+}
+.magnet-buy {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.magnet-small {
+  margin: 12px 0 10px;
+  font-size: 14px;
+  color: var(--text-dim);
+}
+@media (min-width: 900px) {
+  main.magnet {
+    padding: 26px 32px 80px;
+  }
+  .magnet-hero {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 48px;
+    padding: 52px;
+  }
+  .magnet-more {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .magnet-cta {
+    padding: 36px;
+  }
+}
