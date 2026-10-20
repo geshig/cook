@@ -10,7 +10,7 @@ import { PayBadges } from "@/components/PayBadges";
 export function ValueStack({
   bonusMonths,
   source,
-  title = "Всичко, което получаваш за 47 €",
+  title = "Какво получаваш",
 }: {
   bonusMonths: 3 | 1;
   source: string;
