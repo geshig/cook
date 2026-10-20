@@ -60,6 +60,10 @@ const nextConfig: NextConfig = {
    * Short links for bios and posts. Each adds UTM tags, so the statistics
    * (Umami) show where visitors came from. 307 = can be changed any time.
    */
+  async redirects() {
+    // The free chicken recipe moved to the short /pile; old links keep working.
+    return [{ source: "/receptatazasochnotopile", destination: "/pile", permanent: false }];
+  },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },
