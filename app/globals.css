@@ -5367,3 +5367,18 @@ html {
     padding: 20px 40px;
   }
 }
+
+/* the book video on the free recipe page (light background) */
+.magnet-video {
+  display: flex;
+  justify-content: center;
+  margin: 6px 0 22px;
+}
+.magnet-video .hero-video-label {
+  background: var(--olive-deep);
+  border-color: var(--olive-deep);
+  color: var(--on-deep);
+}
+.magnet-video .hero-video {
+  max-width: 360px;
+}

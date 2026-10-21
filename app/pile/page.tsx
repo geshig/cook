@@ -7,6 +7,8 @@ import { StickyBuy } from "@/components/StickyBuy";
 import { getLaunchOffer } from "@/lib/launch";
 import { getPublicRecipes } from "@/lib/publicRecipes";
 import { getAccess, hasBookAccess } from "@/lib/access";
+import { IntroVideo } from "@/components/IntroVideo";
+import { getIntroVideo } from "@/lib/settings";
 
 /**
  * Free recipe from the book, sent through ManyChat ("сочно пиле"). Shows the
@@ -41,6 +43,7 @@ export default async function ChickenMagnetPage() {
   const [recipes, access] = await Promise.all([getPublicRecipes(), getAccess()]);
   void hasBookAccess(access);
   const months: 3 | 1 = (await getLaunchOffer()).left > 0 ? 3 : 1;
+  const intro = await getIntroVideo();
   const chicken = recipes
     .filter((r) => r.photoUrl && /пиле|пилешк/i.test(r.title) && !/мариновка/i.test(r.title))
     .slice(0, 4);
@@ -100,6 +103,11 @@ export default async function ChickenMagnetPage() {
           <p className="magnet-bridge">
             Хареса ли ти? <b>Тази рецепта е 1 от 100+ в книгата.</b>
           </p>
+          {intro && (
+            <div className="magnet-video">
+              <IntroVideo url={intro.url} poster={intro.poster} />
+            </div>
+          )}
           {chicken.length > 0 && (
             <div className="magnet-more" aria-label="Още рецепти с пиле от книгата">
               {chicken.map((r) => (
