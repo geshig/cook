@@ -17,7 +17,17 @@ export function StickyBuy({ afterPx, note }: { afterPx?: number; note?: string }
     const onScroll = () => setHeroGone(window.scrollY > afterPx);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    // Hide while the buy card itself is on screen (pages that have one).
+    const pricing = document.getElementById("pricing");
+    const io =
+      pricing && "IntersectionObserver" in window
+        ? new IntersectionObserver(([e]) => setPricingOn(e.isIntersecting), { threshold: 0.15 })
+        : null;
+    if (pricing && io) io.observe(pricing);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      io?.disconnect();
+    };
   }, [afterPx]);
 
   useEffect(() => {
