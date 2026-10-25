@@ -49,7 +49,7 @@ export function StickyBuy({ afterPx, note }: { afterPx?: number; note?: string }
   return (
     <div className="sticky-buy">
       <div className="sticky-buy-text">
-        <b>100+ рецепти · 47 €</b>
+        <b>100+ рецепти за само 47 €</b>
         <span>{note ?? "+ нови рецепти безплатно с книгата"}</span>
       </div>
       <CheckoutButton kind="book" className="btn" source="лента">
