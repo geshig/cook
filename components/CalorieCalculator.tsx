@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { ACTIVITY, GOALS, calculate, type Goal, type Sex } from "@/lib/calc";
+import { ACTIVITY, GOALS, calculate, nearestActivity, type Goal, type Sex } from "@/lib/calc";
 import { track } from "@/lib/track";
 import { saveTargets } from "@/lib/targets";
 
@@ -36,7 +36,10 @@ export function CalorieCalculator() {
   useEffect(() => {
     try {
       const saved = localStorage.getItem(KEY);
-      if (saved) setF({ ...START, ...JSON.parse(saved) });
+      if (saved) {
+        const v = { ...START, ...JSON.parse(saved) } as Form;
+        setF({ ...v, activity: nearestActivity(Number(v.activity) || START.activity) });
+      }
     } catch {}
   }, []);
   useEffect(() => {
@@ -205,6 +208,14 @@ export function CalorieCalculator() {
                 Нормално тегло за твоя ръст: {r.healthyMin}–{r.healthyMax} kg
               </small>
             </div>
+
+            {r.recomp && (
+              <p className="calc-warn">
+                При твоето BMI най-бързо качваш мускули, като ядеш колкото гориш и
+                тренираш със силови упражнения: мазнините падат, мускулите растат.
+                Затова сметнах калориите за поддържане, без излишък.
+              </p>
+            )}
 
             {(r.floored || lowBmi) && (
               <p className="calc-warn">
