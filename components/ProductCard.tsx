@@ -62,7 +62,6 @@ export function ProductCard({
         <ul className="pdp-trust">
           <li>⚡ Достъп веднага</li>
           <li>📱 Като приложение, не PDF</li>
-          <li>🔒 Защитено през Stripe</li>
         </ul>
 
         <p className="pdp-bonus">
