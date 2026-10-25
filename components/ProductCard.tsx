@@ -49,7 +49,7 @@ export function ProductCard({
         </ul>
 
         <CheckoutButton kind="book" className="btn pdp-btn" source="продукт">
-          Купи книгата · 47 €
+          Купи книгата
         </CheckoutButton>
 
         <ul className="pdp-wallets" aria-label="Начини на плащане">
