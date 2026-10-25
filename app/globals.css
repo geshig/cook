@@ -5417,11 +5417,13 @@ html {
   }
 }
 @media (min-width: 900px) {
-  .lp-hero {
+  section.lp-hero {
     grid-template-areas: "copy media";
     grid-template-rows: auto;
     align-items: center;
+    padding-top: 48px;
     padding-bottom: 48px;
+    min-height: 0;
   }
   .lp-hero .hero-copy {
     padding: 0;
@@ -5771,4 +5773,69 @@ section.lp-faq {
 .lp-fix h2,
 .pdp-title {
   text-wrap: balance;
+}
+
+/* desktop hero: points + an in-page button fill the left column */
+.lp-points,
+.lp-hero-cta {
+  display: none;
+}
+@media (min-width: 900px) {
+  .lp-points {
+    display: grid;
+    gap: 12px;
+    list-style: none;
+    margin: 28px 0 0;
+    padding: 0;
+    max-width: 34em;
+  }
+  .lp-points li {
+    position: relative;
+    padding-left: 34px;
+    font-size: 17px;
+    line-height: 1.45;
+    color: var(--on-deep-dim);
+  }
+  .lp-points li b {
+    color: var(--on-deep);
+  }
+  .lp-points li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    top: 1px;
+    width: 23px;
+    height: 23px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--olive-light);
+    color: var(--olive-deep);
+    font-size: 13px;
+    font-weight: 800;
+  }
+  .lp-hero-cta {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-top: 30px;
+  }
+  .lp-hero-cta .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 56px;
+    padding: 0 30px;
+    font-size: 17px;
+    font-weight: 800;
+  }
+  .lp-hero-cta span {
+    font-size: 15px;
+    color: var(--on-deep-dim);
+  }
+  /* wider sections on a computer, so the page is not a thin column */
+  .lp-page .reviews,
+  section.lp-faq {
+    max-width: 980px;
+  }
 }
