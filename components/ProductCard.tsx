@@ -16,7 +16,22 @@ export function ProductCard({
   firstBuyers: number;
   ownsBook: boolean;
 }) {
-  const bonus = bonusMonths === 3 ? `3 месеца нови рецепти безплатно за първите ${firstBuyers} закупили` : "1 месец нови рецепти безплатно";
+  // What each part would cost on its own, from real market prices (Oct 2026):
+  // a 4-week meal plan from a dietitian ~40 €, a month of a calorie app with
+  // a meal planner ~25 €, 100+ recipes with macros 50 €, our own 5,99 €/month.
+  const bonusPrice = bonusMonths === 3 ? 18 : 6;
+  const value: [string, string, number | null][] = [
+    ["100+ рецепти с калориите и макросите", "вечери за семейството, кутии за работа, десерти", 50],
+    ["Меню по твоите калории", "колкото струва хранителен режим от диетолог", 40],
+    ["Калкулатор, меню планер и списък за пазаруване", "колкото месец в приложение с меню планер", 25],
+    [
+      bonusMonths === 3 ? "3 месеца нови рецепти" : "1 месец нови рецепти",
+      bonusMonths === 3 ? `по 2–4 всяка седмица, за първите ${firstBuyers}` : "по 2–4 всяка седмица",
+      bonusPrice,
+    ],
+    ["Общност в Skool", "питаш и ти отговарям лично", null],
+  ];
+  const total = value.reduce((sum, [, , p]) => sum + (p ?? 0), 0);
   return (
     <section id="pricing" className="pdp">
       <div className="pdp-media">
@@ -32,21 +47,42 @@ export function ProductCard({
       </div>
 
       <div className="pdp-info">
+        <p className="pdp-kicker">Онлайн готварска книга</p>
         <h2 className="pdp-title">Кухнята на Геша</h2>
-        <p className="pdp-sub">Онлайн готварска книга: 100+ високопротеинови рецепти с калориите и макросите на всяка порция</p>
+        <p className="pdp-sub">
+          100+ високопротеинови рецепти. На всяка порция: калории, протеин,
+          въглехидрати и мазнини.
+        </p>
+
+        <div className="pdp-value">
+          <p className="pdp-value-head">
+            <span>Какво получаваш</span>
+            <span>Отделно</span>
+          </p>
+          <ul>
+            {value.map(([head, note, price]) => (
+              <li key={head}>
+                <span>
+                  <b>{head}</b>
+                  <small>{note}</small>
+                </span>
+                {price ? <s>{price} €</s> : <em>включено</em>}
+              </li>
+            ))}
+          </ul>
+          <p className="pdp-value-total">
+            <span>Ако го събираш отделно</span>
+            <s>{total} €</s>
+          </p>
+        </div>
 
         <div className="pdp-price">
           <b>47 €</b>
-          <span>еднократно · достъп завинаги</span>
+          <span>
+            еднократно, с достъп завинаги
+            <em>Спестяваш {total - 47} €</em>
+          </span>
         </div>
-
-        <ul className="pdp-checks">
-          <li><b>100+ рецепти</b> с калориите и макросите</li>
-          <li><b>Вечери за семейството</b> и кутии за работа за няколко дни</li>
-          <li><b>Порциите се смятат сами</b>: за 1 или за 6 души</li>
-          <li><b>Меню по твоите калории</b> и списък за пазаруване</li>
-          <li><b>Общност в Skool</b>, където отговарям лично</li>
-        </ul>
 
         <CheckoutButton kind="book" className="btn pdp-btn" source="продукт">
           Купи книгата
@@ -63,10 +99,6 @@ export function ProductCard({
           <li>⚡ Достъп веднага</li>
           <li>📱 Като приложение, не PDF</li>
         </ul>
-
-        <p className="pdp-bonus">
-          🎁 <b>Бонус:</b> {bonus}, по 2–4 всяка седмица
-        </p>
 
         <div className="pdp-two">
           <span>

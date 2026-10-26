@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createBrowserSupabase } from "@/lib/supabase/browser";
 
 export function LoginForm() {
@@ -15,6 +15,25 @@ export function LoginForm() {
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
     "idle"
   );
+  const router = useRouter();
+  const [code, setCode] = useState("");
+  const [codeState, setCodeState] = useState<"idle" | "checking" | "bad">("idle");
+
+  // The code from the email signs in THIS browser. The link signs in whichever
+  // browser opens it (often Gmail's or another app's), which is why people
+  // "weren't remembered" on their laptop.
+  async function handleCode(e: FormEvent) {
+    e.preventDefault();
+    setCodeState("checking");
+    const supabase = createBrowserSupabase();
+    const { error } = await supabase.auth.verifyOtp({ email, token: code.replace(/\s/g, ""), type: "email" });
+    if (error) {
+      setCodeState("bad");
+      return;
+    }
+    router.replace(next || "/recipes");
+    router.refresh();
+  }
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -47,9 +66,34 @@ export function LoginForm() {
       )}
 
       {status === "sent" ? (
-        <div className="lead-success" style={{ display: "block" }}>
-          Провери пощата си 🎉 — линкът за вход е на път.
-        </div>
+        <>
+          <div className="lead-success" style={{ display: "block" }}>
+            Провери пощата си 🎉 Пратих ти линк и код за вход.
+          </div>
+          <form className="lead-form login-code" onSubmit={handleCode}>
+            <input
+              inputMode="numeric"
+              autoComplete="one-time-code"
+              placeholder="код от имейла"
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+              required
+            />
+            <button className="btn" type="submit" disabled={codeState === "checking"}>
+              {codeState === "checking" ? "Проверявам…" : "Влез с кода"}
+            </button>
+          </form>
+          <p className="login-hint">
+            Най-сигурно е с кода: въведи го тук и сайтът ще те помни в този
+            браузър. Ако натиснеш линка, отвори го в същия браузър, в който е
+            сайтът.
+          </p>
+          {codeState === "bad" && (
+            <div className="lead-note" style={{ color: "var(--rust)" }}>
+              Кодът не става или е изтекъл. Провери го или поискай нов.
+            </div>
+          )}
+        </>
       ) : (
         <form className="lead-form" onSubmit={handleSubmit}>
           <input
