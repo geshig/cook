@@ -47,12 +47,24 @@ export function ProductCard({
       </div>
 
       <div className="pdp-info">
-        <p className="pdp-kicker">Онлайн готварска книга</p>
-        <h2 className="pdp-title">Кухнята на Геша</h2>
-        <p className="pdp-sub">
-          100+ високопротеинови рецепти. На всяка порция: калории, протеин,
-          въглехидрати и мазнини.
-        </p>
+        <div className="pdp-head">
+          <Image
+            className="pdp-thumb"
+            src="/book-cover-v3.png"
+            alt="Книгата „Кухнята на Геша“ с Хоуми на корицата"
+            width={1020}
+            height={1320}
+            sizes="112px"
+          />
+          <div>
+            <p className="pdp-kicker">Онлайн готварска книга</p>
+            <h2 className="pdp-title">Кухнята на Геша</h2>
+            <p className="pdp-sub">
+              100+ високопротеинови рецепти. На всяка порция: калории, протеин,
+              въглехидрати и мазнини.
+            </p>
+          </div>
+        </div>
 
         <div className="pdp-value">
           <p className="pdp-value-head">
