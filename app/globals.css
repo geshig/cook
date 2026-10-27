@@ -5948,3 +5948,30 @@ section.lp-faq {
   line-height: 1.55;
   color: var(--text-dim);
 }
+
+/* "Спестяваш" badge under the price: big enough on a phone */
+.pdp-price {
+  margin-bottom: 6px;
+}
+.pdp-save {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  margin: 0 0 14px;
+  padding: 7px 14px;
+  border-radius: 100px;
+  background: rgba(181, 86, 46, 0.12);
+  color: var(--rust);
+  font-size: 19px;
+  font-weight: 800;
+}
+.pdp-save span {
+  font-size: 15px;
+  font-weight: 700;
+  opacity: 0.85;
+}
+@media (min-width: 900px) {
+  .pdp-save {
+    font-size: 20px;
+  }
+}
