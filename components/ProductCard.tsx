@@ -81,7 +81,7 @@ export function ProductCard({
           <span>еднократно, с достъп завинаги</span>
         </div>
         <p className="pdp-save">
-          Спестяваш {total - 47} € <span>({Math.round(((total - 47) / total) * 100)}%)</span>
+          Спестяваш {total - 47} €
         </p>
 
         <CheckoutButton kind="book" className="btn pdp-btn" source="продукт">
