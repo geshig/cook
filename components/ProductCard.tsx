@@ -21,12 +21,12 @@ export function ProductCard({
   // a meal planner ~25 €, 100+ recipes with macros 50 €, our own 5,99 €/month.
   const bonusPrice = bonusMonths === 3 ? 18 : 6;
   const value: [string, string, number | null][] = [
-    ["100+ рецепти с калориите и макросите", "вечери за семейството, кутии за работа, десерти", 50],
-    ["Меню по твоите калории", "колкото струва хранителен режим от диетолог", 40],
-    ["Калкулатор, меню планер и списък за пазаруване", "колкото месец в приложение с меню планер", 25],
+    ["100+ рецепти с калориите и макросите", "вечери за семейството, обеди в кутии, десерти", 50],
+    ["Меню по твоите калории", "вместо хранителен режим от диетолог", 40],
+    ["Калкулатор, меню планер и списък за пазаруване", "вместо месечен абонамент за приложение", 25],
     [
       bonusMonths === 3 ? "3 месеца нови рецепти" : "1 месец нови рецепти",
-      bonusMonths === 3 ? `по 2–4 всяка седмица, за първите ${firstBuyers}` : "по 2–4 всяка седмица",
+      bonusMonths === 3 ? `по 2–4 нови всяка седмица, за първите ${firstBuyers}` : "по 2–4 нови всяка седмица",
       bonusPrice,
     ],
     ["Общност в Skool", "питаш и ти отговарям лично", null],
@@ -57,7 +57,7 @@ export function ProductCard({
         <div className="pdp-value">
           <p className="pdp-value-head">
             <span>Какво получаваш</span>
-            <span>Отделно</span>
+            <span>Струва отделно</span>
           </p>
           <ul>
             {value.map(([head, note, price]) => (
@@ -71,18 +71,18 @@ export function ProductCard({
             ))}
           </ul>
           <p className="pdp-value-total">
-            <span>Ако го събираш отделно</span>
+            <span>Ако го купуваш поотделно</span>
             <s>{total} €</s>
           </p>
         </div>
 
         <div className="pdp-price">
           <b>47 €</b>
-          <span>
-            еднократно, с достъп завинаги
-            <em>Спестяваш {total - 47} €</em>
-          </span>
+          <span>еднократно, с достъп завинаги</span>
         </div>
+        <p className="pdp-save">
+          Спестяваш {total - 47} € <span>({Math.round(((total - 47) / total) * 100)}%)</span>
+        </p>
 
         <CheckoutButton kind="book" className="btn pdp-btn" source="продукт">
           Купи книгата
