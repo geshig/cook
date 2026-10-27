@@ -5975,3 +5975,32 @@ section.lp-faq {
     font-size: 20px;
   }
 }
+
+/* Phone: no big green cover box — a small cover next to the title instead */
+.pdp-thumb {
+  display: none;
+}
+@media (max-width: 899px) {
+  .pdp-media {
+    display: none;
+  }
+  .pdp-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .pdp-thumb {
+    display: block;
+    flex: none;
+    width: 104px;
+    height: auto;
+    border-radius: 4px;
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.28);
+  }
+  .pdp-head .pdp-title {
+    font-size: 30px;
+  }
+  .pdp-head .pdp-sub {
+    font-size: 14.5px;
+  }
+}
