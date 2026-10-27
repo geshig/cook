@@ -5839,3 +5839,112 @@ section.lp-faq {
     max-width: 980px;
   }
 }
+
+/* Value stack in the product card: what each part costs on its own */
+.pdp-value {
+  margin: 14px 0 4px;
+  padding: 14px 14px 12px;
+  border-radius: 16px;
+  background: var(--card);
+  border: 1px solid var(--line);
+}
+.pdp-value-head {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0 6px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.pdp-value ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.pdp-value li {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom: 1px dashed var(--line);
+}
+.pdp-value li > span {
+  position: relative;
+  padding-left: 26px;
+  font-size: 15px;
+  line-height: 1.3;
+}
+.pdp-value li > span::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: 11px;
+  font-weight: 800;
+}
+.pdp-value li b {
+  display: block;
+  color: var(--text);
+}
+.pdp-value li small {
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+.pdp-value li s,
+.pdp-value li em {
+  flex: none;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-dim);
+  font-style: normal;
+}
+.pdp-value li em {
+  color: var(--accent);
+  font-size: 13px;
+}
+.pdp-value-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin: 10px 0 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+.pdp-value-total s {
+  font-size: 20px;
+  color: var(--text-dim);
+}
+.pdp-price span em {
+  display: block;
+  margin-top: 2px;
+  font-style: normal;
+  font-weight: 800;
+  color: var(--rust);
+}
+
+/* login: code from the email, so the session stays in this browser */
+.login-code {
+  margin-top: 14px;
+}
+.login-code input {
+  letter-spacing: 0.18em;
+  font-weight: 700;
+}
+.login-hint {
+  margin: 10px 0 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-dim);
+}
