@@ -40,7 +40,7 @@ export async function POST(request: Request) {
       payment_method_types: ["card", "revolut_pay"],
       consent_collection: { terms_of_service: "required" },
       custom_text: {
-        terms_of_service_acceptance: { message: `Съгласен съм с [Условията](${siteUrl}/usloviya).` },
+        terms_of_service_acceptance: { message: `Искам достъп веднага и знам, че след това губя правото на отказ от 14 дни. Приемам [Условията](${siteUrl}/usloviya).` },
       },
     });
     if (!session.url) throw new Error("no url");
