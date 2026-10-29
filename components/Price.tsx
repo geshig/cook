@@ -35,12 +35,10 @@ export function PromoTimer({ label = "Офертата изтича след" }:
   }, []);
   if (!PROMO || left === null || left <= 0) return null;
   const s = Math.floor(left / 1000);
-  const d = Math.floor(s / 86400);
-  const h = Math.floor((s % 86400) / 3600);
+  // Only hours ("78 часа"); minutes just in the last hour.
+  const h = Math.floor(s / 3600);
   const m = Math.floor((s % 3600) / 60);
-  const days = (n: number) => `${n} ${n === 1 ? "ден" : "дни"}`;
-  const hours = (n: number) => `${n} ${n === 1 ? "час" : "часа"}`;
-  const text = d > 0 ? `${days(d)} и ${hours(h)}` : h > 0 ? `${hours(h)} и ${m} мин` : `${Math.max(1, m)} мин`;
+  const text = h > 0 ? `${h} ${h === 1 ? "час" : "часа"}` : `${Math.max(1, m)} мин`;
   return (
     <p className="promo-timer">
       <span>⏳ {label}</span>
