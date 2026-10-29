@@ -77,13 +77,10 @@ export async function POST(request: Request) {
       // Digital content: the buyer must expressly agree that access starts now
       // and that this waives the 14-day withdrawal right. Requires a Terms of
       // service URL in Stripe → Settings → Public details.
-      // promotions "auto": in the EU Stripe adds an optional "send me emails"
-      // box under the email. Only people who tick it get the reminder below.
-      consent_collection: { terms_of_service: "required", promotions: "auto" },
-      // If they leave, the session expires after an hour and Stripe makes a
-      // recovery link; the webhook (checkout.session.expired) emails it once.
-      after_expiration: { recovery: { enabled: true } },
-      expires_at: Math.floor(Date.now() / 1000) + 60 * 60,
+      // Note: consent_collection.promotions (and with it the abandoned-cart
+      // reminder) is not available for a Bulgarian Stripe account — Stripe
+      // rejects the session. Do not add it back.
+      consent_collection: { terms_of_service: "required" },
       custom_text: {
         submit: {
           message: forTwo
@@ -117,4 +114,18 @@ export async function POST(request: Request) {
   }
 
   return NextResponse.json({ url: session.url });
+}
+
+/**
+ * Same as POST, but as a plain link: the buy button navigates here and gets a
+ * 303 straight to Stripe. In-app browsers (TikTok, Instagram) sometimes drop a
+ * redirect done from JavaScript after fetch and hide alert() errors, so a real
+ * navigation is the reliable path.
+ */
+export async function GET(request: Request) {
+  const res = await POST(request);
+  const data = (await res.json().catch(() => ({}))) as { url?: string; error?: string };
+  if (data.url) return NextResponse.redirect(data.url, 303);
+  const msg = encodeURIComponent(data.error ?? "Плащането не можа да започне.");
+  return NextResponse.redirect(`${getSiteUrl()}/?checkout=error&msg=${msg}#pricing`, 303);
 }
