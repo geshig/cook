@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getStripe, getSiteUrl } from "@/lib/stripe";
 import { getAccess } from "@/lib/access";
-import { GIFT_PRICE_CENTS } from "@/lib/gifts";
+import { prices } from "@/lib/price";
 
 /** Book owners buy a second access (27 €) for a friend; they get a gift link. */
 export async function POST(request: Request) {
@@ -10,7 +10,7 @@ export async function POST(request: Request) {
   const access = await getAccess();
   if (!access.email) return NextResponse.json({ error: "Влез, за да подариш книгата." }, { status: 401 });
   if (!access.purchasedBook) {
-    return NextResponse.json({ error: "Подаръкът за 27 € е за хората, които вече имат книгата." }, { status: 403 });
+    return NextResponse.json({ error: "Подаръкът е за хората, които вече имат книгата." }, { status: 403 });
   }
 
   const siteUrl = getSiteUrl();
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
         {
           price_data: {
             currency: "eur",
-            unit_amount: GIFT_PRICE_CENTS,
+            unit_amount: prices().gift,
             product_data: {
               name: "Кухнята на Геша — подарък за приятел",
               description: "Достъп до всички рецепти от книгата за един човек, с негов имейл. Получаваш линк, който му пращаш.",

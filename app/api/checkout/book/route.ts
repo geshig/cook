@@ -1,7 +1,16 @@
 import { NextResponse } from "next/server";
 import { getStripe, getSiteUrl } from "@/lib/stripe";
 import { getAccess } from "@/lib/access";
-import { GIFT_PRICE_CENTS } from "@/lib/gifts";
+import { prices } from "@/lib/price";
+
+let productCache: { price: string; product: string } | null = null;
+async function bookProduct(priceId: string): Promise<string> {
+  if (productCache?.price === priceId) return productCache.product;
+  const p = await getStripe().prices.retrieve(priceId);
+  const product = typeof p.product === "string" ? p.product : p.product.id;
+  productCache = { price: priceId, product };
+  return product;
+}
 
 export async function POST(request: Request) {
   const forTwo = new URL(request.url).searchParams.get("for") === "2";
@@ -15,19 +24,37 @@ export async function POST(request: Request) {
 
   const siteUrl = getSiteUrl();
   const access = await getAccess();
+  const now = prices();
   let session;
   try {
-    session = await getStripe().checkout.sessions.create({
+    // At the regular price use the Stripe price as is; during a promo charge
+    // the promo amount on the same Stripe product (same name, image, receipt).
+    const stripe = getStripe();
+    const regular = now.book === 4700;
+    const bookItem = regular
+      ? { price: priceId, quantity: 1 }
+      : {
+          price_data: {
+            currency: "eur",
+            unit_amount: now.book,
+            product: await bookProduct(priceId),
+          },
+          quantity: 1,
+        };
+    session = await stripe.checkout.sessions.create({
       mode: "payment",
+      // Marks the charge as the book, so a full refund takes the book back
+      // whatever the price was.
+      payment_intent_data: { metadata: { kind: forTwo ? "book_for_two" : "book" } },
       ...(access.email ? { customer_email: access.email } : {}),
       line_items: [
-        { price: priceId, quantity: 1 },
+        bookItem,
         ...(forTwo
           ? [
               {
                 price_data: {
                   currency: "eur",
-                  unit_amount: GIFT_PRICE_CENTS,
+                  unit_amount: now.forTwo - now.book,
                   product_data: {
                     name: "Втори достъп за приятел",
                     description: "Получаваш линк, който пращаш. Той влиза със своя имейл.",

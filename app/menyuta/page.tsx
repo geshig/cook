@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Price } from "@/components/Price";
 import Link from "next/link";
 import { CheckoutButton } from "@/components/CheckoutButton";
 import Image from "next/image";
@@ -101,7 +102,7 @@ export default async function MenusPage({ searchParams }: { searchParams: Promis
           <div className="menu-cta">
             <p>Всички рецепти от менютата са в книгата, със снимка, продукти и стъпки.</p>
             <CheckoutButton kind="book" className="btn" source="менюта">
-              Купи книгата — 47 €
+              Купи книгата — <Price />
             </CheckoutButton>
           </div>
         )}

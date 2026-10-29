@@ -185,8 +185,6 @@ export async function POST(request: Request) {
       break;
     }
 
-    // Full refund of the book (47 €): take the book back, stop the bonus,
-    // and free the place in "first 100". Gift (27 €) refunds are ignored.
     case "checkout.session.expired": {
       // Abandoned book checkout: one reminder, only with marketing consent,
       // only if they still don't have the book (they may have paid in another tab).
@@ -200,10 +198,14 @@ export async function POST(request: Request) {
       break;
     }
 
+    // Full refund of the book: take the book back, stop the bonus, and free
+    // the place in "first 100". Gift refunds are ignored. Book charges carry
+    // metadata.kind; older ones (before it) are recognised by the 47 € amount.
     case "charge.refunded": {
       const charge = event.data.object as Stripe.Charge;
       if (!charge.refunded) break; // partial refund: keep access
-      if (charge.amount < 4000) break; // not the book
+      const isBook = charge.metadata?.kind?.startsWith("book") || charge.amount >= 4000;
+      if (!isBook) break; // not the book
       const customerId = typeof charge.customer === "string" ? charge.customer : charge.customer?.id;
       const email = (charge.billing_details?.email ?? charge.receipt_email ?? "").toLowerCase();
       const match = customerId

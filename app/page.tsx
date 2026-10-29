@@ -1,4 +1,6 @@
 import Image from "next/image";
+import { Price } from "@/components/Price";
+import { prices } from "@/lib/price";
 import { StickyBuy } from "@/components/StickyBuy";
 import { ProductCard } from "@/components/ProductCard";
 import { Testimonials } from "@/components/Testimonials";
@@ -65,7 +67,7 @@ export default async function LandingPage() {
         brand: { "@id": `${site}/#org` },
         offers: {
           "@type": "Offer",
-          price: "47.00",
+          price: (prices().book / 100).toFixed(2),
           priceCurrency: "EUR",
           availability: "https://schema.org/InStock",
           url: `${site}/#pricing`,
@@ -104,7 +106,7 @@ export default async function LandingPage() {
             </ul>
             <div className="lp-hero-cta">
               <a href="#pricing" className="btn btn-cream">Виж какво получаваш</a>
-              <span>47 € еднократно · достъп веднага</span>
+              <span><Price /> еднократно · достъп веднага</span>
             </div>
           </div>
           {intro ? (

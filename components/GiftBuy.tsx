@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import { CheckoutButton } from "./CheckoutButton";
+import { eur, prices } from "@/lib/price";
 
 /** Choose how many gift accesses (1–5) before going to Stripe. */
 export function GiftBuy() {
   const [qty, setQty] = useState(1);
+  const gift = prices().gift;
   return (
     <div className="gift-buy">
       <label>
@@ -13,7 +15,7 @@ export function GiftBuy() {
         <select value={qty} onChange={(e) => setQty(Number(e.target.value))}>
           {[1, 2, 3, 4, 5].map((n) => (
             <option key={n} value={n}>
-              {n} × 27 € = {n * 27} €
+              {n} × {eur(gift)} = {eur(n * gift)}
             </option>
           ))}
         </select>

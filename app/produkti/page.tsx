@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Price } from "@/components/Price";
 import Link from "next/link";
 import { CheckoutButton } from "@/components/CheckoutButton";
 import Image from "next/image";
@@ -87,7 +88,7 @@ export default async function ProductsPage() {
           <div className="menu-cta" style={{ textAlign: "center", marginTop: 36 }}>
             <p>Всички рецепти с тези продукти са в книгата.</p>
             <CheckoutButton kind="book" className="btn" source="продукти">
-              Купи книгата — 47 €
+              Купи книгата — <Price />
             </CheckoutButton>
           </div>
         )}
