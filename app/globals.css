@@ -6051,3 +6051,29 @@ section.lp-faq {
   color: inherit;
   overflow: visible;
 }
+
+/* "Купи за двама": a clear outlined button, apart from the accordion below */
+.pdp-two {
+  margin: 14px 0 6px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--card);
+}
+.pdp-two-btn {
+  padding: 8px 14px;
+  border: 1.5px solid var(--accent);
+  border-radius: 100px;
+  font-size: 15px;
+  white-space: nowrap;
+}
+@media (max-width: 899px) {
+  .pdp-two {
+    display: grid;
+    gap: 8px;
+  }
+  .pdp-two-btn {
+    width: 100%;
+    padding: 11px 14px;
+  }
+}
