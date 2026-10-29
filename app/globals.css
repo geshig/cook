@@ -47,7 +47,7 @@ button {
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: var(--font-body), "Manrope", system-ui, sans-serif;
+  font-family: var(--font-body), "Golos Text", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
   padding-bottom: 40px;
@@ -118,7 +118,7 @@ a {
 }
 
 .site-header .logo {
-  font-family: var(--font-body), "Manrope", system-ui, sans-serif;
+  font-family: var(--font-body), "Golos Text", system-ui, sans-serif;
   font-size: 18px;
   font-weight: 800;
   letter-spacing: 0.1em;
@@ -1898,7 +1898,7 @@ section.menu-level {
 }
 
 .menu-level h2 span {
-  font-family: var(--font-body), "Manrope", system-ui, sans-serif;
+  font-family: var(--font-body), "Golos Text", system-ui, sans-serif;
   font-size: 14px;
   font-weight: 600;
   color: var(--sage);
@@ -4894,7 +4894,7 @@ main.about {
   color: var(--text) !important;
 }
 .about-sign a {
-  font-family: var(--font-body), "Manrope", system-ui, sans-serif;
+  font-family: var(--font-body), "Golos Text", system-ui, sans-serif;
   font-size: 16px;
   color: var(--accent);
 }

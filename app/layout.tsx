@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { getSiteUrl } from "@/lib/site";
-import { Playfair_Display, Manrope } from "next/font/google";
+import { Playfair_Display, Golos_Text } from "next/font/google";
 import "./globals.css";
 import { ServiceWorker } from "@/components/ServiceWorker";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -13,7 +13,9 @@ const playfair = Playfair_Display({
   variable: "--font-display",
 });
 
-const manrope = Manrope({
+// Golos Text: drawn for Cyrillic screens. Manrope switched to the Bulgarian
+// handwritten-style letters (д, т, п, ц) on lang="bg", which read poorly.
+const body = Golos_Text({
   weight: ["400", "500", "600", "700", "800"],
   subsets: ["latin", "cyrillic"],
   variable: "--font-body",
@@ -57,7 +59,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="bg" className={`${playfair.variable} ${manrope.variable}`}>
+    <html lang="bg" className={`${playfair.variable} ${body.variable}`}>
       <body>
         {children}
         <SiteFooter />
