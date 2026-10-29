@@ -30,22 +30,21 @@ export function PromoTimer({ label = "Офертата изтича след" }:
     const end = new Date(PROMO.until).getTime();
     const tick = () => setLeft(Math.max(0, end - Date.now()));
     tick();
-    const id = setInterval(tick, 1000);
+    const id = setInterval(tick, 30000);
     return () => clearInterval(id);
   }, []);
   if (!PROMO || left === null || left <= 0) return null;
   const s = Math.floor(left / 1000);
   const d = Math.floor(s / 86400);
-  const hh = String(Math.floor((s % 86400) / 3600)).padStart(2, "0");
-  const mm = String(Math.floor((s % 3600) / 60)).padStart(2, "0");
-  const ss = String(s % 60).padStart(2, "0");
+  const h = Math.floor((s % 86400) / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const days = (n: number) => `${n} ${n === 1 ? "ден" : "дни"}`;
+  const hours = (n: number) => `${n} ${n === 1 ? "час" : "часа"}`;
+  const text = d > 0 ? `${days(d)} и ${hours(h)}` : h > 0 ? `${hours(h)} и ${m} мин` : `${Math.max(1, m)} мин`;
   return (
     <p className="promo-timer">
       <span>⏳ {label}</span>
-      <b>
-        {d > 0 ? `${d} д ` : ""}
-        {hh}:{mm}:{ss}
-      </b>
+      <b>{text}</b>
     </p>
   );
 }
