@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
 import type Stripe from "stripe";
-import { sendGiftEmail, sendPurchaseEmail } from "@/lib/email";
+import { sendCartReminder, sendGiftEmail, sendPurchaseEmail } from "@/lib/email";
 import { createGiftCodes } from "@/lib/gifts";
 import { bonusDaysFor } from "@/lib/launch";
 import { getStripe } from "@/lib/stripe";
@@ -187,6 +187,19 @@ export async function POST(request: Request) {
 
     // Full refund of the book (47 €): take the book back, stop the bonus,
     // and free the place in "first 100". Gift (27 €) refunds are ignored.
+    case "checkout.session.expired": {
+      // Abandoned book checkout: one reminder, only with marketing consent,
+      // only if they still don't have the book (they may have paid in another tab).
+      const s = event.data.object as Stripe.Checkout.Session;
+      const email = s.customer_details?.email?.trim().toLowerCase();
+      const link = s.after_expiration?.recovery?.url;
+      if (s.mode !== "payment" || !email || !link || s.consent?.promotions !== "opt_in") break;
+      const { data: owner } = await admin.from("subscribers").select("purchased_book").eq("email", email).maybeSingle();
+      if (owner?.purchased_book) break;
+      await sendCartReminder({ email, link, sessionId: s.id });
+      break;
+    }
+
     case "charge.refunded": {
       const charge = event.data.object as Stripe.Charge;
       if (!charge.refunded) break; // partial refund: keep access

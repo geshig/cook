@@ -159,6 +159,36 @@ function header(site: string): string {
   return `<a href="${site}" style="display:block;margin:0 0 22px;text-decoration:none"><img src="${site}/email-header.jpg" width="560" alt="Кухнята на Геша" style="display:block;width:100%;max-width:560px;height:auto;border:0;border-radius:14px;color:#6b7f3a;font-weight:800;font-size:15px"></a>`;
 }
 
+/**
+ * One reminder to someone who opened the book checkout, typed their email,
+ * ticked the marketing consent box and did not pay. The link is Stripe's
+ * recovery URL: it opens a fresh checkout with the same book.
+ */
+export async function sendCartReminder(opts: { email: string; link: string; sessionId: string }): Promise<boolean> {
+  const text = [
+    "Здравей,",
+    "",
+    "Видях, че започна поръчка на „Кухнята на Геша“, но не я довърши. Ако нещо те спря или имаш въпрос, просто ми отговори на този имейл.",
+    "",
+    "Ако искаш да продължиш, ето линк. Отваря същото плащане:",
+    opts.link,
+    "",
+    "Вътре те чакат 100+ рецепти с калориите и макросите, менюта по твоите калории и бонусът с нови рецепти.",
+    "",
+    "Геша",
+  ].join("\n");
+  const html = `<!doctype html><html lang="bg"><body style="margin:0;background:#ffffff">
+<div style="max-width:560px;margin:0 auto;padding:28px 22px;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:15px;color:#2b2a26">
+<p style="margin:0 0 14px;line-height:1.6">Здравей,</p>
+<p style="margin:0 0 14px;line-height:1.6">Видях, че започна поръчка на „Кухнята на Геша“, но не я довърши. Ако нещо те спря или имаш въпрос, просто ми отговори на този имейл.</p>
+<p style="margin:0 0 14px;line-height:1.6">Ако искаш да продължиш, ето линк. Отваря същото плащане:<br><a href="${esc(opts.link)}" style="color:#6b7f3a;font-weight:700">Довърши поръчката</a></p>
+<p style="margin:0 0 14px;line-height:1.6">Вътре те чакат 100+ рецепти с калориите и макросите, менюта по твоите калории и бонусът с нови рецепти.</p>
+<p style="margin:0 0 14px;line-height:1.6">Геша</p>
+<p style="margin:22px 0 0;font-size:12px;color:#8a8a80">Пиша ти, защото при плащането се съгласи да получаваш имейли от мен. Не искаш повече? Отговори ми със „стоп“.</p>
+</div></body></html>`;
+  return send({ to: opts.email, subject: "Поръчката ти остана недовършена", html, text, idempotencyKey: `cart-${opts.sessionId}` });
+}
+
 /** Sent after a gift purchase: one link per friend. */
 export async function sendGiftEmail(opts: { email: string; codes: string[]; sessionId: string }): Promise<boolean> {
   const site = getSiteUrl();
