@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Price } from "@/components/Price";
 import { CheckoutButton } from "@/components/CheckoutButton";
 import { CONTACT_EMAIL, SOCIALS } from "@/lib/site";
 import { SocialIcon } from "./SocialIcon";
@@ -50,7 +51,7 @@ export function SiteFooter() {
 
         <div className="footer-col">
           <h3>Книгата</h3>
-          <p className="footer-offer">100+ рецепти за 47 € и бонус с нови рецепти безплатно.</p>
+          <p className="footer-offer">100+ рецепти за <Price /> и бонус с нови рецепти безплатно.</p>
           <CheckoutButton kind="book" className="btn footer-btn" source="футър">
             Купи книгата
           </CheckoutButton>

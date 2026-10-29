@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Price } from "@/components/Price";
 import Link from "next/link";
 import { CheckoutButton } from "@/components/CheckoutButton";
 import Image from "next/image";
@@ -72,7 +73,7 @@ function SharedTeaser({ t, signedIn }: { t: RecipeTeaser; signedIn: boolean }) {
         със снимка, продукти, стъпки и макроси на порция.
       </p>
       <Link className="btn" href="/#pricing" data-umami-event="Купи: споделена рецепта">
-        Виж книгата — 47€
+        Виж книгата — <Price />
       </Link>
       {!signedIn && (
         <Link className="btn btn-ghost" href="/login">
@@ -172,7 +173,7 @@ export default async function RecipesPage({
               : "Купи книгата или влез, ако вече си я взел, за да отвориш пълния каталог с рецепти."}
           </p>
           <CheckoutButton kind="book" className="btn" source="рецепти">
-            Купи книгата — 47 €
+            Купи книгата — <Price />
           </CheckoutButton>
           {!access.email && (
             <Link className="btn btn-ghost" href="/login">

@@ -1,4 +1,5 @@
 import { GiftBuy } from "./GiftBuy";
+import { Price } from "@/components/Price";
 import { CopyLink } from "./CopyLink";
 import type { Gift } from "@/lib/gifts";
 import { giftLink } from "@/lib/gifts";
@@ -9,8 +10,7 @@ export function GiftCard({ gifts, justBought }: { gifts: Gift[]; justBought: boo
     <div className="gift-card">
       <h2>Подари книгата на приятел</h2>
       <p>
-        Двамата излизате <b>74 € вместо 94 €</b>, спестявате 20 €. Доплащаш
-        само за втория, получаваш линк, пращаш го и човекът влиза със своя
+        Доплащаш само <b><Price kind="gift" /></b> за втория: получаваш линк, пращаш го и човекът влиза със своя
         имейл: 100+ рецепти и бонуса с нови рецепти, точно като теб.
       </p>
       {justBought && gifts.length === 0 && (

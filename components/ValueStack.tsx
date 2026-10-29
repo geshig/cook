@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Price } from "@/components/Price";
 import { CheckoutButton } from "@/components/CheckoutButton";
 import { PayBadges } from "@/components/PayBadges";
 
@@ -47,7 +48,7 @@ export function ValueStack({
       <div className="value-buy">
         <Image className="value-cover" src="/book-cover-v3.png" alt="Книгата „Кухнята на Геша“ с Хоуми на корицата" width={1020} height={1320} sizes="90px" />
         <div className="value-price">
-          <b>47 €</b>
+          <b><Price /></b>
           <span>еднократно, достъп завинаги</span>
         </div>
         <CheckoutButton kind="book" className="btn value-btn" source={source}>

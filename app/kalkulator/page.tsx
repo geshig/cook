@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Price } from "@/components/Price";
 import { getAccess, hasBookAccess, isAdmin } from "@/lib/access";
 import { SiteHeader } from "@/components/SiteHeader";
 import { CalorieCalculator } from "@/components/CalorieCalculator";
@@ -45,7 +46,7 @@ export default async function CalculatorPage() {
                 рецепти безплатно.
               </p>
               <CheckoutButton kind="book" className="btn" source="калкулатор">
-                Купи книгата за 47 €
+                Купи книгата за <Price />
               </CheckoutButton>
             </div>
           </div>

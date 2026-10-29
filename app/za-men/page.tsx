@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Price } from "@/components/Price";
 import Image from "next/image";
 import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -89,7 +90,7 @@ export default async function AboutPage() {
               </Link>
             ) : (
               <CheckoutButton kind="book" className="btn" source="за мен">
-                Купи книгата за 47 €
+                Купи книгата за <Price />
               </CheckoutButton>
             )}
             <Link href="/menyuta" className="btn btn-ghost">

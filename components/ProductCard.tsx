@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { CheckoutButton } from "@/components/CheckoutButton";
+import { OldPrice, Price, PromoTimer } from "@/components/Price";
+import { eur, prices } from "@/lib/price";
 
 /**
  * The buy block on the landing page, laid out like a shop product page:
@@ -31,6 +33,7 @@ export function ProductCard({
     ],
     ["Общност в Skool", "питаш и ти отговарям лично", null],
   ];
+  const now = prices();
   const total = value.reduce((sum, [, , p]) => sum + (p ?? 0), 0);
   return (
     <section id="pricing" className="pdp">
@@ -89,12 +92,14 @@ export function ProductCard({
         </div>
 
         <div className="pdp-price">
-          <b>47 €</b>
+          <OldPrice className="pdp-old" />
+          <b>
+            <Price />
+          </b>
           <span>еднократно, с достъп завинаги</span>
         </div>
-        <p className="pdp-save">
-          Спестяваш {total - 47} €
-        </p>
+        <p className="pdp-save">Спестяваш {Math.round(total - now.book / 100)} €</p>
+        <PromoTimer />
 
         <CheckoutButton kind="book" className="btn pdp-btn" source="продукт">
           Купи книгата
@@ -114,7 +119,7 @@ export function ProductCard({
 
         <div className="pdp-two">
           <span>
-            <b>Готвите двама?</b> <s>94 €</s> 74 € за двама
+            <b>Готвите двама?</b> <s>{eur(now.book * 2)}</s> {eur(now.forTwo)} за двама
           </span>
           <CheckoutButton kind="book" forTwo className="pdp-two-btn" source="за двама">
             Купи за двама →
