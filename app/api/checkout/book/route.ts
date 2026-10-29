@@ -50,7 +50,13 @@ export async function POST(request: Request) {
       // Digital content: the buyer must expressly agree that access starts now
       // and that this waives the 14-day withdrawal right. Requires a Terms of
       // service URL in Stripe → Settings → Public details.
-      consent_collection: { terms_of_service: "required" },
+      // promotions "auto": in the EU Stripe adds an optional "send me emails"
+      // box under the email. Only people who tick it get the reminder below.
+      consent_collection: { terms_of_service: "required", promotions: "auto" },
+      // If they leave, the session expires after an hour and Stripe makes a
+      // recovery link; the webhook (checkout.session.expired) emails it once.
+      after_expiration: { recovery: { enabled: true } },
+      expires_at: Math.floor(Date.now() / 1000) + 60 * 60,
       custom_text: {
         submit: {
           message: forTwo
