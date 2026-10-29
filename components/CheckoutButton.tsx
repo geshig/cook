@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { track } from "@/lib/track";
 
 export function CheckoutButton({
@@ -25,11 +25,25 @@ export function CheckoutButton({
 }) {
   const [loading, setLoading] = useState(false);
 
+  // Coming back from Stripe with the back button restores the page from cache:
+  // turn the button back on.
+  useEffect(() => {
+    const reset = () => setLoading(false);
+    window.addEventListener("pageshow", reset);
+    return () => window.removeEventListener("pageshow", reset);
+  }, []);
+
   async function handleClick() {
     setLoading(true);
     track(kind === "book" ? "Плащане: старт" : kind === "gift" ? "Подарък: старт" : "Абонамент: старт", { от: source ?? "друго" });
+    const qs = [forTwo ? "for=2" : "", query ?? ""].filter(Boolean).join("&");
+    if (kind === "book") {
+      // A real navigation: the server answers with a redirect to Stripe. Works
+      // in TikTok/Instagram browsers, where a JS redirect after fetch can fail.
+      window.location.assign(`/api/checkout/book${qs ? `?${qs}` : ""}`);
+      return;
+    }
     try {
-      const qs = [forTwo ? "for=2" : "", query ?? ""].filter(Boolean).join("&");
       const res = await fetch(`/api/checkout/${kind}${qs ? `?${qs}` : ""}`, { method: "POST" });
       const data = await res.json();
       if (data.url) {
