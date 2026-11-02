@@ -16,11 +16,11 @@ export const SOCIALS: { id: "instagram" | "youtube" | "tiktok" | "facebook"; lab
 export const CONTACT_EMAIL = "hello@geshapov.com";
 
 /**
- * Затворената общност в Skool. Описанието на лендинга се показва винаги;
- * бутонът „Влез в общността“ за купувачите излиза, когато url е попълнен.
- * Поканата при покупка идва автоматично през Zapier (Stripe → Skool).
+ * Затворената група във Facebook за хората с книгата (замени Skool).
+ * Линкът излиза в имейла за достъп, в профила и в /recipes.
+ * Докато url е празен, бутоните са скрити.
  */
 export const COMMUNITY = {
-  name: "Общността в Skool",
-  url: "https://www.skool.com/geshacooks-3584",
+  name: "Групата във Facebook",
+  url: "https://www.facebook.com/groups/3758671370957707/",
 };
