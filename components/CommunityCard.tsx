@@ -9,7 +9,7 @@ export function CommunityCard() {
         <b>{COMMUNITY.name}</b>
         <p>
           Покажи какво си сготвил, питай за замени и хранене и гледай
-          съветите ми за здраве и уелнес. Аз съм вътре и отговарям лично.
+          съветите ми за здраве и тренировки. Аз съм вътре и отговарям лично.
         </p>
       </div>
       <a className="btn" href={COMMUNITY.url} target="_blank" rel="noopener noreferrer">

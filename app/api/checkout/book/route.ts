@@ -27,20 +27,18 @@ export async function POST(request: Request) {
   const now = prices();
   let session;
   try {
-    // At the regular price use the Stripe price as is; during a promo charge
-    // the promo amount on the same Stripe product (same name, image, receipt).
+    // The amount comes from lib/price.ts, charged on the same Stripe product
+    // as STRIPE_PRICE_BOOK (same name, image, receipt). The Stripe price itself
+    // is still 47 €, so it is not used directly.
     const stripe = getStripe();
-    const regular = now.book === 4700;
-    const bookItem = regular
-      ? { price: priceId, quantity: 1 }
-      : {
-          price_data: {
-            currency: "eur",
-            unit_amount: now.book,
-            product: await bookProduct(priceId),
-          },
-          quantity: 1,
-        };
+    const bookItem = {
+      price_data: {
+        currency: "eur",
+        unit_amount: now.book,
+        product: await bookProduct(priceId),
+      },
+      quantity: 1,
+    };
     session = await stripe.checkout.sessions.create({
       mode: "payment",
       // Marks the charge as the book, so a full refund takes the book back

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { sendNewRecipes, sendReviewRequest } from "@/lib/email";
+import { sendNewRecipes, sendReviewRequest, sendTrialReminder } from "@/lib/email";
 
 export const maxDuration = 300;
 
@@ -12,6 +12,7 @@ const pause = (ms: number) => new Promise((r) => setTimeout(r, ms));
  * "Authorization: Bearer $CRON_SECRET"; anyone else gets 401.
  *  1) 7 days after a purchase: „Какво сготви?“ (for real testimonials).
  *  2) Mondays: last week's new recipes to people with an active bonus/subscription.
+ *  3) 7 days before the free bonus months end: the 5,99 € reminder.
  */
 export async function GET(request: Request) {
   const secret = process.env.CRON_SECRET?.trim();
@@ -25,6 +26,7 @@ export async function GET(request: Request) {
   const now = Date.now();
   let reviews = 0;
   let news = 0;
+  let trials = 0;
 
   // 1) Bought between 8 and 7 days ago (the cron runs daily, so once each).
   const { data: buyers } = await admin
@@ -66,5 +68,18 @@ export async function GET(request: Request) {
     }
   }
 
-  return NextResponse.json({ ok: true, reviews, news });
+  // 3) Free months end in 6–7 days (the cron runs daily, so once each).
+  const { data: ending } = await admin
+    .from("subscribers")
+    .select("email, trial_end")
+    .gte("trial_end", new Date(now + 6 * DAY).toISOString())
+    .lt("trial_end", new Date(now + 7 * DAY).toISOString());
+  for (const t of ending ?? []) {
+    const email = String(t.email).toLowerCase();
+    if (admins.has(email) || !t.trial_end) continue;
+    if (await sendTrialReminder(email, String(t.trial_end))) trials++;
+    await pause(600);
+  }
+
+  return NextResponse.json({ ok: true, reviews, news, trials });
 }
