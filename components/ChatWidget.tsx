@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import Image from "next/image";
 import { track } from "@/lib/track";
 
 type Msg = { role: "user" | "assistant"; content: string };
@@ -75,14 +76,16 @@ export function ChatWidget() {
             track("Чат: отворен");
           }}
         >
-          💬 Питай ме
+          <Image src="/homie-avatar.jpg" alt="" width={34} height={34} className="chat-fab-av" unoptimized loading="eager" />
+          Питай Хоуми
         </button>
       )}
       {open && (
-        <div className="chat-panel" role="dialog" aria-label="Въпроси за книгата">
+        <div className="chat-panel" role="dialog" aria-label="Питай Хоуми за книгата">
           <div className="chat-head">
-            <div>
-              <b>Въпроси за книгата</b>
+            <Image src="/homie-avatar.jpg" alt="Хоуми" width={42} height={42} className="chat-av" unoptimized loading="eager" />
+            <div className="chat-head-t">
+              <b>Хоуми 🐾</b>
               <span>AI помощник · отговаря веднага</span>
             </div>
             <button type="button" className="chat-x" onClick={() => setOpen(false)} aria-label="Затвори">
@@ -91,14 +94,14 @@ export function ChatWidget() {
           </div>
           <div className="chat-list" ref={listRef}>
             <p className="chat-msg bot">
-              Здравей! 👋 Питай ме каквото искаш за книгата: какво има вътре, за кого е, как се получава.
+              Бау! 🐶 Аз съм Хоуми, кучето на Геша (и AI помощникът на сайта). Опитвам всяка рецепта първи, така че питай ме каквото искаш за книгата.
             </p>
             {msgs.map((m, i) => (
               <p key={i} className={"chat-msg " + (m.role === "user" ? "me" : "bot")}>
                 {m.content}
               </p>
             ))}
-            {busy && <p className="chat-msg bot chat-typing">…</p>}
+            {busy && <p className="chat-msg bot chat-typing">Хоуми пише 🐾</p>}
             {asked === 0 && (
               <div className="chat-sugg">
                 {SUGGESTIONS.map((s) => (
@@ -114,7 +117,7 @@ export function ChatWidget() {
               <input
                 value={text}
                 onChange={(e) => setText(e.target.value)}
-                placeholder="Напиши въпрос…"
+                placeholder="Напиши на Хоуми…"
                 maxLength={500}
                 enterKeyHint="send"
               />
@@ -123,7 +126,7 @@ export function ChatWidget() {
               </button>
             </form>
           ) : (
-            <p className="chat-limit">За още въпроси пиши на hello@geshapov.com 🙂</p>
+            <p className="chat-limit">Хоуми отиде да спи 😴 За още въпроси пиши на hello@geshapov.com</p>
           )}
         </div>
       )}
