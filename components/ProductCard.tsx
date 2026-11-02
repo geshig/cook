@@ -99,7 +99,15 @@ export function ProductCard({
           <span>еднократно, с достъп завинаги</span>
         </div>
         <p className="pdp-save">Спестяваш {Math.round(total - now.book / 100)} €</p>
-        <PromoTimer />
+        <PromoTimer label={<>Цената <Price /> важи още</>} />
+        {bonusMonths === 3 && (
+          <div className="first100">
+            <p className="first100-head">
+              🎁 <b>Само за първите {firstBuyers} купили:</b>
+              <span className="first100-gift">+{"\u00a0"}3 месеца нови рецепти безплатно</span>
+            </p>
+          </div>
+        )}
 
         <CheckoutButton kind="book" className="btn pdp-btn" source="продукт">
           Купи книгата

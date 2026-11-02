@@ -23,7 +23,7 @@ export function OldPrice({ kind = "book", className }: { kind?: "book" | "forTwo
 }
 
 /** Live countdown to the end of the promo: "2 д 06:12:33". */
-export function PromoTimer({ label = "Офертата изтича след" }: { label?: string }) {
+export function PromoTimer({ label = "Офертата изтича след" }: { label?: React.ReactNode }) {
   const [left, setLeft] = useState<number | null>(null);
   useEffect(() => {
     if (!PROMO) return;
