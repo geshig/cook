@@ -3,10 +3,15 @@
  * site and the checkout go back to the regular price on their own. To run
  * another promo, change PROMO (price and end) and deploy.
  */
-// Постоянните цени от 2 ноември 2026 (преди: 47 € / 74 € / 27 €).
-export const REGULAR = { book: 2999, forTwo: 3999, gift: 2499 } as const;
+export const REGULAR = { book: 4700, forTwo: 7400, gift: 2700 } as const;
 
-export const PROMO: { book: number; forTwo: number; gift: number; until: string } | null = null;
+export const PROMO: { book: number; forTwo: number; gift: number; until: string } | null = {
+  book: 2999,
+  forTwo: 3999,
+  gift: 2499,
+  // 72 hours from 2 Nov: Thursday 5 November 2026, 12:00 Sofia time
+  until: "2026-11-05T12:00:00+02:00",
+};
 
 export function promoActive(now = Date.now()): boolean {
   return !!PROMO && now < new Date(PROMO.until).getTime();

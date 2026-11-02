@@ -3,7 +3,7 @@ import { randomBytes } from "crypto";
 import { createAdminClient } from "./supabase/admin";
 import { getSiteUrl } from "./site";
 
-export const GIFT_PRICE_CENTS = 2499;
+export const GIFT_PRICE_CENTS = 2700;
 
 const ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no 0/O, 1/I
 

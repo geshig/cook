@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SELLER, LEGAL_UPDATED } from "@/lib/legal";
-import { REGULAR, eur } from "@/lib/price";
 
 export const metadata: Metadata = { title: "Условия за ползване — Кухнята на Геша" };
 
@@ -52,8 +51,8 @@ export default function TermsPage() {
           </li>
           <li>
             <b>За двама и подарък за приятел</b>: можеш да купиш книгата за
-            двама за {eur(REGULAR.forTwo)} (вместо 2 × {eur(REGULAR.book)}), а ако вече я имаш, да купиш
-            достъп за друг човек за {eur(REGULAR.gift)}. Получаваш линк за всеки подарък; който
+            двама за 74 € (вместо 2 × 47 €), а ако вече я имаш, да купиш
+            достъп за друг човек за 27 €. Получаваш линк за всеки подарък; който
             го отвори и влезе със своя имейл, получава книгата и бонуса от 3
             месеца при същите условия. Всеки линк е за един човек и важи, докато
             не бъде използван. Подаръкът не се връща, след като линкът е
