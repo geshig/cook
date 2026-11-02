@@ -166,6 +166,7 @@ export default async function LandingPage() {
       <ProductCard
         bonusMonths={first ? 3 : 1}
         firstBuyers={FIRST_BUYERS}
+        left={offer.left}
         ownsBook={access.purchasedBook && !access.hadSubscription}
       />
 

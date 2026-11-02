@@ -12,10 +12,13 @@ import { eur, prices } from "@/lib/price";
 export function ProductCard({
   bonusMonths,
   firstBuyers,
+  left,
   ownsBook,
 }: {
   bonusMonths: 3 | 1;
   firstBuyers: number;
+  /** Real count of places left in the first 100. */
+  left: number;
   ownsBook: boolean;
 }) {
   // What each part would cost on its own, from real market prices (Oct 2026):
@@ -99,7 +102,20 @@ export function ProductCard({
           <span>еднократно, с достъп завинаги</span>
         </div>
         <p className="pdp-save">Спестяваш {Math.round(total - now.book / 100)} €</p>
-        <PromoTimer />
+        <PromoTimer label={<>Цената <Price /> важи още</>} />
+        {bonusMonths === 3 && left > 0 && left < firstBuyers && (
+          <div className="first100">
+            <p className="first100-head">
+              🎁 <b>Първите {firstBuyers} купили</b> получават и <b>3 месеца нови рецепти безплатно</b>
+            </p>
+            <div className="first100-bar" aria-hidden="true">
+              <span style={{ width: `${Math.round(((firstBuyers - left) / firstBuyers) * 100)}%` }} />
+            </div>
+            <p className="first100-left">
+              Остават <b>{left}</b> от {firstBuyers} места
+            </p>
+          </div>
+        )}
 
         <CheckoutButton kind="book" className="btn pdp-btn" source="продукт">
           Купи книгата
