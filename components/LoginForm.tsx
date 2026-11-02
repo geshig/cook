@@ -70,6 +70,10 @@ export function LoginForm() {
           <div className="lead-success" style={{ display: "block" }}>
             Провери пощата си 🎉 Пратих ти линк и код за вход.
           </div>
+          <p className="login-hint" style={{ marginTop: 0, marginBottom: 12 }}>
+            Не го виждаш до минута? Погледни в <b>Спам</b> (в abv.bg често отива там)
+            и натисни „Не е спам“.
+          </p>
           <form className="lead-form login-code" onSubmit={handleCode}>
             <input
               inputMode="numeric"
