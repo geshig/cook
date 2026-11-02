@@ -6,11 +6,11 @@
 export const REGULAR = { book: 4700, forTwo: 7400, gift: 2700 } as const;
 
 export const PROMO: { book: number; forTwo: number; gift: number; until: string } | null = {
-  book: 2499,
-  forTwo: 3999,
-  gift: 1999,
-  // Sunday 1 November 2026, 23:59 Sofia time
-  until: "2026-11-01T23:59:59+02:00",
+  book: 2999,
+  forTwo: 4999,
+  gift: 2499,
+  // 72 hours from 2 Nov: Thursday 5 November 2026, 12:00 Sofia time
+  until: "2026-11-05T12:00:00+02:00",
 };
 
 export function promoActive(now = Date.now()): boolean {
