@@ -140,6 +140,10 @@ export default async function RecipesPage({
                   Плащането мина. Влез с {paidEmail ?? "имейла, с който плати"} и
                   ще ти изпратя линк. Рецептите ще те чакат отключени.
                 </p>
+                <p style={{ fontSize: 14, color: "var(--text-dim)" }}>
+                  Имейлите от мен понякога отиват в Спам, особено в abv.bg. Ако не
+                  ги виждаш, погледни там и натисни „Не е спам“.
+                </p>
                 <Link className="btn" href={loginHref}>
                   Влез в рецептите
                 </Link>

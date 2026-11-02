@@ -31,7 +31,7 @@ export function ProductCard({
       bonusMonths === 3 ? `по 2–4 нови всяка седмица, за първите ${firstBuyers}` : "по 2–4 нови всяка седмица",
       bonusPrice,
     ],
-    ["Група във Facebook", "питаш и ти отговарям лично", null],
+    ["Затворена група във Facebook", "само за хората с книгата", null],
   ];
   const now = prices();
   const total = value.reduce((sum, [, , p]) => sum + (p ?? 0), 0);

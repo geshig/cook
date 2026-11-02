@@ -1,5 +1,6 @@
 import "server-only";
 import { COMMUNITY, getSiteUrl } from "./site";
+import { createAdminClient } from "./supabase/admin";
 
 const esc = (s: string) =>
   s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
@@ -40,16 +41,48 @@ async function send(opts: {
       from,
       to: [opts.to],
       reply_to: "hello@geshapov.com",
+      // Mail apps show an "Unsubscribe" link for non-transactional emails; it
+      // also tells Gmail these are wanted emails from a real sender (less spam).
+      ...(/^(purchase|gift|test)-/.test(opts.idempotencyKey)
+        ? {}
+        : { headers: { "List-Unsubscribe": "<mailto:hello@geshapov.com?subject=stop>" } }),
       subject: opts.subject,
       html: opts.html,
       text: opts.text,
     }),
   });
-  if (!res.ok) {
-    console.error("Resend error", res.status, await res.text().catch(() => ""));
-    return false;
-  }
-  return true;
+  const ok = res.ok;
+  if (!ok) console.error("Resend error", res.status, await res.text().catch(() => ""));
+  await logEmail(opts.to, opts.subject, opts.idempotencyKey, ok);
+  return ok;
+}
+
+/**
+ * Admin → Имейли: a record of every email the site sends. Best effort: if the
+ * email_log table is missing, the email still goes out.
+ */
+async function logEmail(to: string, subject: string, key: string, ok: boolean) {
+  try {
+    const kind = key.split("-")[0];
+    await createAdminClient().from("email_log").insert({ to_email: to.toLowerCase(), subject, kind, ok });
+  } catch {}
+}
+
+/** Admin → Имейли: a test to hello@, which proves sending and forwarding work. */
+export async function sendTestEmail(to: string): Promise<boolean> {
+  const when = new Date().toLocaleString("bg-BG", { timeZone: "Europe/Sofia" });
+  const lines = [
+    "Това е тестов имейл от сайта.",
+    `Изпратен е през Resend на ${when} до ${to}.`,
+    "Ако го виждаш в geshbdo@gmail.com, значи и изпращането, и препращането от hello@geshapov.com работят.",
+  ];
+  return send({
+    to,
+    subject: `Тест от сайта, ${when}`,
+    html: wrap(lines.map((l) => `<p>${esc(l)}</p>`).join("")),
+    text: lines.join("\n\n"),
+    idempotencyKey: `test-${Date.now()}`,
+  });
 }
 
 /**
@@ -86,8 +119,8 @@ export async function sendPurchaseEmail(opts: {
     "",
     ...(group
       ? [
-          "ЕЛА В ГРУПАТА ВЪВ FACEBOOK",
-          "Направих група само за хората с книгата. Там си показваме какво сме сготвили, питаме се за замени и първо там пускам новите неща. Пускам и полезни неща от мен за здраве и тренировки. А ако някой ден поискаш да тренираме заедно, там ще разбереш как. Ще се радвам да те видя вътре!",
+          "ЕЛА В ЗАТВОРЕНАТА НИ ГРУПА ВЪВ FACEBOOK",
+          "Направих затворена група във Facebook само за хората с книгата. Там си показваме какво сме сготвили, питаме се за замени и първо там пускам новите неща. Пускам и полезни неща от мен за здраве и тренировки. А ако някой ден поискаш да тренираме заедно, там ще разбереш как. Ще се радвам да те видя вътре!",
           `Влез в групата: ${group}`,
           "",
         ]
@@ -130,8 +163,8 @@ ${h("КАК ВЛИЗАШ")}
 ${p(`Влизаш с този имейл: <b>${esc(opts.email)}</b>. Пращам ти линк за вход, без парола, и сайтът те помни на телефона.`)}
 ${
   group
-    ? h("ЕЛА В ГРУПАТА ВЪВ FACEBOOK") +
-      p("Направих група само за хората с книгата. Там си показваме какво сме сготвили, питаме се за замени и първо там пускам новите неща. Пускам и полезни неща от мен за здраве и тренировки. А ако някой ден поискаш да тренираме заедно, там ще разбереш как. Ще се радвам да те видя вътре!") +
+    ? h("ЕЛА В ЗАТВОРЕНАТА НИ ГРУПА ВЪВ FACEBOOK") +
+      p("Направих затворена група във Facebook само за хората с книгата. Там си показваме какво сме сготвили, питаме се за замени и първо там пускам новите неща. Пускам и полезни неща от мен за здраве и тренировки. А ако някой ден поискаш да тренираме заедно, там ще разбереш как. Ще се радвам да те видя вътре!") +
       btn(group, "Влез в групата")
     : ""
 }
@@ -289,7 +322,7 @@ export const GROUP_INVITE = {
   lines: [
     "Здравей! Геша е 👋",
     "Искам да те питам: всичко наред ли е с „Кухнята на Геша“? Успя ли да влезеш и да намериш рецептите? Ако нещо не работи или имаш въпрос, просто отговори на този имейл. Чета и отговарям сам на всеки.",
-    "И още нещо: направих група във Facebook само за хората с книгата. Там си показваме какво сме сготвили, питаме се за замени и първо там пускам новите неща. Пускам и полезни неща от мен за здраве и тренировки. А ако някой ден поискаш да тренираме заедно, там ще разбереш как. Ще се радвам да те видя вътре!",
+    "И още нещо: направих затворена група във Facebook само за хората с книгата. Там си показваме какво сме сготвили, питаме се за замени и първо там пускам новите неща. Пускам и полезни неща от мен за здраве и тренировки. А ако някой ден поискаш да тренираме заедно, там ще разбереш как. Ще се радвам да те видя вътре!",
   ],
   button: "Влез в групата",
   sign: "Геша и Хоуми 🐾",

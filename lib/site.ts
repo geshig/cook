@@ -21,6 +21,6 @@ export const CONTACT_EMAIL = "hello@geshapov.com";
  * Докато url е празен, бутоните са скрити.
  */
 export const COMMUNITY = {
-  name: "Групата във Facebook",
+  name: "Затворената група във Facebook",
   url: "https://www.facebook.com/groups/3758671370957707/",
 };
