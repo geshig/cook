@@ -6325,3 +6325,30 @@ section.lp-faq {
     height: 560px;
   }
 }
+
+/* Homie as the chat helper */
+.chat-fab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px 6px 6px;
+}
+.chat-fab-av,
+.chat-av {
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--olive-light);
+  flex: none;
+}
+.chat-head {
+  justify-content: flex-start;
+  gap: 10px;
+}
+.chat-head-t {
+  flex: 1;
+  min-width: 0;
+}
+.chat-typing {
+  letter-spacing: normal;
+  font-style: italic;
+}
