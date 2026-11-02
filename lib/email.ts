@@ -41,6 +41,11 @@ async function send(opts: {
       from,
       to: [opts.to],
       reply_to: "hello@geshapov.com",
+      // Mail apps show an "Unsubscribe" link for non-transactional emails; it
+      // also tells Gmail these are wanted emails from a real sender (less spam).
+      ...(/^(purchase|gift|test)-/.test(opts.idempotencyKey)
+        ? {}
+        : { headers: { "List-Unsubscribe": "<mailto:hello@geshapov.com?subject=stop>" } }),
       subject: opts.subject,
       html: opts.html,
       text: opts.text,
