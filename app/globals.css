@@ -6124,7 +6124,7 @@ section.lp-faq {
   font-weight: 800;
 }
 
-/* Under the timer: the first-100 bonus with the real places-left counter */
+/* Under the timer: the first-100 bonus (bar/counter styles kept for later) */
 .first100 {
   margin: -6px 0 14px;
   padding: 12px 14px 11px;
@@ -6133,8 +6133,8 @@ section.lp-faq {
   border: 1.5px solid rgba(181, 86, 46, 0.35);
 }
 .first100-head {
-  margin: 0 0 9px;
-  font-size: 15px;
+  margin: 0;
+  font-size: 15.5px;
   line-height: 1.4;
   color: var(--text);
 }
