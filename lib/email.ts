@@ -164,7 +164,7 @@ ${p("Приятно готвене!<br>Геша и Хоуми 🐾")}
 
 /** Brand banner (Gesha and Homie). If images are blocked, the alt text still names the brand. */
 function header(site: string): string {
-  return `<a href="${site}" style="display:block;margin:0 0 22px;text-decoration:none"><img src="${site}/email-header.jpg" width="560" alt="Кухнята на Геша" style="display:block;width:100%;max-width:560px;height:auto;border:0;border-radius:14px;color:#6b7f3a;font-weight:800;font-size:15px"></a>`;
+  return `<a href="${site}" style="display:block;margin:0 0 22px;text-decoration:none"><img src="${site}/email-header-v2.jpg" width="560" alt="Кухнята на Геша" style="display:block;width:100%;max-width:560px;height:auto;border:0;border-radius:14px;color:#6b7f3a;font-weight:800;font-size:15px"></a>`;
 }
 
 /**
