@@ -22,7 +22,7 @@ export function OldPrice({ kind = "book", className }: { kind?: "book" | "forTwo
   );
 }
 
-/** Live countdown to the end of the promo: "2 д 06:12:33". */
+/** Live countdown to the end of the promo: "63:12:33 ч.". */
 export function PromoTimer({ label = "Офертата изтича след" }: { label?: React.ReactNode }) {
   const [left, setLeft] = useState<number | null>(null);
   useEffect(() => {
@@ -37,11 +37,10 @@ export function PromoTimer({ label = "Офертата изтича след" }:
   const s = Math.floor(left / 1000);
   // Hours:minutes:seconds, hours counted in total ("78:12:33").
   const pad = (n: number) => String(n).padStart(2, "0");
-  const text = `${pad(Math.floor(s / 3600))}:${pad(Math.floor((s % 3600) / 60))}:${pad(s % 60)}`;
   return (
     <p className="promo-timer">
       <span>⏳ {label}</span>
-      <b>{text}</b>
+      <b>{`${pad(Math.floor(s / 3600))}:${pad(Math.floor((s % 3600) / 60))}:${pad(s % 60)} ч.`}</b>
     </p>
   );
 }
