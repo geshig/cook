@@ -6077,3 +6077,49 @@ section.lp-faq {
     padding: 11px 14px;
   }
 }
+
+/* "Готвите двама?" box: tinted, clear price and a solid button */
+.pdp-two {
+  display: grid;
+  gap: 4px;
+  margin: 16px 0 8px;
+  padding: 16px;
+  border-radius: 16px;
+  background: var(--tint);
+  border: 1.5px solid var(--tint-strong);
+}
+.pdp-two p {
+  margin: 0;
+}
+.pdp-two-head {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--text);
+}
+.pdp-two-price {
+  font-size: 16px;
+  color: var(--text-dim);
+}
+.pdp-two-price s {
+  margin-right: 4px;
+}
+.pdp-two-price b {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--rust);
+}
+.pdp-two-note {
+  font-size: 14px;
+  color: var(--text-dim);
+}
+.pdp-two .pdp-two-btn {
+  margin-top: 10px;
+  width: 100%;
+  padding: 13px 16px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--olive-deep);
+  color: var(--on-deep);
+  font-size: 16.5px;
+  font-weight: 800;
+}
