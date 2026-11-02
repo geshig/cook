@@ -103,7 +103,8 @@ export function ProductCard({
         {bonusMonths === 3 && (
           <div className="first100">
             <p className="first100-head">
-              🎁 <b>Само за първите {firstBuyers} купили:</b> +{"\u00a0"}3{"\u00a0"}месеца нови рецепти безплатно
+              🎁 <b>Само за първите {firstBuyers} купили:</b>
+              <span className="first100-gift">+{"\u00a0"}3 месеца нови рецепти безплатно</span>
             </p>
           </div>
         )}

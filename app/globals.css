@@ -6163,3 +6163,8 @@ section.lp-faq {
   color: var(--rust);
   font-size: 15px;
 }
+.first100-gift {
+  display: block;
+  margin-top: 2px;
+  font-weight: 700;
+}
