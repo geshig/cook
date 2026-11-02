@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Price } from "@/components/Price";
 import { prices } from "@/lib/price";
 import { StickyBuy } from "@/components/StickyBuy";
+import { ChatWidget } from "@/components/ChatWidget";
 import { ProductCard } from "@/components/ProductCard";
 import { Testimonials } from "@/components/Testimonials";
 import { getAccess } from "@/lib/access";
@@ -204,6 +205,7 @@ export default async function LandingPage() {
 
       </div>
 
+      {process.env.ANTHROPIC_API_KEY && <ChatWidget />}
       <StickyBuy afterPx={700} note={first ? `+ 3 месеца нови рецепти за първите ${FIRST_BUYERS}` : "+ 1 месец нови рецепти безплатно"} />
     </>
   );
