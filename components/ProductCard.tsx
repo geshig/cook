@@ -118,11 +118,15 @@ export function ProductCard({
         </ul>
 
         <div className="pdp-two">
-          <span>
-            <b>Готвите двама?</b> <s>{eur(now.book * 2)}</s> {eur(now.forTwo)} за двама
-          </span>
+          <p className="pdp-two-head">👫 Готвите двама?</p>
+          <p className="pdp-two-price">
+            <s>{eur(now.book * 2)}</s> <b>{eur(now.forTwo)}</b> за двама
+          </p>
+          <p className="pdp-two-note">
+            Спестявате {eur(now.book * 2 - now.forTwo)}. Всеки влиза със своя имейл.
+          </p>
           <CheckoutButton kind="book" forTwo className="pdp-two-btn" source="за двама">
-            Купи за двама →
+            Купи за двама
           </CheckoutButton>
         </div>
 
