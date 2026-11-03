@@ -49,8 +49,7 @@ const up = (x: number, step: number) => Math.ceil(x / step - 1e-9) * step;
 function formatAmount(x: number, unit: string): { value: string; unit: string } {
   if (unit === "g" || unit === "ml") {
     if (x >= 1000) return { value: decimal(x / 1000, 1), unit: unit === "g" ? "кг" : "л" };
-    if (x < 10) return { value: String(Math.max(1, up(x, 1))), unit };
-    if (x < 250) return { value: String(up(x, 5)), unit };
+    if (x < 250) return { value: String(Math.max(5, up(x, 5))), unit }; // 3 → 5, 7 → 10, 13 → 15
     return { value: String(up(x, 10)), unit };
   }
   if (unit === "кг" || unit === "л") {
