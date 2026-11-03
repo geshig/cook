@@ -34,7 +34,23 @@ export async function proxy(request: NextRequest) {
     }
   );
 
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  // Keep people signed in: once a day re-send the auth cookies from the
+  // server with the full 400-day life. Safari caps cookies written by
+  // JavaScript to 7 days, so without this a visit after a week looked like
+  // "the site forgot me".
+  if (user && !request.cookies.get("kg-keep")) {
+    const year = 400 * 24 * 60 * 60;
+    for (const c of request.cookies.getAll()) {
+      if (!/^sb-.+-auth-token(\.\d+)?$/.test(c.name)) continue;
+      if (response.cookies.get(c.name)) continue; // just refreshed above
+      response.cookies.set(c.name, c.value, { path: "/", sameSite: "lax", secure: true, maxAge: year });
+    }
+    response.cookies.set("kg-keep", "1", { path: "/", sameSite: "lax", secure: true, maxAge: 24 * 60 * 60 });
+  }
 
   return response;
 }
