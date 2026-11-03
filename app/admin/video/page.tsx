@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { getIntroVideo } from "@/lib/settings";
+import { getGuideVideo, getIntroVideo } from "@/lib/settings";
 import { VideoUpload } from "@/components/VideoUpload";
 
 export default async function AdminVideo() {
-  const video = await getIntroVideo();
+  const [video, guide] = await Promise.all([getIntroVideo(), getGuideVideo()]);
   return (
     <section style={{ paddingTop: 32, maxWidth: 720 }}>
       <div className="admin-tabs">
@@ -27,6 +27,19 @@ export default async function AdminVideo() {
         <video src={video.url} poster={video.poster ?? undefined} controls playsInline style={{ width: "100%", maxWidth: 360, borderRadius: 16, marginBottom: 16 }} />
       )}
       <VideoUpload current={video?.url ?? null} />
+
+      <h2 className="display" style={{ fontSize: 28, margin: "40px 0 6px" }}>
+        Видео „Как работи“ (след покупка)
+      </h2>
+      <p style={{ color: "var(--text-dim)", marginBottom: 18, lineHeight: 1.6 }}>
+        Излиза на страницата <Link href="/kak-raboti">/kak-raboti</Link>. Към нея водят
+        имейлът след покупка и рецептите. Покажи с екрана на телефона: търсене и
+        филтри, порции, „Готвя“, списък, меню по калории, калкулатор, бонуса и групата.
+      </p>
+      {guide && (
+        <video src={guide.url} poster={guide.poster ?? undefined} controls playsInline style={{ width: "100%", maxWidth: 360, borderRadius: 16, marginBottom: 16 }} />
+      )}
+      <VideoUpload current={guide?.url ?? null} target="guide" />
     </section>
   );
 }

@@ -6352,3 +6352,99 @@ section.lp-faq {
   letter-spacing: normal;
   font-style: italic;
 }
+
+/* ---------- /kak-raboti: walkthrough after purchase ---------- */
+.guide-chip {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 7px 14px;
+  border-radius: 100px;
+  background: var(--tint);
+  border: 1px solid var(--tint-strong);
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+}
+.guide section {
+  max-width: 720px;
+}
+.guide-hero {
+  text-align: center;
+  padding-bottom: 10px;
+}
+.guide-hero h1 {
+  font-size: clamp(36px, 9vw, 56px);
+  margin: 4px 0 6px;
+}
+.guide-hero > p {
+  color: var(--text-dim);
+  font-size: 17px;
+  margin: 0 0 18px;
+}
+.guide-video {
+  display: block;
+  width: min(100%, 380px);
+  margin: 0 auto;
+  aspect-ratio: 9 / 16;
+  max-height: 72vh;
+  border-radius: 20px;
+  background: #000;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.22);
+}
+.guide-steps ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.guide-steps li {
+  display: flex;
+  gap: 14px;
+  padding: 16px;
+  border-radius: 16px;
+  background: var(--card);
+  border: 1px solid var(--line-soft);
+}
+.guide-ico {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: var(--tint);
+  font-size: 22px;
+}
+.guide-steps b {
+  display: block;
+  font-size: 17px;
+  margin-bottom: 4px;
+}
+.guide-steps p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text-dim);
+}
+.guide-link {
+  display: inline-block;
+  margin-top: 8px;
+  font-weight: 800;
+  color: var(--accent);
+  text-decoration: none;
+}
+.guide-end {
+  display: grid;
+  gap: 10px;
+  text-align: center;
+  padding-bottom: 48px;
+}
+.guide-end p {
+  color: var(--text-dim);
+  font-size: 14px;
+}
+.guide-end a:not(.btn) {
+  color: var(--accent);
+}
