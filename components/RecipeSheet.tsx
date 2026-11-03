@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import type { RecipeCard } from "@/lib/types";
 import { parseIngredients, parseSteps } from "@/lib/recipeText";
-import { defaultServings, scaleLine, splitTips } from "@/lib/scale";
+import { defaultServings, scaleLine, simplifyLines, splitTips, toOlive } from "@/lib/scale";
 import { splitTimers, formatClock } from "@/lib/timers";
 import { addToShopping } from "@/lib/shopping";
 import { readTargets, type Targets } from "@/lib/targets";
@@ -50,9 +50,9 @@ export function RecipeSheet({
 
   const lines = useMemo(() => {
     const factor = recipe.servings ? portions / recipe.servings : 1;
-    return parseIngredients(recipe.ingredients).map((l) => scaleLine(l, factor));
+    return simplifyLines(parseIngredients(recipe.ingredients).map((l) => scaleLine(l, factor)));
   }, [recipe, portions]);
-  const { steps, tips } = useMemo(() => splitTips(parseSteps(recipe.steps)), [recipe]);
+  const { steps, tips } = useMemo(() => splitTips(parseSteps(recipe.steps).map(toOlive)), [recipe]);
 
   const say = useCallback((msg: string) => {
     setToast(msg);

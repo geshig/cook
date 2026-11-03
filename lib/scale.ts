@@ -30,32 +30,42 @@ function decimal(x: number, digits: number): string {
   return String(Math.round(x * p) / p).replace(".", ",");
 }
 
-function quarter(x: number): string {
-  const q = Math.round(x * 4) / 4;
+/** Spoons and pieces: whole or half only ("¾" → "1", "1¼" → "1½"). */
+function half(x: number): string {
+  const q = Math.round(x * 2) / 2;
   if (q <= 0) return "малко";
   const whole = Math.floor(q);
-  const frac = q - whole;
-  const glyph = frac === 0.25 ? "¼" : frac === 0.5 ? "½" : frac === 0.75 ? "¾" : "";
-  return (whole ? String(whole) : "") + glyph;
+  return (whole ? String(whole) : "") + (q - whole ? "½" : "");
 }
 
+/** Round up to a step, ignoring float noise (13 → 15, 37 → 40). */
+const up = (x: number, step: number) => Math.ceil(x / step - 1e-9) * step;
+
+/**
+ * Simple, cookable amounts everywhere (also at the recipe's own portions):
+ * grams and ml rounded UP to a clean number, spoons in halves, garlic in
+ * whole cloves, tiny spoon amounts as "щипка".
+ */
 function formatAmount(x: number, unit: string): { value: string; unit: string } {
   if (unit === "g" || unit === "ml") {
     if (x >= 1000) return { value: decimal(x / 1000, 1), unit: unit === "g" ? "кг" : "л" };
-    if (x < 10) return { value: decimal(x, 1), unit };
-    if (x < 60) return { value: String(Math.round(x)), unit };
-    return { value: String(Math.round(x / 5) * 5), unit };
+    if (x < 10) return { value: String(Math.max(1, up(x, 1))), unit };
+    if (x < 250) return { value: String(up(x, 5)), unit };
+    return { value: String(up(x, 10)), unit };
   }
   if (unit === "кг" || unit === "л") {
-    if (x < 1) return { value: String(Math.round((x * 1000) / 5) * 5), unit: unit === "кг" ? "g" : "ml" };
+    if (x < 1) return formatAmount(x * 1000, unit === "кг" ? "g" : "ml");
     return { value: decimal(x, 2), unit };
   }
   // Spoons: no "¼ ч.л." — a pinch, or tablespoons turned into teaspoons.
   if (unit === "с.л." && x < 1) return formatAmount(x * 3, "ч.л.");
   if (unit === "ч.л." && x < 0.3) return { value: "щипка", unit: "" };
-  if (unit === "ч.л." && x >= 3 && Math.abs(x / 3 - Math.round(x / 3)) < 0.01) return { value: quarter(x / 3), unit: "с.л." };
-  const value = quarter(x);
-  if (value === "1" && /^скилидк/.test(unit)) return { value, unit: "скилидка" };
+  if (unit === "ч.л." && x >= 3 && Math.abs(x / 3 - Math.round(x / 3)) < 0.01) return { value: half(x / 3), unit: "с.л." };
+  if (/^скилидк/.test(unit)) {
+    const n = Math.max(1, up(x, 1));
+    return { value: String(n), unit: n === 1 ? "скилидка" : "скилидки" };
+  }
+  const value = half(x);
   if (value === "1" && unit === "стръка") return { value, unit: "стрък" };
   return { value, unit };
 }
@@ -77,17 +87,91 @@ export function scaleLine(line: string, factor: number): IngredientLine {
     : "";
   if (unit) rest = rest.slice(unitMatch![0].length);
 
-  if (factor === 1) {
-    return { kind: "item", amount: m[0] + (unit ? " " + unit : ""), text: rest };
+  // A range ("45-50 g", "1½ ч.л. - 1 с.л.") becomes one amount: the upper one.
+  // Its unit may sit after the second number ("1½ ч.л. - 1 с.л. магданоз").
+  let x = b ?? a;
+  let u = unit;
+  if (b !== null && !unit) {
+    const m2 = rest.match(/^(\S+)\s+-\s*\S+\s+(\S+)\s+/);
+    if (m2 && /\.$/.test(m2[2])) {
+      u = m2[2];
+      rest = rest.slice(m2[0].length);
+    }
   }
-  const fa = formatAmount(a * factor, unit);
-  let amount = fa.value;
-  if (b !== null) {
-    const fb = formatAmount(b * factor, unit);
-    amount = fa.unit === fb.unit ? `${fa.value}-${fb.value}` : `${fa.value} ${fa.unit} - ${fb.value}`;
-    return { kind: "item", amount: `${amount} ${fb.unit}`.trim(), text: rest };
+  if (unit && /^-/.test(rest)) {
+    const m3 = rest.match(/^-\s*(\d+(?:[.,]\d+)?)?([¼½¾⅓⅔⅛])?\s+(\S+\.)\s+/);
+    if (m3) {
+      const n = toNumber(m3[1], m3[2]);
+      if (n !== null) {
+        x = n;
+        u = m3[3];
+        rest = rest.slice(m3[0].length);
+      }
+    }
   }
-  return { kind: "item", amount: `${amount} ${fa.unit}`.trim(), text: rest };
+  const f = formatAmount(x * factor, u);
+  return { kind: "item", amount: `${f.value} ${f.unit}`.trim(), text: rest };
+}
+
+/** "олио" → "зехтин" (also in steps: "олиото" → "зехтина"). */
+export function toOlive(text: string): string {
+  return text
+    .replace(/олио или зехтин|зехтин или олио/gi, "зехтин")
+    .replace(/олиото/g, "зехтина")
+    .replace(/Олиото/g, "Зехтина")
+    .replace(/олио/g, "зехтин")
+    .replace(/Олио/g, "Зехтин");
+}
+
+const LIQUID = /зехтин|сок|сос|оцет|вода|мляко|мед|масло|бульон/i;
+const isOptional = (t: string) => /по желание|по избор/i.test(t) || /кайен|люти люспи|лют сос|сирача/i.test(t);
+
+/**
+ * Makes a scaled ingredient list easy to read:
+ * - "олио" is always "зехтин";
+ * - a pinch of a liquid ("щипка зехтин", "щипка лимонов сок") becomes "малко";
+ * - several "щипка" spices in one group become one line:
+ *   "щипка: сол, черен пипер, чеснов прах, риган".
+ */
+export function simplifyLines(lines: IngredientLine[]): IngredientLine[] {
+  const norm = lines.map((l): IngredientLine => {
+    if (l.kind === "header") return l;
+    let { amount, text } = l;
+    text = toOlive(text);
+    if (!amount && /^щипка\s+/i.test(text)) {
+      amount = "щипка";
+      text = text.replace(/^щипка\s+/i, "");
+    }
+    if (amount === "щипка" && LIQUID.test(text)) amount = "малко";
+    return { kind: "item", amount, text };
+  });
+
+  const out: IngredientLine[] = [];
+  let group: IngredientLine[] = [];
+  const flush = () => {
+    const pinch = group.filter((l) => l.kind === "item" && l.amount === "щипка" && !isOptional(l.text));
+    if (pinch.length < 2) {
+      out.push(...group);
+    } else {
+      const names = pinch.map((l) => (l.kind === "item" ? l.text : ""));
+      let placed = false;
+      for (const l of group) {
+        if (pinch.includes(l)) {
+          if (!placed) out.push({ kind: "item", amount: "щипка", text: names.join(", ") });
+          placed = true;
+        } else out.push(l);
+      }
+    }
+    group = [];
+  };
+  for (const l of norm) {
+    if (l.kind === "header") {
+      flush();
+      out.push(l);
+    } else group.push(l);
+  }
+  flush();
+  return out;
 }
 
 const MEAL_TAGS = ["обяд", "вечеря", "закуска", "снак"];
