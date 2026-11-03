@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createBrowserSupabase } from "@/lib/supabase/browser";
 
@@ -19,18 +19,36 @@ export function LoginForm() {
   const [code, setCode] = useState("");
   const [codeState, setCodeState] = useState<"idle" | "checking" | "bad">("idle");
 
+  // Remember the last email on this device, so signing in again is one tap.
+  useEffect(() => {
+    if (params.get("email")) return;
+    try {
+      const saved = localStorage.getItem("kg-email");
+      if (saved) setEmail(saved);
+    } catch {}
+  }, [params]);
+  const remember = (e: string) => {
+    try {
+      localStorage.setItem("kg-email", e.trim().toLowerCase());
+    } catch {}
+  };
+
   // The code from the email signs in THIS browser. The link signs in whichever
   // browser opens it (often Gmail's or another app's), which is why people
   // "weren't remembered" on their laptop.
   async function handleCode(e: FormEvent) {
     e.preventDefault();
     setCodeState("checking");
-    const supabase = createBrowserSupabase();
-    const { error } = await supabase.auth.verifyOtp({ email, token: code.replace(/\s/g, ""), type: "email" });
-    if (error) {
+    const res = await fetch("/api/auth/code", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, code }),
+    }).catch(() => null);
+    if (!res?.ok) {
       setCodeState("bad");
       return;
     }
+    remember(email);
     router.replace(next || "/recipes");
     router.refresh();
   }
@@ -38,6 +56,7 @@ export function LoginForm() {
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setStatus("sending");
+    remember(email);
     const supabase = createBrowserSupabase();
     const { error } = await supabase.auth.signInWithOtp({
       email,
