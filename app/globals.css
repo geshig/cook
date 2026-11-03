@@ -6448,3 +6448,45 @@ section.lp-faq {
 .guide-end a:not(.btn) {
   color: var(--accent);
 }
+
+/* "Замени с едно натискане" */
+.swap-chip {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 3px 10px;
+  border-radius: 100px;
+  border: 1px solid var(--tint-strong);
+  background: var(--tint);
+  color: var(--accent);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.5;
+  vertical-align: 1px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.swap-chip.on {
+  background: var(--card);
+  border-color: var(--line);
+  color: var(--text-dim);
+}
+.swap-note {
+  margin: 4px 0 18px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--tint);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text);
+}
+.swap-note button {
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  font-weight: 800;
+  color: var(--accent);
+  text-decoration: underline;
+  cursor: pointer;
+}
