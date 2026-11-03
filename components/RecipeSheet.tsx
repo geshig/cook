@@ -10,6 +10,7 @@ import { addToShopping } from "@/lib/shopping";
 import { readTargets, type Targets } from "@/lib/targets";
 import { cookedToday, toggleCookedToday } from "@/lib/cooked";
 import { ingredientNote } from "@/lib/optional";
+import { SWAPS, applySwaps, findSwap } from "@/lib/swaps";
 import { portionGrams } from "@/lib/portions";
 import { CheckoutButton } from "@/components/CheckoutButton";
 import { ActivateTrialButton } from "@/components/ActivateTrialButton";
@@ -48,10 +49,38 @@ export function RecipeSheet({
     setCooked(cookedToday(recipe.id));
   }, [recipe.id]);
 
+  // "Замени с едно натискане": swaps change the lines and the per-portion macros.
+  const [swapOn, setSwapOn] = useState<Set<string>>(() => new Set());
+  const swapped = useMemo(
+    () => applySwaps(parseIngredients(recipe.ingredients), swapOn, recipe.servings ?? 1),
+    [recipe, swapOn]
+  );
   const lines = useMemo(() => {
     const factor = recipe.servings ? portions / recipe.servings : 1;
-    return simplifyLines(parseIngredients(recipe.ingredients).map((l) => scaleLine(l, factor)));
-  }, [recipe, portions]);
+    return simplifyLines(swapped.lines.map((l) => scaleLine(l, factor)));
+  }, [recipe, portions, swapped]);
+  const swapping = swapOn.size > 0;
+  const adj = (base: number | null, d: number) => (base == null ? null : Math.max(0, Math.round(base + (swapping ? d : 0))));
+  const kcal = adj(recipe.kcal, swapped.delta.kcal);
+  const proteinG = adj(recipe.proteinG, swapped.delta.p);
+  const carbsG = adj(recipe.carbsG, swapped.delta.c);
+  const fatG = adj(recipe.fatG, swapped.delta.f);
+  const approx = swapping ? "≈ " : "";
+  function toggleSwap(id: string) {
+    setSwapOn((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+  /** Which chip an ingredient line gets: undo an active swap, or offer one. */
+  function chipFor(amount: string, text: string): { id: string; label: string; on: boolean } | null {
+    const lower = text.toLowerCase();
+    for (const sw of SWAPS) if (swapOn.has(sw.id) && lower.includes(sw.to.toLowerCase())) return { id: sw.id, label: "↺ върни", on: true };
+    const sw = findSwap(`${amount} ${text}`.trim());
+    return sw && !swapOn.has(sw.id) ? { id: sw.id, label: `⇄ ${sw.label}`, on: false } : null;
+  }
   const { steps, tips } = useMemo(() => splitTips(parseSteps(recipe.steps).map(toOlive)), [recipe]);
 
   const say = useCallback((msg: string) => {
@@ -220,15 +249,15 @@ export function RecipeSheet({
         <h2 className="display">{recipe.title}</h2>
         <div className="meta">
           {recipe.timeMinutes != null && <span>⏱ {recipe.timeMinutes} мин</span>}
-          {perPortion && <span>{recipe.kcal} kcal на порция</span>}
+          {perPortion && <span>{approx}{kcal} kcal на порция</span>}
           {portionGrams(recipe.title) && <span>⚖️ ≈ {portionGrams(recipe.title)} g порция</span>}
         </div>
-        {targets && recipe.kcal != null && !locked && (
+        {targets && kcal != null && !locked && (
           <p className="day-share">
-            Една порция е <b>{Math.round((recipe.kcal / targets.kcal) * 100)}%</b> от твоите {targets.kcal} kcal
-            {recipe.proteinG != null && (
+            Една порция е <b>{Math.round((kcal / targets.kcal) * 100)}%</b> от твоите {targets.kcal} kcal
+            {proteinG != null && (
               <>
-                {" "}и <b>{Math.round((recipe.proteinG / targets.protein) * 100)}%</b> от протеина за деня
+                {" "}и <b>{Math.round((proteinG / targets.protein) * 100)}%</b> от протеина за деня
               </>
             )}
             .
@@ -236,21 +265,21 @@ export function RecipeSheet({
         )}
         {(recipe.proteinG != null || recipe.carbsG != null || recipe.fatG != null) && (
           <div className="macro-row">
-            {recipe.proteinG != null && (
+            {proteinG != null && (
               <div className="macro p">
-                <b>{recipe.proteinG} g</b>
+                <b>{approx}{proteinG} g</b>
                 <span>протеин</span>
               </div>
             )}
-            {recipe.carbsG != null && (
+            {carbsG != null && (
               <div className="macro">
-                <b>{recipe.carbsG} g</b>
+                <b>{approx}{carbsG} g</b>
                 <span>въглехидрати</span>
               </div>
             )}
-            {recipe.fatG != null && (
+            {fatG != null && (
               <div className="macro">
-                <b>{recipe.fatG} g</b>
+                <b>{approx}{fatG} g</b>
                 <span>мазнини</span>
               </div>
             )}
@@ -348,6 +377,23 @@ export function RecipeSheet({
                     {it.amount ? <span className="ing-amount">{it.amount}</span> : <span className="ing-amount" />}
                     <span className="ing-text">
                       {it.text}
+                      {!locked &&
+                        (() => {
+                          const chip = chipFor(it.amount, it.text);
+                          if (!chip) return null;
+                          return (
+                            <button
+                              type="button"
+                              className={"swap-chip" + (chip.on ? " on" : "")}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleSwap(chip.id);
+                              }}
+                            >
+                              {chip.label}
+                            </button>
+                          );
+                        })()}
                       {(() => {
                         const n = ingredientNote(it.text);
                         if (!n) return null;
@@ -362,6 +408,18 @@ export function RecipeSheet({
                 )
               )}
             </ul>
+
+            {swapping && (
+              <div className="swap-note">
+                <b>Със замените</b> макросите са приблизителни (≈).
+                {Object.values(swapped.notes).map((n) => (
+                  <span key={n}> {n}</span>
+                ))}{" "}
+                <button type="button" onClick={() => setSwapOn(new Set())}>
+                  Върни оригинала
+                </button>
+              </div>
+            )}
 
             <h4>Начин на приготвяне</h4>
             <ol className="steps">
