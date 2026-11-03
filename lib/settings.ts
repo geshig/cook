@@ -32,3 +32,28 @@ export async function getIntroVideo(): Promise<IntroVideo> {
     return null;
   }
 }
+
+/** The "how it works" video on /kak-raboti, set from /admin/video. */
+const cachedGuide = unstable_cache(
+  async (): Promise<IntroVideo> => {
+    const { data, error } = await createAdminClient()
+      .from("site_settings")
+      .select("key, value")
+      .in("key", ["guide_video", "guide_poster"]);
+    if (error) throw new Error(error.message);
+    const url = data?.find((r) => r.key === "guide_video")?.value;
+    if (!url) return null;
+    return { url, poster: data?.find((r) => r.key === "guide_poster")?.value ?? null };
+  },
+  ["guide-video-v1"],
+  { revalidate: 600, tags: ["settings"] }
+);
+
+export async function getGuideVideo(): Promise<IntroVideo> {
+  try {
+    return await cachedGuide();
+  } catch (e) {
+    console.error("guide video read failed:", e instanceof Error ? e.message : e);
+    return null;
+  }
+}
