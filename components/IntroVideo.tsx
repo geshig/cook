@@ -31,8 +31,11 @@ export function IntroVideo({ url, poster: uploaded }: { url: string; poster: str
   return (
     <div className="hero-video-wrap">
       <p className="hero-video-label">
-        <span aria-hidden="true">▶</span> Изгледай, преди да продължиш
+        <span aria-hidden="true">▶</span> Гледай, преди да продължиш
       </p>
+      <span className="hero-video-arrow" aria-hidden="true">
+        ↓
+      </span>
     <div className={"hero-video" + (branded ? " branded" : "") + (playing ? " is-playing" : "")}>
       <video ref={ref} src={url} controls={playing} playsInline preload="none" />
       {!playing && (
