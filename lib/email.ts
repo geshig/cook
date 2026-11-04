@@ -307,6 +307,7 @@ export async function sendNewRecipes(
   const text = [
     "Здравей! Ето какво добавих тази седмица:",
     recipes.map((r) => `• ${line(r)} — ${site}/recipes?r=${r.id}`).join("\n"),
+    `Всички нови рецепти по седмици: ${site}/novi`,
     "Приятно готвене!",
     "Геша",
   ].join("\n\n");
@@ -315,7 +316,7 @@ export async function sendNewRecipes(
 <ul style="padding-left:20px">${recipes
       .map((r) => `<li style="margin:6px 0"><a href="${site}/recipes?r=${r.id}" style="color:#6b7f3a;font-weight:bold">${esc(r.title)}</a>${r.kcal != null ? ` · ${r.kcal} kcal` : ""}${r.proteinG != null ? ` · ${r.proteinG} g протеин` : ""}</li>`)
       .join("")}</ul>
-<p><a href="${site}/recipes" style="display:inline-block;padding:12px 22px;background:#6b7f3a;color:#fff;border-radius:100px;text-decoration:none;font-weight:bold">Отвори рецептите</a></p>
+<p><a href="${site}/novi" style="display:inline-block;padding:12px 22px;background:#6b7f3a;color:#fff;border-radius:100px;text-decoration:none;font-weight:bold">Виж всички нови рецепти</a></p>
 <p>Приятно готвене!<br>Геша</p>`
   );
   return send({ to: email, subject, html, text, idempotencyKey: `new-${weekKey}-${email}` });

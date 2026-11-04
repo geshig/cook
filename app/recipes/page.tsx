@@ -215,9 +215,14 @@ export default async function RecipesPage({
       <header className="app-header">
         <h1 className="display">Рецептите</h1>
         <p>{recipes.length} рецепти · търси, филтрирай и запазвай любими</p>
-        <Link href="/kak-raboti" className="guide-chip">
-          ▶ Нов си тук? Виж как работи книгата
-        </Link>
+        <span className="chip-row">
+          <Link href="/novi" className="guide-chip">
+            🆕 Нови рецепти
+          </Link>
+          <Link href="/kak-raboti" className="guide-chip">
+            ▶ Как работи книгата
+          </Link>
+        </span>
       </header>
       {access.purchasedBook && (!access.hadSubscription || access.trialEndsAt || sp.bonus === "active") && (
         <section style={{ paddingBlock: 0, maxWidth: 900 }}>
