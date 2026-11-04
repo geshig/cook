@@ -33,15 +33,19 @@ export function IntroVideo({ url, poster: uploaded }: { url: string; poster: str
       <p className="hero-video-label">
         <span aria-hidden="true">▶</span> Гледай, преди да продължиш
       </p>
-      <span className="hero-video-arrow" aria-hidden="true">
-        ↓
-      </span>
     <div className={"hero-video" + (branded ? " branded" : "") + (playing ? " is-playing" : "")}>
       <video ref={ref} src={url} controls={playing} playsInline preload="none" />
       {!playing && (
         <>
           <Image className="hero-video-cover" src={poster} alt="" fill priority sizes="(min-width: 900px) 320px, 80vw" />
           <button type="button" className="hero-video-play" onClick={start} aria-label="Пусни видеото">
+            <span className="hero-video-pointer" aria-hidden="true">
+              <b>Цъкни тук</b>
+              <svg viewBox="0 0 60 60" width="54" height="54">
+                <path d="M50 6 C 46 30, 34 44, 10 50" fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
+                <path d="M8 50 L 21 39 M8 50 L 23 56" fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
+              </svg>
+            </span>
             <span className="hero-video-btn" aria-hidden="true">
               <svg viewBox="0 0 24 24" width="30" height="30">
                 <path d="M8 5.5v13l11-6.5z" fill="currentColor" />

@@ -6626,3 +6626,56 @@ section.lp-how {
     font-size: 12.5px;
   }
 }
+
+/* Arrow + "Цъкни тук" pointing straight at the play button */
+.hero-video-arrow {
+  display: none;
+}
+.hero-video-pointer {
+  position: absolute;
+  z-index: 3;
+  left: calc(50% + 26px);
+  top: calc(50% - 92px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  color: var(--olive-light);
+  pointer-events: none;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.55));
+  animation: hv-point 1.3s ease-in-out infinite;
+}
+.hero-video-pointer b {
+  padding: 5px 11px;
+  border-radius: 100px;
+  background: var(--olive-light);
+  color: var(--olive-deep);
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  filter: none;
+}
+.hero-video.branded .hero-video-pointer {
+  left: calc(25% + 22px);
+  top: calc(75% - 96px);
+}
+@keyframes hv-point {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-7px, 7px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-video-pointer {
+    animation: none;
+  }
+}
+.hero-video-pointer svg {
+  color: #fff;
+  margin-left: 6px;
+}
