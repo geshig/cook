@@ -45,7 +45,7 @@ export function IntroVideo({ url, poster: uploaded }: { url: string; poster: str
                   <path d="M8 5.5v13l11-6.5z" fill="currentColor" />
                 </svg>
               </span>
-              <span className="hero-video-btn-t">Цъкни тук</span>
+              <span className="hero-video-btn-t">Натисни тук</span>
             </span>
             <span className={"hero-video-cap" + (branded ? " sr-only" : "")}>
               <b>Изгледай, преди да купиш</b>

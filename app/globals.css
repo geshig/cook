@@ -6683,3 +6683,8 @@ section.lp-how {
   text-transform: uppercase;
   white-space: nowrap;
 }
+@media (min-width: 900px) {
+  .lp-hero h1 {
+    font-size: clamp(44px, 4.3vw, 62px);
+  }
+}
