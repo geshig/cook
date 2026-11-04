@@ -56,7 +56,7 @@ export function ValueStack({
         </CheckoutButton>
       </div>
       <p className="value-bonus">
-        🎁 <b>Бонус:</b> {bonus} нови рецепти безплатно, по 2–4 всяка седмица
+        🎁 <b>Бонус:</b> {bonus} нови рецепти безплатно, по 3–4 всеки месец
       </p>
       <PayBadges />
     </div>
