@@ -6627,55 +6627,59 @@ section.lp-how {
   }
 }
 
-/* Arrow + "Цъкни тук" pointing straight at the play button */
-.hero-video-arrow {
-  display: none;
-}
-.hero-video-pointer {
+/* Play button = a pill "▶ ЦЪКНИ ТУК" right on Homie's plate */
+.hero-video .hero-video-btn,
+.hero-video.branded .hero-video-btn {
   position: absolute;
-  z-index: 3;
-  left: calc(50% + 26px);
-  top: calc(50% - 92px);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 2px;
-  color: var(--olive-light);
-  pointer-events: none;
-  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.55));
-  animation: hv-point 1.3s ease-in-out infinite;
-}
-.hero-video-pointer b {
-  padding: 5px 11px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: auto;
+  height: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 20px 8px 8px;
   border-radius: 100px;
+  background: var(--olive-deep);
+  color: #fff;
+  box-shadow: 0 0 0 4px rgba(250, 246, 238, 0.9), 0 14px 30px rgba(0, 0, 0, 0.4);
+}
+.hero-video.branded .hero-video-btn {
+  top: 69%;
+}
+.hero-video-btn::before,
+.hero-video-btn::after,
+.hero-video.branded .hero-video-btn::before,
+.hero-video.branded .hero-video-btn::after {
+  border-radius: 100px;
+  border-color: var(--olive-light);
+  animation-name: video-pulse-pill;
+}
+@keyframes video-pulse-pill {
+  from {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  to {
+    transform: scale(1.25, 1.6);
+    opacity: 0;
+  }
+}
+.hero-video-tri {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  padding-left: 3px;
   background: var(--olive-light);
   color: var(--olive-deep);
-  font-size: 15px;
+}
+.hero-video-btn-t {
+  font-size: 16px;
   font-weight: 800;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   white-space: nowrap;
-  filter: none;
-}
-.hero-video.branded .hero-video-pointer {
-  left: calc(25% + 22px);
-  top: calc(75% - 96px);
-}
-@keyframes hv-point {
-  0%,
-  100% {
-    transform: translate(0, 0);
-  }
-  50% {
-    transform: translate(-7px, 7px);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .hero-video-pointer {
-    animation: none;
-  }
-}
-.hero-video-pointer svg {
-  color: #fff;
-  margin-left: 6px;
 }
