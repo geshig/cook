@@ -6490,3 +6490,201 @@ section.lp-faq {
   text-decoration: underline;
   cursor: pointer;
 }
+
+/* "Как работи" — three plain steps under the hero */
+section.lp-how {
+  max-width: 980px;
+  padding-top: 26px;
+  padding-bottom: 6px;
+}
+.lp-how h2 {
+  margin: 0 0 14px;
+  font-size: clamp(26px, 6.4vw, 38px);
+  line-height: 1.1;
+}
+.lp-how ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.lp-how li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  border-radius: 16px;
+  background: var(--card);
+  border: 1px solid var(--line-soft);
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--text-dim);
+}
+.lp-how li > span {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--olive-deep);
+  color: var(--on-deep);
+  font-size: 18px;
+  font-weight: 800;
+}
+.lp-how li b {
+  display: block;
+  font-size: 17px;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+.lp-how-note {
+  margin: 12px 2px 0;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--tint);
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--text);
+}
+@media (min-width: 900px) {
+  .lp-how ol {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .lp-how li {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+  }
+}
+
+/* Landing: the video is the first thing to do — big label + bouncing arrow */
+.hero-video-label {
+  padding: 10px 20px;
+  background: var(--olive-light);
+  border-color: var(--olive-light);
+  color: var(--olive-deep);
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.25);
+}
+.hero-video-label span {
+  color: var(--olive-deep);
+}
+.hero-video-arrow {
+  margin: -6px 0 -4px;
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--olive-light);
+  animation: hv-bounce 1.4s ease-in-out infinite;
+}
+@keyframes hv-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(6px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-video-arrow {
+    animation: none;
+  }
+}
+@media (max-width: 899px) {
+  /* Phone: title, then straight to the video — the details are in "Как работи". */
+  .lp-hero .lp-lead {
+    display: none;
+  }
+  .lp-hero h1 {
+    font-size: clamp(32px, 9vw, 44px);
+  }
+  .lp-hero {
+    gap: 14px;
+  }
+}
+@media (max-width: 899px) {
+  .lp-hero h1 {
+    font-size: clamp(27px, 7.6vw, 44px);
+  }
+  .hero-video-label {
+    padding: 10px 16px;
+    font-size: 14px;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+}
+@media (max-width: 370px) {
+  .hero-video-label {
+    padding: 9px 13px;
+    font-size: 12.5px;
+  }
+}
+
+/* Play button = a pill "▶ ЦЪКНИ ТУК" right on Homie's plate */
+.hero-video .hero-video-btn,
+.hero-video.branded .hero-video-btn {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: auto;
+  height: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 20px 8px 8px;
+  border-radius: 100px;
+  background: var(--olive-deep);
+  color: #fff;
+  box-shadow: 0 0 0 4px rgba(250, 246, 238, 0.9), 0 14px 30px rgba(0, 0, 0, 0.4);
+}
+.hero-video.branded .hero-video-btn {
+  top: 69%;
+}
+.hero-video-btn::before,
+.hero-video-btn::after,
+.hero-video.branded .hero-video-btn::before,
+.hero-video.branded .hero-video-btn::after {
+  border-radius: 100px;
+  border-color: var(--olive-light);
+  animation-name: video-pulse-pill;
+}
+@keyframes video-pulse-pill {
+  from {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  to {
+    transform: scale(1.25, 1.6);
+    opacity: 0;
+  }
+}
+.hero-video-tri {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  padding-left: 3px;
+  background: var(--olive-light);
+  color: var(--olive-deep);
+}
+.hero-video-btn-t {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+@media (min-width: 900px) {
+  .lp-hero h1 {
+    font-size: clamp(44px, 4.3vw, 62px);
+  }
+}
