@@ -138,6 +138,13 @@ export default async function LandingPage() {
         </section>
       </div>
 
+
+      <ProductCard
+        bonusMonths={first ? 3 : 1}
+        firstBuyers={FIRST_BUYERS}
+        ownsBook={access.purchasedBook && !access.hadSubscription}
+      />
+
       <section className="lp-how">
         <h2 className="display">Как работи</h2>
         <ol>
@@ -168,12 +175,6 @@ export default async function LandingPage() {
           телефона и компютъра.
         </p>
       </section>
-
-      <ProductCard
-        bonusMonths={first ? 3 : 1}
-        firstBuyers={FIRST_BUYERS}
-        ownsBook={access.purchasedBook && !access.hadSubscription}
-      />
 
       <Testimonials />
 
