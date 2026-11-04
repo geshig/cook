@@ -6688,3 +6688,126 @@ section.lp-how {
     font-size: clamp(44px, 4.3vw, 62px);
   }
 }
+
+/* ---------- /novi: new recipes by week ---------- */
+.novi section {
+  max-width: 900px;
+}
+.novi-head {
+  padding-bottom: 6px;
+}
+.novi-head h1 {
+  font-size: clamp(36px, 9vw, 54px);
+  margin: 4px 0 8px;
+}
+.novi-head p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--text-dim);
+}
+.novi-head b {
+  color: var(--text);
+}
+.novi-offer {
+  padding-top: 8px;
+  padding-bottom: 4px;
+}
+.novi-week {
+  padding-top: 18px;
+  padding-bottom: 6px;
+}
+.novi-week h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 12px;
+  font-size: 21px;
+}
+.novi-new {
+  padding: 3px 10px;
+  border-radius: 100px;
+  background: var(--rust);
+  color: #fff;
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+.novi-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+@media (min-width: 900px) {
+  .novi-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.novi-card {
+  display: block;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--card);
+  border: 1px solid var(--line-soft);
+  color: inherit;
+  text-decoration: none;
+}
+.novi-photo {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  background: var(--card-hi);
+}
+.novi-photo img {
+  object-fit: cover;
+}
+.novi-card.locked .novi-photo img {
+  filter: blur(6px) saturate(0.9);
+  transform: scale(1.06);
+}
+.novi-lock {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 7px 12px;
+  border-radius: 100px;
+  background: var(--olive-deep);
+  color: var(--on-deep);
+  font-size: 13px;
+  font-weight: 800;
+  white-space: nowrap;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+.novi-card h3 {
+  margin: 10px 12px 4px;
+  font-size: 15.5px;
+  line-height: 1.3;
+}
+.novi-card p {
+  display: flex;
+  gap: 10px;
+  margin: 0 12px 12px;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+.novi-card p span:last-child {
+  color: var(--rust);
+  font-weight: 700;
+}
+.novi-empty p {
+  padding: 18px;
+  border-radius: 16px;
+  background: var(--tint);
+}
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.novi-photo {
+  overflow: hidden;
+}
+.novi-card p span {
+  white-space: nowrap;
+}
