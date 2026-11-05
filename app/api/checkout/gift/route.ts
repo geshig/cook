@@ -3,7 +3,7 @@ import { getStripe, getSiteUrl } from "@/lib/stripe";
 import { getAccess } from "@/lib/access";
 import { prices } from "@/lib/price";
 
-/** Book owners buy a second access (27 €) for a friend; they get a gift link. */
+/** Book owners buy a second access (19,99 €) for a friend; they get a gift link. */
 export async function POST(request: Request) {
   // How many gifts: chosen on our page (Stripe would show an abbreviated "К-во").
   const qty = Math.min(5, Math.max(1, Math.round(Number(new URL(request.url).searchParams.get("qty")) || 1)));

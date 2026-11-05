@@ -60,7 +60,7 @@ export async function POST(request: Request) {
         break;
       }
 
-      // A friend's gift (27 €): make the codes and email the links. The
+      // A friend's gift (19,99 €): make the codes and email the links. The
       // buyer already owns the book, so nothing else changes for them.
       if (session.metadata?.kind === "gift") {
         try {
