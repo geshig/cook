@@ -3,12 +3,12 @@
  * site and the checkout go back to the regular price on their own. To run
  * another promo, change PROMO (price and end) and deploy.
  */
-export const REGULAR = { book: 4700, forTwo: 7400, gift: 2700 } as const;
+export const REGULAR = { book: 4700, forTwo: 7400, gift: 1999 } as const;
 
 export const PROMO: { book: number; forTwo: number; gift: number; until: string } | null = {
   book: 2999,
   forTwo: 4499,
-  gift: 2499,
+  gift: 1999,
   // Until Sunday 8 November 2026, 23:59 Sofia time
   until: "2026-11-08T23:59:59+02:00",
 };
