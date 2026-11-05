@@ -9,8 +9,8 @@ export const PROMO: { book: number; forTwo: number; gift: number; until: string 
   book: 2999,
   forTwo: 4499,
   gift: 2499,
-  // 72 hours from 2 Nov: Thursday 5 November 2026, 12:00 Sofia time
-  until: "2026-11-05T12:00:00+02:00",
+  // Until Sunday 8 November 2026, 23:59 Sofia time
+  until: "2026-11-08T23:59:59+02:00",
 };
 
 export function promoActive(now = Date.now()): boolean {
