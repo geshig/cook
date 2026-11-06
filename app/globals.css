@@ -6853,3 +6853,33 @@ section.lp-how {
     gap: 6px 22px;
   }
 }
+
+/* Named promo next to the buy buttons (not a top banner) */
+.promo-bar {
+  border-radius: 14px;
+  margin: 0 0 10px;
+}
+.promo-bar.compact {
+  display: inline-flex;
+  justify-content: flex-start;
+  gap: 8px;
+  margin: 0 0 3px;
+  padding: 0;
+  background: none;
+  color: var(--text);
+  font-size: 12px;
+}
+.promo-bar.compact .promo-bar-name {
+  padding: 2px 7px;
+  border-radius: 5px;
+  background: #111;
+  color: #fff;
+  font-size: 11px;
+}
+.promo-bar.compact .promo-bar-time {
+  color: var(--rust);
+}
+.sticky-old {
+  font-weight: 600;
+  color: var(--text-dim);
+}

@@ -1,8 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { CheckoutButton } from "@/components/CheckoutButton";
-import { OldPrice, Price, PromoTimer } from "@/components/Price";
+import { OldPrice, Price } from "@/components/Price";
 import { eur, prices } from "@/lib/price";
+import { PromoBar } from "@/components/PromoBar";
 
 /**
  * The buy block on the landing page, laid out like a shop product page:
@@ -99,7 +100,7 @@ export function ProductCard({
           <span>еднократно, с достъп завинаги</span>
         </div>
         <p className="pdp-save">Спестяваш {Math.round(total - now.book / 100)} €</p>
-        <PromoTimer label={<>Цената <Price /> важи още</>} />
+        <PromoBar />
         {bonusMonths === 3 && (
           <div className="first100">
             <p className="first100-head">
