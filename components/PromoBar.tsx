@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { PROMO, REGULAR, eur } from "@/lib/price";
+import { PROMO, REGULAR, eur, promoDeadline } from "@/lib/price";
 
 /**
  * Named promo strip ("ЧЕРЕН ПЕТЪК · 47 € 29,99 € само днес · 08:12:33"),
@@ -11,8 +11,7 @@ export function PromoBar({ compact = false }: { compact?: boolean }) {
   const [left, setLeft] = useState<number | null>(null);
   useEffect(() => {
     if (!PROMO) return;
-    const end = new Date(PROMO.until).getTime();
-    const tick = () => setLeft(Math.max(0, end - Date.now()));
+    const tick = () => setLeft(Math.max(0, promoDeadline() - Date.now()));
     tick();
     const id = setInterval(tick, 1000);
     return () => clearInterval(id);
