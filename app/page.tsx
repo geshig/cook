@@ -3,7 +3,6 @@ import { Price } from "@/components/Price";
 import { prices } from "@/lib/price";
 import { StickyBuy } from "@/components/StickyBuy";
 import { ChatWidget } from "@/components/ChatWidget";
-import { PromoBar } from "@/components/PromoBar";
 import { ProductCard } from "@/components/ProductCard";
 import { Testimonials } from "@/components/Testimonials";
 import { getAccess } from "@/lib/access";
@@ -85,7 +84,6 @@ export default async function LandingPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
       />
-      <PromoBar />
       <SiteHeader />
       <div className="lp-page">
 

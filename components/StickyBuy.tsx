@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { CheckoutButton } from "@/components/CheckoutButton";
-import { Price } from "@/components/Price";
+import { OldPrice, Price } from "@/components/Price";
+import { PromoBar } from "@/components/PromoBar";
+import { promoActive } from "@/lib/price";
 
 /**
  * Phone-only buy bar: appears once the hero button has scrolled away and
@@ -50,8 +52,11 @@ export function StickyBuy({ afterPx, note }: { afterPx?: number; note?: string }
   return (
     <div className="sticky-buy">
       <div className="sticky-buy-text">
-        <b>100+ рецепти само за <Price /></b>
-        <span>{note ?? "+ нови рецепти безплатно с книгата"}</span>
+        <PromoBar compact />
+        <b>
+          100+ рецепти за <OldPrice className="sticky-old" /> <Price />
+        </b>
+        {!promoActive() && <span>{note ?? "+ нови рецепти безплатно с книгата"}</span>}
       </div>
       <CheckoutButton kind="book" className="btn" source="лента">
         Купи
