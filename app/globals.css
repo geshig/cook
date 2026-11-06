@@ -6811,3 +6811,45 @@ section.lp-how {
 .novi-card p span {
   white-space: nowrap;
 }
+
+/* Named promo ("Черен петък"): black bar on top of the landing page */
+.promo-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px 14px;
+  padding: 10px 14px;
+  background: #111;
+  color: #fff;
+  text-decoration: none;
+  font-size: 14.5px;
+  line-height: 1.3;
+}
+.promo-bar-name {
+  padding: 3px 10px;
+  border-radius: 6px;
+  background: #fff;
+  color: #111;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+}
+.promo-bar-price s {
+  opacity: 0.6;
+}
+.promo-bar-price b {
+  color: #ffd166;
+  font-size: 17px;
+  font-weight: 900;
+}
+.promo-bar-time {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.03em;
+}
+@media (min-width: 900px) {
+  .promo-bar {
+    font-size: 16px;
+    gap: 6px 22px;
+  }
+}

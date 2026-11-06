@@ -5,12 +5,14 @@
  */
 export const REGULAR = { book: 4700, forTwo: 7400, gift: 1999 } as const;
 
-export const PROMO: { book: number; forTwo: number; gift: number; until: string } | null = {
+export const PROMO: { book: number; forTwo: number; gift: number; until: string; name?: string } | null = {
   book: 2999,
   forTwo: 4499,
   gift: 1999,
-  // Until Sunday 8 November 2026, 23:59 Sofia time
-  until: "2026-11-08T23:59:59+02:00",
+  // Friday 6 November 2026, until 23:59 Sofia time (a one-day test)
+  until: "2026-11-06T23:59:59+02:00",
+  // Shown in the black bar at the top of the landing page.
+  name: "Черен петък",
 };
 
 export function promoActive(now = Date.now()): boolean {
