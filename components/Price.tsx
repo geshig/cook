@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { PROMO, REGULAR, eur, prices, promoActive } from "@/lib/price";
+import { PROMO, REGULAR, eur, prices, promoActive, promoDeadline } from "@/lib/price";
 
 /** The book price as text ("24,99 €"), correct even on cached pages. */
 export function Price({ kind = "book" }: { kind?: "book" | "forTwo" | "gift" }) {
@@ -27,8 +27,7 @@ export function PromoTimer({ label = "Офертата изтича след" }:
   const [left, setLeft] = useState<number | null>(null);
   useEffect(() => {
     if (!PROMO) return;
-    const end = new Date(PROMO.until).getTime();
-    const tick = () => setLeft(Math.max(0, end - Date.now()));
+    const tick = () => setLeft(Math.max(0, promoDeadline() - Date.now()));
     tick();
     const id = setInterval(tick, 1000);
     return () => clearInterval(id);

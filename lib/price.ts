@@ -9,11 +9,27 @@ export const PROMO: { book: number; forTwo: number; gift: number; until: string;
   book: 2999,
   forTwo: 4499,
   gift: 1999,
-  // Friday 6 November 2026, until 23:59 Sofia time (a one-day test)
-  until: "2026-11-06T23:59:59+02:00",
+  // Black Friday test, renewed for another day: until Saturday 7 Nov 23:59.
+  // The timer counts to the end of each day (midnight resets it to 24 h).
+  until: "2026-11-07T23:59:59+02:00",
   // Shown in the black bar at the top of the landing page.
   name: "Черен петък",
 };
+
+/** What the timer counts to: the end of today in Sofia, or the promo end if sooner. */
+export function promoDeadline(now = Date.now()): number {
+  if (!PROMO) return 0;
+  const end = new Date(PROMO.until).getTime();
+  const day = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Sofia", year: "numeric", month: "2-digit", day: "2-digit" }).format(now);
+  const tz =
+    new Intl.DateTimeFormat("en-US", { timeZone: "Europe/Sofia", timeZoneName: "shortOffset" })
+      .formatToParts(now)
+      .find((p) => p.type === "timeZoneName")?.value ?? "GMT+2";
+  const m = tz.match(/GMT([+-])(\d+)(?::(\d+))?/);
+  const off = m ? `${m[1]}${m[2].padStart(2, "0")}:${(m[3] ?? "00").padStart(2, "0")}` : "+02:00";
+  const dayEnd = new Date(`${day}T23:59:59${off}`).getTime();
+  return Math.min(end, dayEnd);
+}
 
 export function promoActive(now = Date.now()): boolean {
   return !!PROMO && now < new Date(PROMO.until).getTime();
