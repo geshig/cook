@@ -9,9 +9,9 @@ export const PROMO: { book: number; forTwo: number; gift: number; until: string;
   book: 2999,
   forTwo: 4499,
   gift: 1999,
-  // Black Friday test, renewed for another day: until Saturday 7 Nov 23:59.
-  // The timer counts to the end of each day (midnight resets it to 24 h).
-  until: "2026-11-07T23:59:59+02:00",
+  // Renews itself every day: the timer counts to 23:59 and resets at
+  // midnight. The promo itself runs until this date (move it to stop).
+  until: "2026-12-31T23:59:59+02:00",
   // Shown in the black bar at the top of the landing page.
   name: "Черен петък",
 };

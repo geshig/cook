@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getPublicRecipes } from "@/lib/publicRecipes";
 import { getLaunchOffer, FIRST_BUYERS } from "@/lib/launch";
-import { PROMO, REGULAR, eur, prices, promoActive } from "@/lib/price";
+import { PROMO, REGULAR, eur, prices, promoActive, promoDeadline } from "@/lib/price";
 
 /**
  * "Питай ме" on the landing page: a small AI helper that answers questions
@@ -34,7 +34,7 @@ async function systemPrompt(): Promise<string> {
   const p = prices();
   const promo = promoActive() && PROMO;
   const until = promo
-    ? new Date(PROMO!.until).toLocaleString("bg-BG", { timeZone: "Europe/Sofia", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" })
+    ? new Date(promoDeadline()).toLocaleString("bg-BG", { timeZone: "Europe/Sofia", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" })
     : null;
   const bonus = offer.left > 0 ? `3 месеца нови рецепти безплатно за първите ${FIRST_BUYERS} купили` : "1 месец нови рецепти безплатно";
   const list = recipes
