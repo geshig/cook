@@ -57,9 +57,10 @@ export async function POST() {
       cancel_url: trial ? `${siteUrl}/recipes` : `${siteUrl}/?checkout=cancelled`,
       adaptive_pricing: { enabled: false },
       locale: "bg",
-      // Cards only (Visa, Mastercard, Revolut и т.н.); Apple Pay и Google Pay
-      // идват с картите, ако са включени в Stripe → Settings → Payment methods.
-      payment_method_types: ["card"],
+      // No fixed list: Stripe offers every method enabled in the dashboard that
+      // works for a subscription — card, Apple Pay, Google Pay and Link. Most
+      // buyers pay the book with Link; with "card" only they had to type the
+      // card again here, and some cards failed the 0 € check.
       // Digital content: the buyer must expressly agree that access starts now
       // and that this waives the 14-day withdrawal right. Requires a Terms of
       // service URL in Stripe → Settings → Public details.
