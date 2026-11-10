@@ -39,6 +39,7 @@ export function SiteFooter() {
           <Link href="/produkti">Продуктите, с които готвя</Link>
           <Link href="/spisak">Списък за пазаруване</Link>
           <Link href="/za-men">За мен и Хоуми</Link>
+          <Link href="/trenirai-s-men">Тренирай с мен</Link>
         </nav>
 
         <nav className="footer-col" aria-label="Помощ">

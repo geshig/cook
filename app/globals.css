@@ -6883,3 +6883,207 @@ section.lp-how {
   font-weight: 600;
   color: var(--text-dim);
 }
+
+/* ---------- /trenirai-s-men ---------- */
+.coach-hero-btn {
+  margin-top: 6px;
+}
+.coach-get {
+  list-style: none;
+  padding: 0;
+  margin: 6px 0 0;
+  display: grid;
+  gap: 10px;
+}
+.coach-get li {
+  display: grid;
+  gap: 3px;
+  padding: 14px 16px;
+  border-radius: var(--radius);
+  background: var(--card);
+  border: 1px solid var(--line-soft);
+}
+.coach-get b {
+  font-size: 17px;
+}
+.coach-get span {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text-dim);
+}
+.coach-steps {
+  list-style: none;
+  padding: 0;
+  margin: 6px 0 18px;
+  display: grid;
+  gap: 14px;
+}
+.coach-steps li {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.coach-num {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 800;
+}
+.coach-steps b {
+  font-size: 17px;
+}
+.coach-steps p {
+  margin: 2px 0 0;
+  font-size: 15px !important;
+}
+.coach-price {
+  padding: 14px 16px;
+  border-radius: var(--radius);
+  background: var(--tint);
+}
+.coach-price b {
+  color: var(--text);
+}
+.coach-form {
+  display: grid;
+  gap: 16px;
+  margin-top: 14px;
+  padding: 18px 16px;
+  border-radius: 20px;
+  background: var(--card);
+  border: 1px solid var(--line);
+}
+.coach-form label,
+.coach-form legend {
+  display: grid;
+  gap: 6px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+}
+.coach-form label span {
+  font-weight: 400;
+  color: var(--text-dim);
+}
+.coach-form fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+.coach-form input:not([type="radio"]):not([type="checkbox"]),
+.coach-form textarea {
+  font: inherit;
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px 14px;
+  width: 100%;
+}
+.coach-form textarea {
+  resize: vertical;
+}
+.coach-row {
+  display: grid;
+  gap: 16px;
+}
+.coach-row-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+@media (min-width: 640px) {
+  .coach-row:not(.coach-row-3) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.coach-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.coach-choices label {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 14px;
+  border-radius: 100px;
+  border: 1.5px solid var(--line);
+  background: var(--bg);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.coach-choices label.on {
+  border-color: var(--accent);
+  background: var(--tint-strong);
+  color: var(--accent-hover);
+}
+.coach-choices input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.coach-hp {
+  position: absolute !important;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+}
+.coach-consent {
+  display: flex !important;
+  gap: 10px;
+  align-items: flex-start;
+  font-weight: 400 !important;
+  font-size: 14px !important;
+  line-height: 1.5;
+  color: var(--text-dim) !important;
+}
+.coach-consent input {
+  margin-top: 3px;
+  width: 18px;
+  height: 18px;
+  flex: none;
+  accent-color: var(--accent);
+}
+.coach-consent a {
+  color: var(--accent);
+}
+.coach-error {
+  color: var(--rust) !important;
+  font-weight: 700;
+  margin: 0;
+}
+.coach-btn {
+  width: 100%;
+}
+.coach-note,
+.coach-disclaimer {
+  margin: 0;
+  font-size: 13.5px !important;
+  text-align: center;
+  color: var(--text-dim);
+}
+.coach-disclaimer {
+  margin-top: 14px !important;
+}
+.coach-sent {
+  margin-top: 14px;
+  padding: 20px 18px;
+  border-radius: 20px;
+  background: var(--tint);
+  border: 1.5px solid var(--accent);
+}
+.coach-sent b {
+  font-size: 19px;
+}
+.coach-sent p {
+  margin: 8px 0 0;
+}

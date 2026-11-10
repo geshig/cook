@@ -1,5 +1,5 @@
 import "server-only";
-import { COMMUNITY, getSiteUrl } from "./site";
+import { COMMUNITY, CONTACT_EMAIL, getSiteUrl } from "./site";
 import { createAdminClient } from "./supabase/admin";
 
 const esc = (s: string) =>
@@ -23,6 +23,8 @@ async function send(opts: {
   html: string;
   text: string;
   idempotencyKey: string;
+  /** Where "Reply" goes; by default hello@. */
+  replyTo?: string;
 }): Promise<boolean> {
   const key = process.env.RESEND_API_KEY?.trim();
   if (!key) {
@@ -40,10 +42,10 @@ async function send(opts: {
     body: JSON.stringify({
       from,
       to: [opts.to],
-      reply_to: "hello@geshapov.com",
+      reply_to: opts.replyTo ?? "hello@geshapov.com",
       // Mail apps show an "Unsubscribe" link for non-transactional emails; it
       // also tells Gmail these are wanted emails from a real sender (less spam).
-      ...(/^(purchase|gift|test)-/.test(opts.idempotencyKey)
+      ...(/^(purchase|gift|test|coach)-/.test(opts.idempotencyKey)
         ? {}
         : { headers: { "List-Unsubscribe": "<mailto:hello@geshapov.com?subject=stop>" } }),
       subject: opts.subject,
@@ -370,5 +372,82 @@ export async function sendTrialReminder(email: string, trialEnd: string): Promis
     html,
     text,
     idempotencyKey: `trial-${email}-${trialEnd.slice(0, 10)}`,
+  });
+}
+
+export type CoachingRequest = {
+  name: string;
+  email: string;
+  contact: string;
+  format: string;
+  goal: string;
+  age: string;
+  height: string;
+  weight: string;
+  experience: string;
+  days: string;
+  health: string;
+  message: string;
+};
+
+/**
+ * /trenirai-s-men: the filled form goes to hello@ (forwarded to the inbox).
+ * "Reply" answers the person directly. Nothing is stored in the database.
+ */
+export async function sendCoachingRequest(r: CoachingRequest): Promise<boolean> {
+  const rows: [string, string][] = [
+    ["Име", r.name],
+    ["Имейл", r.email],
+    ["Телефон / Instagram", r.contact],
+    ["Как иска да тренира", r.format],
+    ["Цел", r.goal],
+    ["Възраст", r.age],
+    ["Ръст", r.height ? `${r.height} см` : ""],
+    ["Тегло", r.weight ? `${r.weight} кг` : ""],
+    ["Опит", r.experience],
+    ["Дни в седмицата", r.days],
+    ["Контузии / здраве", r.health],
+    ["Съобщение", r.message],
+  ];
+  const filled = rows.filter(([, v]) => v.trim());
+  const text = [
+    "Нова заявка от „Тренирай с мен“. Натисни „Отговор“, за да пишеш директно на човека.",
+    "",
+    ...filled.map(([k, v]) => `${k}: ${v}`),
+  ].join("\n");
+  const html = wrap(
+    `<p>Нова заявка от „Тренирай с мен“. Натисни <b>„Отговор“</b>, за да пишеш директно на човека.</p>
+<table style="border-collapse:collapse;width:100%;font-size:15px">${filled
+      .map(
+        ([k, v]) =>
+          `<tr><td style="padding:7px 10px 7px 0;color:#5e5a4f;vertical-align:top;white-space:nowrap">${esc(k)}</td><td style="padding:7px 0;vertical-align:top;white-space:pre-wrap"><b>${esc(v)}</b></td></tr>`
+      )
+      .join("")}</table>`
+  );
+  return send({
+    to: CONTACT_EMAIL,
+    replyTo: r.email,
+    subject: `Тренирай с мен: ${r.name} (${r.format}, ${r.goal})`,
+    html,
+    text,
+    idempotencyKey: `coach-${r.email}-${Date.now()}`,
+  });
+}
+
+/** The short "I got it" note to the person who filled the form. */
+export async function sendCoachingThanks(email: string, name: string): Promise<boolean> {
+  const first = name.trim().split(/\s+/)[0] ?? "";
+  const lines = [
+    `Здравей${first ? `, ${first}` : ""}! Геша е 👋`,
+    "Получих заявката ти за тренировки с мен. Благодаря за доверието!",
+    "Ще я прочета внимателно и ще ти пиша лично до 2 работни дни, за да поговорим какво искаш да постигнеш и как да го направим заедно.",
+    "Ако междувременно се сетиш за нещо, просто отговори на този имейл.",
+  ];
+  return send({
+    to: email,
+    subject: "Получих заявката ти за тренировки",
+    html: wrap(lines.map((l) => `<p>${esc(l)}</p>`).join("\n") + "<p>Геша и Хоуми 🐾</p>"),
+    text: [...lines, "Геша и Хоуми 🐾"].join("\n\n"),
+    idempotencyKey: `coach-thanks-${email}-${new Date().toISOString().slice(0, 13)}`,
   });
 }

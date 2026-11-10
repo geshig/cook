@@ -6,4 +6,4 @@ export const SELLER = {
   site: "www.geshapov.com",
 };
 
-export const LEGAL_UPDATED = "2 ноември 2026 г.";
+export const LEGAL_UPDATED = "10 ноември 2026 г.";
