@@ -8,6 +8,8 @@ export const metadata: Metadata = {
   description:
     "Лично водене от Геша: тренировки, които пасват на живота ти, и хранене без глад. Онлайн или на живо в зала. Попълни заявката и си говорим.",
   alternates: { canonical: "/trenirai-s-men" },
+  // Скрита засега: няма линкове към нея и търсачките не я показват.
+  robots: { index: false, follow: false },
 };
 
 const GET = [
