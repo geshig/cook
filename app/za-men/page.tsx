@@ -96,6 +96,9 @@ export default async function AboutPage() {
             <Link href="/menyuta" className="btn btn-ghost">
               Виж дневните менюта
             </Link>
+            <Link href="/trenirai-s-men" className="btn btn-ghost">
+              Тренирай с мен
+            </Link>
           </div>
         </section>
       </main>
