@@ -13,7 +13,6 @@ export const SHORT_LINKS: Record<string, Short> = {
   "/dm": { dest: "/", source: "instagram", medium: "dm" },
   "/tt": { dest: "/", source: "tiktok", medium: "bio" },
   "/ttv": { dest: "/", source: "tiktok", medium: "video" },
-  "/skool": { dest: "/", source: "skool", medium: "community" },
   "/fb": { dest: "/", source: "facebook", medium: "bio" },
   "/fbp": { dest: "/", source: "facebook", medium: "post" },
   "/menu": { dest: "/menyuta", source: "instagram", medium: "post", campaign: "menyuta" },
