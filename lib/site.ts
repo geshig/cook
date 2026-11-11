@@ -16,7 +16,7 @@ export const SOCIALS: { id: "instagram" | "youtube" | "tiktok" | "facebook"; lab
 export const CONTACT_EMAIL = "hello@geshapov.com";
 
 /**
- * Затворената група във Facebook за хората с книгата (замени Skool).
+ * Затворената група във Facebook за хората с книгата.
  * Линкът излиза в имейла за достъп, в профила и в /recipes.
  * Докато url е празен, бутоните са скрити.
  */
