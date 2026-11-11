@@ -6,7 +6,7 @@ import { getGuideVideo } from "@/lib/settings";
 
 export const metadata: Metadata = {
   title: "Наръчник — Кухнята на Геша",
-  description: "Видео за 1:38: как да ползваш книгата — търсене, филтри, калкулатор, менюта, списък за пазаруване и рецептите.",
+  description: "Видео за 1:38: как да използваш книгата — търсене, филтри, калкулатор, менюта, списък за пазаруване и рецептите.",
   robots: { index: false, follow: true },
 };
 
@@ -20,7 +20,7 @@ export default async function GuidePage() {
       <main className="novi narachnik">
         <section className="novi-head">
           <p className="about-kicker">📖 Наръчник</p>
-          <h1 className="display">Как работи книгата</h1>
+          <h1 className="display">Как да използваш книгата</h1>
           <p>
             За 1:38 ти показвам всичко: търсене и филтри, калкулатора, менютата, списъка за пазаруване, порциите,
             таймера и любимите.

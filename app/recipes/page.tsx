@@ -156,7 +156,7 @@ export default async function RecipesPage({
             {guide && !(signedIn && (!paidEmail || paidEmail === signedIn)) && (
               <div className="gate-guide">
                 <p>
-                  <b>Докато чакаш имейла, виж как работи книгата (1:38)</b>
+                  <b>Докато чакаш имейла, виж как да използваш книгата (1:38)</b>
                 </p>
                 <GuideVideo url={guide.url} poster={guide.poster} where="след плащане" />
               </div>

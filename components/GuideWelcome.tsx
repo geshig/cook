@@ -51,7 +51,7 @@ export function GuideWelcome({ url, poster }: { url: string; poster: string | nu
       <div className="guide-modal-card" onClick={(e) => e.stopPropagation()}>
         <p className="about-kicker">Добре дошъл в книгата 🐾</p>
         <h2 id="guide-modal-title" className="display">
-          Как работи книгата
+          Как да използваш книгата
         </h2>
         <p className="guide-modal-sub">Виж всичко за 1:38. Пусни го със звук.</p>
         <GuideVideo url={url} poster={poster} where="прозорец" />
