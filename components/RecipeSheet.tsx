@@ -11,6 +11,7 @@ import { readTargets, type Targets } from "@/lib/targets";
 import { cookedToday, toggleCookedToday } from "@/lib/cooked";
 import { ingredientNote } from "@/lib/optional";
 import { SWAPS, applySwaps, findSwap } from "@/lib/swaps";
+import { autoMarkSteps, fillStepAmounts, stripStepMarks } from "@/lib/stepAmounts";
 import { portionGrams } from "@/lib/portions";
 import { CheckoutButton } from "@/components/CheckoutButton";
 import { ActivateTrialButton } from "@/components/ActivateTrialButton";
@@ -81,7 +82,19 @@ export function RecipeSheet({
     const sw = findSwap(`${amount} ${text}`.trim());
     return sw && !swapOn.has(sw.id) ? { id: sw.id, label: `⇄ ${sw.label}`, on: false } : null;
   }
-  const { steps, tips } = useMemo(() => splitTips(parseSteps(recipe.steps).map(toOlive)), [recipe]);
+  // Количества в стъпките: „пилешкото (500 g)“, по порциите и замените.
+  // Без ръчни знаци {…} в рецептата ги слагаме автоматично.
+  const { steps: rawSteps, tips } = useMemo(() => {
+    const marked = recipe.steps?.includes("{") ? recipe.steps : autoMarkSteps(recipe.ingredients, recipe.steps).steps;
+    const split = splitTips(parseSteps(marked).map(toOlive));
+    return { steps: split.steps, tips: split.tips.map(stripStepMarks) };
+  }, [recipe]);
+  const steps = useMemo(() => {
+    const factor = recipe.servings ? portions / recipe.servings : 1;
+    const raw = parseIngredients(recipe.ingredients);
+    const scaled = swapped.lines.map((l) => scaleLine(l, factor));
+    return rawSteps.map((st) => fillStepAmounts(st, raw, scaled));
+  }, [recipe, portions, swapped, rawSteps]);
 
   const say = useCallback((msg: string) => {
     setToast(msg);

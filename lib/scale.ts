@@ -114,12 +114,13 @@ export function scaleLine(line: string, factor: number): IngredientLine {
 
 /** "олио" → "зехтин" (also in steps: "олиото" → "зехтина"). */
 export function toOlive(text: string): string {
+  // (?<![а-я]) пази „фолио“, „портфолио“ от „фзехтин“.
   return text
     .replace(/олио или зехтин|зехтин или олио/gi, "зехтин")
-    .replace(/олиото/g, "зехтина")
-    .replace(/Олиото/g, "Зехтина")
-    .replace(/олио/g, "зехтин")
-    .replace(/Олио/g, "Зехтин");
+    .replace(/(?<![а-яА-Я])олиото/g, "зехтина")
+    .replace(/(?<![а-яА-Я])Олиото/g, "Зехтина")
+    .replace(/(?<![а-яА-Я])олио/g, "зехтин")
+    .replace(/(?<![а-яА-Я])Олио/g, "Зехтин");
 }
 
 const LIQUID = /зехтин|сок|сос|оцет|вода|мляко|мед|масло|бульон/i;
