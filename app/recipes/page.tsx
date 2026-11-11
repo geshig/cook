@@ -22,6 +22,9 @@ import { TrackOnce } from "@/components/TrackOnce";
 import { PendingGift } from "@/components/GiftRedeem";
 import { COMMUNITY } from "@/lib/site";
 import { bonusMonthsFor } from "@/lib/launch";
+import { getGuideVideo } from "@/lib/settings";
+import { GuideVideo } from "@/components/GuideVideo";
+import { GuideWelcome } from "@/components/GuideWelcome";
 
 type SP = Promise<{ [key: string]: string | string[] | undefined }>;
 
@@ -114,6 +117,7 @@ export default async function RecipesPage({
     const signedIn = access.email?.toLowerCase() ?? null;
 
     if (justPaid) {
+      const guide = await getGuideVideo();
       const loginHref = paidEmail ? `/login?email=${encodeURIComponent(paidEmail)}` : "/login";
       return (
         <>
@@ -148,6 +152,14 @@ export default async function RecipesPage({
                   Влез в рецептите
                 </Link>
               </>
+            )}
+            {guide && !(signedIn && (!paidEmail || paidEmail === signedIn)) && (
+              <div className="gate-guide">
+                <p>
+                  <b>Докато чакаш имейла, виж как работи книгата (1:38)</b>
+                </p>
+                <GuideVideo url={guide.url} poster={guide.poster} where="след плащане" />
+              </div>
             )}
           </div>
         </>
@@ -189,10 +201,11 @@ export default async function RecipesPage({
     );
   }
 
-  const [recipes, tags, favorites] = await Promise.all([
+  const [recipes, tags, favorites, guide] = await Promise.all([
     getRecipesForViewer(access),
     getAllTags().catch(() => []),
     getFavoriteIds(access.email).catch(() => []),
+    getGuideVideo(),
   ]);
   // Only offer tags that at least one recipe actually has, grouped for the filter panel.
   const used = new Set(recipes.flatMap((r) => r.tags));
@@ -212,6 +225,7 @@ export default async function RecipesPage({
       <SiteHeader />
       {purchaseEvent}
       <PendingGift />
+      {guide && <GuideWelcome url={guide.url} poster={guide.poster} />}
       <header className="app-header">
         <h1 className="display">Рецептите</h1>
         <p>{recipes.length} рецепти · търси, филтрирай и запазвай любими</p>
@@ -219,8 +233,8 @@ export default async function RecipesPage({
           <Link href="/novi" className="guide-chip">
             🆕 Нови рецепти
           </Link>
-          <Link href="/kak-raboti" className="guide-chip">
-            ▶ Как работи книгата
+          <Link href="/narachnik" className="guide-chip">
+            ▶ Наръчник
           </Link>
         </span>
       </header>

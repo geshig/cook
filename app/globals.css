@@ -6883,3 +6883,84 @@ section.lp-how {
   font-weight: 600;
   color: var(--text-dim);
 }
+
+/* ---------- Наръчник: how-it-works video (page, thank-you page, first-visit window) ---------- */
+.narachnik-video {
+  text-align: center;
+  padding-top: 6px;
+}
+.narachnik .guide-video {
+  margin-bottom: 18px;
+}
+.narachnik-help,
+.narachnik-empty {
+  color: var(--text-dim);
+  font-size: 15px;
+  margin: 0 0 16px;
+}
+.gate-guide {
+  margin-top: 26px;
+  padding-top: 22px;
+  border-top: 1px solid var(--tint-strong);
+}
+.gate-guide p {
+  margin-bottom: 14px;
+}
+.gate-guide b {
+  color: var(--text);
+}
+.gate-guide .guide-video {
+  max-height: 70vh;
+  max-height: 70dvh;
+}
+.guide-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(24, 26, 18, 0.72);
+}
+.guide-modal-card {
+  width: min(100%, 420px);
+  max-height: calc(100vh - 32px);
+  max-height: calc(100dvh - 32px);
+  overflow: auto;
+  padding: 18px 16px 14px;
+  border-radius: 22px;
+  background: var(--card);
+  text-align: center;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
+.guide-modal-card .about-kicker {
+  margin: 0;
+}
+.guide-modal-card h2 {
+  font-size: 30px;
+  margin: 2px 0 4px;
+}
+.guide-modal-sub {
+  color: var(--text-dim);
+  font-size: 15px;
+  margin: 0 0 12px;
+}
+.guide-modal-card .guide-video {
+  width: auto;
+  height: min(58vh, 560px);
+  height: min(58dvh, 560px);
+  max-width: 100%;
+}
+.guide-modal-actions {
+  margin-top: 12px;
+}
+.guide-modal-note {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+.guide-modal-note a {
+  color: var(--accent);
+  font-weight: 700;
+}
