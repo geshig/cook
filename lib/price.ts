@@ -6,8 +6,8 @@
 export const REGULAR = { book: 5000, forTwo: 7400, gift: 1999 } as const;
 
 export const PROMO: { book: number; forTwo: number; gift: number; until: string; name?: string } | null = {
-  book: 2999,
-  forTwo: 4499,
+  book: 2499,
+  forTwo: 3999,
   gift: 1999,
   // Renews itself every day: the timer counts to 23:59 and resets at
   // midnight. The promo itself runs until this date (move it to stop).
