@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { CheckoutButton } from "@/components/CheckoutButton";
 import { OldPrice, Price } from "@/components/Price";
-import { eur, prices } from "@/lib/price";
+import { REGULAR, eur, prices } from "@/lib/price";
 import { PromoBar } from "@/components/PromoBar";
 
 /**
@@ -25,7 +25,7 @@ export function ProductCard({
   const bonusPrice = bonusMonths === 3 ? 18 : 6;
   const value: [string, string, number | null][] = [
     ["100+ рецепти с лесни стъпки и съвети", "вечери за семейството, обеди за работа, сладко", 50],
-    ["Меню за целия ден", "идеи какво да ядеш, за да отслабнеш", 40],
+    ["Меню за всяка седмица", "идеи какво да ядеш, за да отслабнеш", 40],
     ["Калкулатор и списък за магазина", "калориите, нужни да сваляш или покачваш килограми, и продуктите с едно натискане", 25],
     [
       bonusMonths === 3 ? "3 месеца нови рецепти" : "1 месец нови рецепти",
@@ -99,7 +99,9 @@ export function ProductCard({
           </b>
           <span>еднократно, с достъп завинаги</span>
         </div>
-        <p className="pdp-save">Спестяваш {Math.round(total - now.book / 100)} €</p>
+        {now.book < REGULAR.book && (
+          <p className="pdp-save">−{Math.round((1 - now.book / REGULAR.book) * 100)}% отстъпка</p>
+        )}
         <PromoBar />
         {bonusMonths === 3 && (
           <div className="first100">
@@ -129,10 +131,11 @@ export function ProductCard({
         <div className="pdp-two">
           <p className="pdp-two-head">👫 Готвите двама?</p>
           <p className="pdp-two-price">
-            <s>{eur(now.book * 2)}</s> <b>{eur(now.forTwo)}</b> за двама
+            <s>{eur(REGULAR.book * 2)}</s> <b>{eur(now.forTwo)}</b> за двама
           </p>
           <p className="pdp-two-note">
-            Спестявате {eur(now.book * 2 - now.forTwo)}. Всеки влиза със своя имейл.
+            −{Math.round((1 - now.forTwo / (REGULAR.book * 2)) * 100)}% отстъпка, по {eur(Math.round(now.forTwo / 2))} на човек. Всеки
+            влиза със своя имейл.
           </p>
           <CheckoutButton kind="book" forTwo className="pdp-two-btn" source="за двама">
             Купи за двама
