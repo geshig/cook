@@ -4,7 +4,7 @@ import { useState } from "react";
 import { HEALTH_DOCTOR, type CoachingApp } from "@/lib/coaching";
 
 const GROUPS: { title: string; statuses: CoachingApp["status"][]; open: boolean }[] = [
-  { title: "Нови", statuses: ["new"], open: true },
+  { title: "Нови · за разговор", statuses: ["new"], open: true },
   { title: "Чакат плащане", statuses: ["approved"], open: true },
   { title: "Клиенти", statuses: ["paid"], open: true },
   { title: "Приключили и отказани", statuses: ["ended", "rejected"], open: false },

@@ -118,10 +118,10 @@ export function CoachingForm() {
     return (
       <div className="cf-done">
         <p className="cf-done-icon">💪</p>
-        <h3>Получих формата ти!</h3>
+        <h3>Получих анкетата ти!</h3>
         <p>
-          Чета я лично и ти пиша до 48 часа на имейла{f.contact_app !== "Instagram" ? ` и в ${f.contact_app}` : ""}. Ако
-          не виждаш имейл от мен, провери „Спам“ и „Промоции“.
+          Чета я лично и до 48 часа ти пиша{f.contact_app !== "Обаждане" ? ` в ${f.contact_app}` : ""}, за да си уговорим
+          15-минутния разговор. Пратих ти и имейл: ако не го виждаш, провери „Спам“ и „Промоции“.
         </p>
         <p>Геша и Хоуми 🐾</p>
       </div>
@@ -236,7 +236,7 @@ export function CoachingForm() {
             <span>Телефон</span>
             <input type="tel" autoComplete="tel" inputMode="tel" value={f.phone} onChange={(e) => set("phone", e.target.value)} placeholder="088…" maxLength={40} />
           </label>
-          <label className="cf-label">Къде да ти пиша?</label>
+          <label className="cf-label">Къде да се чуем?</label>
           <Chips value={f.contact_app} options={CONTACT_APPS} onPick={(v) => set("contact_app", v)} />
 
           <input className="cf-hp" tabIndex={-1} autoComplete="off" value={f.website} onChange={(e) => set("website", e.target.value)} aria-hidden="true" />
@@ -260,7 +260,7 @@ export function CoachingForm() {
           </button>
         )}
         <button type="submit" className="btn cf-next" disabled={busy}>
-          {step < 2 ? "Напред" : busy ? "Изпращам…" : "Изпрати формата"}
+          {step < 2 ? "Напред" : busy ? "Изпращам…" : "Изпрати анкетата"}
         </button>
       </div>
     </form>

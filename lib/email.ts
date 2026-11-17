@@ -397,13 +397,13 @@ export async function sendCoachingApplied(opts: { id: string; email: string; nam
   const first = opts.name.split(" ")[0] || "";
   const lines = [
     `Здравей${first ? `, ${first}` : ""}! Геша е 👋`,
-    "Получих формата ти за онлайн коучинга. Благодаря, че ми се довери!",
-    "Ще я прочета лично и ще ти пиша до 48 часа. Ако сме подходящи един за друг, ще получиш линк за плащане. Дотогава не плащаш нищо.",
+    "Получих анкетата ти за онлайн коучинга. Благодаря, че ми се довери!",
+    "Ще я прочета лично и до 48 часа ще ти пиша, за да си уговорим 15-минутен разговор. Запознаваме се и виждаме дали сме подходящи един за друг. Разговорът е безплатен и без ангажимент.",
     "Ако искаш да добавиш нещо, просто отговори на този имейл.",
   ];
   return send({
     to: opts.email,
-    subject: "Получих формата ти 💪",
+    subject: "Получих анкетата ти 💪",
     html: wrapT(paras(lines) + "<p>Геша и Хоуми 🐾</p>"),
     text: [...lines, "Геша и Хоуми 🐾"].join("\n\n"),
     idempotencyKey: `coach-applied-${opts.id}`,
@@ -420,9 +420,9 @@ export async function sendCoachingNotify(opts: { id: string; rows: [string, stri
   const name = opts.rows.find(([k]) => k === "Име")?.[1] ?? "";
   return send({
     to: coachInbox(),
-    subject: `${opts.flagged ? "⚠️ " : ""}Нова кандидатура за коучинг: ${name}`,
+    subject: `${opts.flagged ? "⚠️ " : ""}Нова анкета за коучинг: ${name}`,
     html: wrapT(
-      `${opts.flagged ? '<p style="color:#b5562e"><b>⚠️ Има отметнат здравословен проблем: виж го, преди да одобриш.</b></p>' : ""}<table style="border-collapse:collapse;font-size:15px">${table}</table><p style="margin-top:20px">${btn(`${site}/admin/kouching`, "Одобри или откажи")}</p>`
+      `${opts.flagged ? '<p style="color:#b5562e"><b>⚠️ Има отметнат здравословен проблем: питай за него в разговора.</b></p>' : ""}<table style="border-collapse:collapse;font-size:15px">${table}</table><p style="margin-top:20px">${btn(`${site}/admin/kouching`, "Виж в Админ → Коучинг")}</p>`
     ),
     text: opts.rows.map(([k, v]) => `${k}: ${v}`).join("\n") + `\n\n${site}/admin/kouching`,
     idempotencyKey: `coach-new-${opts.id}`,
@@ -436,7 +436,7 @@ export async function sendCoachingApproved(opts: { id: string; email: string; na
   const three = `${site}/api/coaching/pay?t=${opts.token}&plan=three`;
   const lines = [
     `Здравей${first ? `, ${first}` : ""}! Геша е 👋`,
-    "Прочетох формата ти и с радост ще работим заедно! 💪",
+    "Благодаря ти за разговора! С радост ще работим заедно 💪",
     "Остава само да избереш плана си. Мястото ти е запазено за 3 дни.",
   ];
   const after = [
@@ -464,7 +464,7 @@ export async function sendCoachingRejected(opts: { id: string; email: string; na
   const first = opts.name.split(" ")[0] || "";
   const lines = [
     `Здравей${first ? `, ${first}` : ""}! Геша е 👋`,
-    "Благодаря ти за формата за онлайн коучинга. Прочетох я внимателно.",
+    "Благодаря ти за интереса към онлайн коучинга.",
     "Този път няма да мога да те взема: местата са само 10 и искам всеки човек да получи пълното ми внимание. Записвам те и ще пиша първо на теб, когато се освободи място.",
     "Дотогава можеш да започнеш с книгата „Кухнята на Геша“: 100+ рецепти с калориите и протеина, меню за всяка седмица и калкулатор.",
   ];
