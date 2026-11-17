@@ -13,6 +13,9 @@ type CalFn = ((...args: unknown[]) => void) & { loaded?: boolean; ns?: Record<st
 export function CalBooking({ calLink, name, email }: { calLink: string; name: string; email: string }) {
   const box = useRef<HTMLDivElement>(null);
   const [booked, setBooked] = useState(false);
+  // The inline calendar shows only once Cal.com says it has loaded; until
+  // then (or if it never does) the big button is the way to book.
+  const [ready, setReady] = useState(false);
   const direct = `https://cal.com/${calLink}?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}`;
 
   useEffect(() => {
@@ -54,6 +57,7 @@ export function CalBooking({ calLink, name, email }: { calLink: string; name: st
       config: { name, email, layout: "month_view", theme: "light" },
     });
     Cal("ui", { theme: "light", hideEventTypeDetails: true, layout: "month_view", styles: { branding: { brandColor: "#6b7f3a" } } });
+    Cal("on", { action: "linkReady", callback: () => setReady(true) });
     Cal("on", {
       action: "bookingSuccessful",
       callback: () => {
@@ -66,10 +70,12 @@ export function CalBooking({ calLink, name, email }: { calLink: string; name: st
   return (
     <div className="cal-wrap">
       {booked && <p className="cal-booked">✅ Часът е записан! Поканата е в имейла ти. Ще се чуем 💪</p>}
-      <div ref={box} id="cal-inline" className="cal-box" />
-      <a className="cal-direct" href={direct} target="_blank" rel="noopener">
-        Календарът не се отваря? Избери час тук
-      </a>
+      {!booked && (
+        <a className="btn cal-btn" href={direct} target="_blank" rel="noopener" onClick={() => track("Коучинг: календар линк")}>
+          📅 Избери час за разговора
+        </a>
+      )}
+      <div ref={box} id="cal-inline" className={"cal-box" + (ready ? " on" : "")} />
     </div>
   );
 }
