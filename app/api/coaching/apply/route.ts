@@ -36,14 +36,13 @@ export async function POST(request: Request) {
   const phone = str(b.phone, 40);
   if (name.length < 2) return NextResponse.json({ error: "Напиши името си." }, { status: 400 });
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return NextResponse.json({ error: "Провери имейла." }, { status: 400 });
-  if (phone.replace(/\D/g, "").length < 7) return NextResponse.json({ error: "Напиши телефон, за да ти пиша." }, { status: 400 });
   if (b.agree !== true) return NextResponse.json({ error: "Отметни, че си прочел/а бележката за здравето." }, { status: 400 });
 
   const health = Array.isArray(b.health) ? b.health.filter((h): h is string => typeof h === "string" && HEALTH.includes(h)) : [];
   const row = {
     name,
     email,
-    phone,
+    phone: phone || null,
     // Discord: keep the username with it ("Discord (ime)").
     contact_app:
       oneOf(b.contact_app, CONTACT_APPS) === "Discord" && str(b.discord, 40)
@@ -85,7 +84,7 @@ export async function POST(request: Request) {
   const rows: [string, string][] = [
     ["Име", name],
     ["Имейл", email],
-    ["Телефон", `${phone}${row.contact_app ? ` (${row.contact_app})` : ""}`],
+    ["Връзка", row.contact_app ?? ""],
     ["Цел", row.goal ?? ""],
     ["Пол / години", [row.sex, row.age && `${row.age} г.`].filter(Boolean).join(", ")],
     ["Ръст / тегло", [row.height_cm && `${row.height_cm} см`, row.weight_kg && `${row.weight_kg} кг`].filter(Boolean).join(", ")],

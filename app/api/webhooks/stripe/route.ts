@@ -99,7 +99,7 @@ export async function POST(request: Request) {
           email: owner,
           name: app?.name ?? "",
           plan,
-          contact: app?.contact_app && app.contact_app !== "Обаждане" ? `${app.contact_app} (${app.phone ?? ""})` : app?.contact_app ?? "",
+          contact: app?.phone && app.contact_app ? `${app.contact_app} (${app.phone})` : app?.contact_app ?? "",
         }).catch((e) => console.error("coaching email failed:", e instanceof Error ? e.message : e));
         break;
       }

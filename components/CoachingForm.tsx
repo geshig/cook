@@ -248,10 +248,6 @@ export function CoachingForm() {
             <span>Имейл</span>
             <input type="email" autoComplete="email" inputMode="email" value={f.email} onChange={(e) => set("email", e.target.value)} maxLength={120} />
           </label>
-          <label className="cf-field">
-            <span>Телефон</span>
-            <input type="tel" autoComplete="tel" inputMode="tel" value={f.phone} onChange={(e) => set("phone", e.target.value)} placeholder="088…" maxLength={40} />
-          </label>
           <label className="cf-label">Къде предпочиташ да си пишем по време на коучинга?</label>
           <Chips value={f.contact_app} options={CONTACT_APPS} onPick={(v) => set("contact_app", v)} />
           {f.contact_app === "Discord" && (
