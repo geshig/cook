@@ -154,6 +154,11 @@ a {
   color: var(--amber);
 }
 
+.site-header nav a.nav-coach {
+  color: var(--amber);
+  font-weight: 700;
+}
+
 @media (min-width: 900px) {
   .site-header {
     padding: 26px 32px 0;
