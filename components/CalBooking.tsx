@@ -48,7 +48,7 @@ export function CalBooking({ calLink, name, email }: { calLink: string; name: st
     const Cal = w.Cal!;
     Cal("init", { origin: "https://cal.com" });
     Cal("inline", {
-      elementOrSelector: box.current,
+      elementOrSelector: "#cal-inline",
       calLink,
       layout: "month_view",
       config: { name, email, layout: "month_view", theme: "light" },
@@ -66,7 +66,7 @@ export function CalBooking({ calLink, name, email }: { calLink: string; name: st
   return (
     <div className="cal-wrap">
       {booked && <p className="cal-booked">✅ Часът е записан! Поканата е в имейла ти. Ще се чуем 💪</p>}
-      <div ref={box} className="cal-box" />
+      <div ref={box} id="cal-inline" className="cal-box" />
       <a className="cal-direct" href={direct} target="_blank" rel="noopener">
         Календарът не се отваря? Избери час тук
       </a>
