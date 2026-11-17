@@ -8,6 +8,8 @@ export const COACHING = {
   month: 9700, // 97 € на месец, абонамент
   three: 23700, // 237 € за 3 месеца, еднократно
   product: "Онлайн коучинг с Геша",
+  /** Cal.com линк за 15-минутния разговор, напр. "geshapov/razgovor". Празно: „ще ти пиша“. */
+  calLink: (process.env.NEXT_PUBLIC_CAL_LINK ?? "").trim().replace(/^https?:\/\/(app\.)?cal\.com\//, ""),
 };
 
 export type CoachingPlan = "month" | "three";

@@ -1,5 +1,6 @@
 import "server-only";
 import { COMMUNITY, getSiteUrl } from "./site";
+import { COACHING } from "./coaching";
 import { createAdminClient } from "./supabase/admin";
 
 const esc = (s: string) =>
@@ -395,17 +396,22 @@ function coachInbox(): string {
 
 export async function sendCoachingApplied(opts: { id: string; email: string; name: string }): Promise<boolean> {
   const first = opts.name.split(" ")[0] || "";
+  const cal = COACHING.calLink
+    ? `https://cal.com/${COACHING.calLink}?name=${encodeURIComponent(opts.name)}&email=${encodeURIComponent(opts.email)}`
+    : null;
   const lines = [
     `Здравей${first ? `, ${first}` : ""}! Геша е 👋`,
     "Получих анкетата ти за онлайн коучинга. Благодаря, че ми се довери!",
-    "Ще я прочета лично и до 48 часа ще ти пиша, за да си уговорим 15-минутен разговор. Запознаваме се и виждаме дали сме подходящи един за друг. Разговорът е безплатен и без ангажимент.",
-    "Ако искаш да добавиш нещо, просто отговори на този имейл.",
+    cal
+      ? "Следващата стъпка е 15-минутен разговор: запознаваме се и виждаме дали сме подходящи един за друг. Безплатен е и без ангажимент. Ако още нямаш час, избери тук:"
+      : "Ще я прочета лично и до 48 часа ще ти пиша, за да си уговорим 15-минутен разговор. Запознаваме се и виждаме дали сме подходящи един за друг. Разговорът е безплатен и без ангажимент.",
   ];
+  const tail = ["Ако искаш да добавиш нещо, просто отговори на този имейл."];
   return send({
     to: opts.email,
     subject: "Получих анкетата ти 💪",
-    html: wrapT(paras(lines) + "<p>Геша и Хоуми 🐾</p>"),
-    text: [...lines, "Геша и Хоуми 🐾"].join("\n\n"),
+    html: wrapT(paras(lines) + (cal ? `<p>${btn(cal, "Избери час за разговора")}</p>` : "") + paras(tail) + "<p>Геша и Хоуми 🐾</p>"),
+    text: [...lines, ...(cal ? [cal] : []), ...tail, "Геша и Хоуми 🐾"].join("\n\n"),
     idempotencyKey: `coach-applied-${opts.id}`,
   });
 }
@@ -429,7 +435,14 @@ export async function sendCoachingNotify(opts: { id: string; rows: [string, stri
   });
 }
 
-export async function sendCoachingApproved(opts: { id: string; email: string; name: string; token: string }): Promise<boolean> {
+export async function sendCoachingApproved(opts: {
+  id: string;
+  email: string;
+  name: string;
+  token: string;
+  /** Cents already paid for the book: taken off the first payment. */
+  credit: number;
+}): Promise<boolean> {
   const site = getSiteUrl();
   const first = opts.name.split(" ")[0] || "";
   const month = `${site}/api/coaching/pay?t=${opts.token}&plan=month`;
@@ -438,9 +451,12 @@ export async function sendCoachingApproved(opts: { id: string; email: string; na
     `Здравей${first ? `, ${first}` : ""}! Геша е 👋`,
     "Благодаря ти за разговора! С радост ще работим заедно 💪",
     "Остава само да избереш плана си. Мястото ти е запазено за 3 дни.",
+    ...(opts.credit > 0
+      ? [`Вече имаш книгата, затова ти връщам парите за нея: ${(opts.credit / 100).toFixed(2).replace(".", ",")} € се приспадат автоматично от първото плащане.`]
+      : ["Книгата „Кухнята на Геша“ е включена и остава твоя."]),
   ];
   const after = [
-    "След плащането получаваш имейл с първите стъпки, книгата „Кухнята на Геша“ се отключва в профила ти и аз ти пиша лично. Започваме на 1 декември.",
+    "След плащането получаваш имейл с първите стъпки, книгата е в профила ти и аз ти пиша лично. Започваме на 1 декември.",
     "Въпроси? Просто отговори на този имейл.",
   ];
   const html = wrapT(

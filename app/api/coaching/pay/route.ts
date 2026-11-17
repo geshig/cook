@@ -3,7 +3,7 @@ import type Stripe from "stripe";
 import { getStripe } from "@/lib/stripe";
 import { getSiteUrl } from "@/lib/site";
 import { COACHING, type CoachingPlan } from "@/lib/coaching";
-import { getApplication, spotsLeft } from "@/lib/coachingDb";
+import { bookCredit, getApplication, spotsLeft } from "@/lib/coachingDb";
 
 /**
  * The payment link from the "approved" email: /api/coaching/pay?t=<token>&plan=month|three.
@@ -24,10 +24,28 @@ export async function GET(request: Request) {
   if ((await spotsLeft()) <= 0) return back("full=1");
 
   const meta = { kind: "coaching", app: app.id, plan };
+  // Already has the book: its price comes off the first payment.
+  const credit = await bookCredit(app.email);
+  let discounts: Stripe.Checkout.SessionCreateParams["discounts"];
+  if (credit > 0) {
+    try {
+      const coupon = await getStripe().coupons.create({
+        amount_off: credit,
+        currency: "eur",
+        duration: "once",
+        max_redemptions: 1,
+        name: "Връщам ти парите за книгата",
+      });
+      discounts = [{ coupon: coupon.id }];
+    } catch (e) {
+      console.error("coaching book coupon failed:", e instanceof Error ? e.message : e);
+    }
+  }
   const common: Stripe.Checkout.SessionCreateParams = {
     customer_email: app.email,
     client_reference_id: app.id,
     metadata: meta,
+    ...(discounts ? { discounts } : {}),
     success_url: `${site}/treniray?paid=1`,
     cancel_url: `${site}/treniray?link=cancel`,
     locale: "bg",

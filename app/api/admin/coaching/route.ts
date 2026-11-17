@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { randomBytes } from "node:crypto";
 import { getAccess, isAdmin } from "@/lib/access";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { getApplication } from "@/lib/coachingDb";
+import { bookCredit, getApplication } from "@/lib/coachingDb";
 import { sendCoachingApproved, sendCoachingRejected } from "@/lib/email";
 
 /** Админ → Коучинг: одобри (праща линкове за плащане), откажи, приключи. */
@@ -19,7 +19,8 @@ export async function POST(request: Request) {
     const token = app.pay_token ?? randomBytes(16).toString("hex");
     const { error } = await db.update({ status: "approved", pay_token: token, approved_at: new Date().toISOString() }).eq("id", app.id);
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-    const sent = await sendCoachingApproved({ id: app.id, email: app.email, name: app.name, token });
+    const credit = await bookCredit(app.email);
+    const sent = await sendCoachingApproved({ id: app.id, email: app.email, name: app.name, token, credit });
     return NextResponse.json({ ok: true, status: "approved", sent });
   }
   if (action === "reject") {

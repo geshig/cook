@@ -7607,3 +7607,47 @@ section.tr-change {
   color: var(--accent);
   font-weight: 800;
 }
+.tr-book {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-top: 12px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: var(--tint);
+  border: 1.5px dashed var(--accent);
+}
+.tr-book > span {
+  font-size: 26px;
+  line-height: 1;
+}
+.tr-book p {
+  font-size: 15px;
+  line-height: 1.45;
+}
+.cal-wrap {
+  margin-top: 14px;
+  text-align: left;
+}
+.cal-box {
+  width: 100%;
+  min-height: 420px;
+  overflow: auto;
+  border-radius: 14px;
+  background: #fff;
+}
+.cal-booked {
+  margin-bottom: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--card);
+  font-weight: 700;
+}
+.cal-direct {
+  display: block;
+  margin-top: 10px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--accent);
+  font-weight: 700;
+}

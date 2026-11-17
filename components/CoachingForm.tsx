@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { ACTIVITY, CONTACT_APPS, GOALS, HEALTH, HEALTH_DOCTOR, TRAIN_WHERE } from "@/lib/coaching";
+import { ACTIVITY, COACHING, CONTACT_APPS, GOALS, HEALTH, HEALTH_DOCTOR, TRAIN_WHERE } from "@/lib/coaching";
+import { CalBooking } from "@/components/CalBooking";
 import { track } from "@/lib/track";
 
 type F = {
@@ -115,6 +116,19 @@ export function CoachingForm() {
   }
 
   if (done) {
+    if (COACHING.calLink) {
+      return (
+        <div className="cf-done">
+          <p className="cf-done-icon">💪</p>
+          <h3>Получих анкетата ти!</h3>
+          <p>
+            Последна стъпка: избери удобен час за 15-минутния разговор. Запознаваме се и виждаме дали сме подходящи.
+            Безплатно е.
+          </p>
+          <CalBooking calLink={COACHING.calLink} name={f.name} email={f.email} />
+        </div>
+      );
+    }
     return (
       <div className="cf-done">
         <p className="cf-done-icon">💪</p>

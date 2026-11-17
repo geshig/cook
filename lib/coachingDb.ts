@@ -36,3 +36,41 @@ export async function getApplication(by: { id?: string; token?: string }): Promi
   const { data } = await (by.id ? q.eq("id", by.id) : q.eq("pay_token", by.token!)).maybeSingle();
   return (data as CoachingApp) ?? null;
 }
+
+/**
+ * Already owns the book? Its price comes off the first coaching payment.
+ * Looks up their paid book checkout in Stripe (the oldest one: gifts come
+ * later). For two: half of it. Got it as a gift (paid nothing): 0.
+ */
+export async function bookCredit(email: string): Promise<number> {
+  try {
+    const { data } = await createAdminClient()
+      .from("subscribers")
+      .select("purchased_book")
+      .eq("email", email.toLowerCase())
+      .maybeSingle();
+    if (!data?.purchased_book) return 0;
+    const { getStripe } = await import("./stripe");
+    const list = await getStripe().checkout.sessions.list({
+      customer_details: { email: email.toLowerCase() },
+      status: "complete",
+      limit: 30,
+    });
+    const books = list.data
+      .filter(
+        (s) =>
+          s.mode === "payment" &&
+          s.payment_status === "paid" &&
+          !["gift", "coaching"].includes(s.metadata?.kind ?? "") &&
+          (s.amount_total ?? 0) >= 1000
+      )
+      .sort((a, b) => a.created - b.created);
+    const first = books[0];
+    if (!first) return 0;
+    const paid = first.amount_total ?? 0;
+    return first.metadata?.kind === "book_for_two" ? Math.round(paid / 2) : paid;
+  } catch (e) {
+    console.error("bookCredit failed:", e instanceof Error ? e.message : e);
+    return 0;
+  }
+}
