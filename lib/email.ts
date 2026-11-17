@@ -43,7 +43,7 @@ async function send(opts: {
       reply_to: "hello@geshapov.com",
       // Mail apps show an "Unsubscribe" link for non-transactional emails; it
       // also tells Gmail these are wanted emails from a real sender (less spam).
-      ...(/^(purchase|gift|test)-/.test(opts.idempotencyKey)
+      ...(/^(purchase|gift|test|coach)-/.test(opts.idempotencyKey)
         ? {}
         : { headers: { "List-Unsubscribe": "<mailto:hello@geshapov.com?subject=stop>" } }),
       subject: opts.subject,
@@ -371,4 +371,148 @@ export async function sendTrialReminder(email: string, trialEnd: string): Promis
     text,
     idempotencyKey: `trial-${email}-${trialEnd.slice(0, 10)}`,
   });
+}
+
+/* ───────────── Онлайн коучинг ───────────── */
+
+const btn = (href: string, label: string) =>
+  `<a href="${esc(href)}" style="display:inline-block;padding:13px 22px;background:#6b7f3a;color:#fff;border-radius:100px;text-decoration:none;font-weight:bold">${esc(label)}</a>`;
+
+/** Transactional (no "stop" footer). */
+const wrapT = (body: string) =>
+  `<div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;color:#2b2a26;font-size:16px;line-height:1.6">${header(getSiteUrl())}${body}</div>`;
+
+const paras = (lines: string[]) => lines.map((l) => `<p>${esc(l)}</p>`).join("\n");
+
+/** Where new applications and payments are announced: COACHING_NOTIFY_EMAIL, else the first admin. */
+function coachInbox(): string {
+  return (
+    process.env.COACHING_NOTIFY_EMAIL?.trim() ||
+    (process.env.ADMIN_EMAILS ?? "").split(",")[0]?.trim() ||
+    "hello@geshapov.com"
+  );
+}
+
+export async function sendCoachingApplied(opts: { id: string; email: string; name: string }): Promise<boolean> {
+  const first = opts.name.split(" ")[0] || "";
+  const lines = [
+    `Здравей${first ? `, ${first}` : ""}! Геша е 👋`,
+    "Получих формата ти за онлайн коучинга. Благодаря, че ми се довери!",
+    "Ще я прочета лично и ще ти пиша до 48 часа. Ако сме подходящи един за друг, ще получиш линк за плащане. Дотогава не плащаш нищо.",
+    "Ако искаш да добавиш нещо, просто отговори на този имейл.",
+  ];
+  return send({
+    to: opts.email,
+    subject: "Получих формата ти 💪",
+    html: wrapT(paras(lines) + "<p>Геша и Хоуми 🐾</p>"),
+    text: [...lines, "Геша и Хоуми 🐾"].join("\n\n"),
+    idempotencyKey: `coach-applied-${opts.id}`,
+  });
+}
+
+/** To Gesha: a new application with everything from the form. */
+export async function sendCoachingNotify(opts: { id: string; rows: [string, string][]; flagged: boolean }): Promise<boolean> {
+  const site = getSiteUrl();
+  const table = opts.rows
+    .filter(([, v]) => v)
+    .map(([k, v]) => `<tr><td style="padding:4px 10px 4px 0;color:#5e5a4f;vertical-align:top">${esc(k)}</td><td style="padding:4px 0"><b>${esc(v)}</b></td></tr>`)
+    .join("");
+  const name = opts.rows.find(([k]) => k === "Име")?.[1] ?? "";
+  return send({
+    to: coachInbox(),
+    subject: `${opts.flagged ? "⚠️ " : ""}Нова кандидатура за коучинг: ${name}`,
+    html: wrapT(
+      `${opts.flagged ? '<p style="color:#b5562e"><b>⚠️ Има отметнат здравословен проблем: виж го, преди да одобриш.</b></p>' : ""}<table style="border-collapse:collapse;font-size:15px">${table}</table><p style="margin-top:20px">${btn(`${site}/admin/kouching`, "Одобри или откажи")}</p>`
+    ),
+    text: opts.rows.map(([k, v]) => `${k}: ${v}`).join("\n") + `\n\n${site}/admin/kouching`,
+    idempotencyKey: `coach-new-${opts.id}`,
+  });
+}
+
+export async function sendCoachingApproved(opts: { id: string; email: string; name: string; token: string }): Promise<boolean> {
+  const site = getSiteUrl();
+  const first = opts.name.split(" ")[0] || "";
+  const month = `${site}/api/coaching/pay?t=${opts.token}&plan=month`;
+  const three = `${site}/api/coaching/pay?t=${opts.token}&plan=three`;
+  const lines = [
+    `Здравей${first ? `, ${first}` : ""}! Геша е 👋`,
+    "Прочетох формата ти и с радост ще работим заедно! 💪",
+    "Остава само да избереш плана си. Мястото ти е запазено за 3 дни.",
+  ];
+  const after = [
+    "След плащането получаваш имейл с първите стъпки, книгата „Кухнята на Геша“ се отключва в профила ти и аз ти пиша лично. Започваме на 1 декември.",
+    "Въпроси? Просто отговори на този имейл.",
+  ];
+  const html = wrapT(
+    paras(lines) +
+      `<p style="margin:22px 0 6px"><b>3 месеца: 237 €</b> (79 € на месец, спестяваш 54 €)<br><span style="color:#5e5a4f;font-size:14px">Еднократно плащане. Най-добрият вариант за истински резултат.</span></p><p>${btn(three, "Избирам 3 месеца")}</p>` +
+      `<p style="margin:22px 0 6px"><b>Месечно: 97 € на месец</b><br><span style="color:#5e5a4f;font-size:14px">Спираш, когато поискаш, с едно съобщение до мен.</span></p><p>${btn(month, "Избирам месечно")}</p>` +
+      paras(after) +
+      "<p>Геша и Хоуми 🐾</p>"
+  );
+  return send({
+    to: opts.email,
+    subject: "Мястото ти в коучинга е запазено 🎉",
+    html,
+    text: [...lines, `3 месеца, 237 €: ${three}`, `Месечно, 97 €: ${month}`, ...after, "Геша и Хоуми 🐾"].join("\n\n"),
+    idempotencyKey: `coach-ok-${opts.id}`,
+  });
+}
+
+export async function sendCoachingRejected(opts: { id: string; email: string; name: string }): Promise<boolean> {
+  const site = getSiteUrl();
+  const first = opts.name.split(" ")[0] || "";
+  const lines = [
+    `Здравей${first ? `, ${first}` : ""}! Геша е 👋`,
+    "Благодаря ти за формата за онлайн коучинга. Прочетох я внимателно.",
+    "Този път няма да мога да те взема: местата са само 10 и искам всеки човек да получи пълното ми внимание. Записвам те и ще пиша първо на теб, когато се освободи място.",
+    "Дотогава можеш да започнеш с книгата „Кухнята на Геша“: 100+ рецепти с калориите и протеина, меню за всяка седмица и калкулатор.",
+  ];
+  return send({
+    to: opts.email,
+    subject: "За коучинга",
+    html: wrapT(paras(lines) + `<p>${btn(site, "Виж книгата")}</p><p>Геша и Хоуми 🐾</p>`),
+    text: [...lines, site, "Геша и Хоуми 🐾"].join("\n\n"),
+    idempotencyKey: `coach-no-${opts.id}`,
+  });
+}
+
+/** After payment: welcome to the client and a heads-up to Gesha. */
+export async function sendCoachingWelcome(opts: {
+  sessionId: string;
+  email: string;
+  name: string;
+  plan: "month" | "three";
+  contact: string;
+}): Promise<void> {
+  const site = getSiteUrl();
+  const first = opts.name.split(" ")[0] || "";
+  const planText = opts.plan === "three" ? "3 месеца (237 €)" : "месечно (97 € на месец)";
+  const lines = [
+    `Радвам се, че започваме заедно${first ? `, ${first}` : ""}! 🎉`,
+    `Плащането мина: ${planText}. Ето какво следва:`,
+    `1. До 48 часа ти пиша лично в ${opts.contact || "Viber/WhatsApp"} и ти пращам плана: твоите калории и протеин, менюто за първата седмица и тренировките.`,
+    "2. Книгата „Кухнята на Геша“ вече е отключена: влизаш с този имейл, без парола.",
+    "3. Всяка неделя ми пращаш теглото си и как мина седмицата. В понеделник оправям плана, ако трябва.",
+    "Едно нещо от теб още сега: снимай се отпред и отстрани (на същото място и светлина) и си запиши теглото сутрин на гладно. Това е началната точка и след 4 седмици ще благодариш, че го направи.",
+  ];
+  const tail =
+    opts.plan === "month"
+      ? "Месечният план се подновява автоматично. Спираш го, когато поискаш, с едно съобщение до мен преди следващото плащане."
+      : "Трите месеца са платени изцяло. Няма автоматично подновяване.";
+  const login = `${site}/login?email=${encodeURIComponent(opts.email)}`;
+  await send({
+    to: opts.email,
+    subject: "Започваме! 💪 Първите стъпки в коучинга",
+    html: wrapT(paras(lines) + `<p>${btn(login, "Влез в книгата")}</p>` + paras([tail]) + "<p>Започваме! Геша и Хоуми 🐾</p>"),
+    text: [...lines, `Вход: ${login}`, tail, "Започваме! Геша и Хоуми 🐾"].join("\n\n"),
+    idempotencyKey: `coach-welcome-${opts.sessionId}`,
+  }).catch(() => false);
+  await send({
+    to: coachInbox(),
+    subject: `💰 Платен коучинг: ${opts.name} (${planText})`,
+    html: wrapT(`<p><b>${esc(opts.name)}</b> (${esc(opts.email)}) плати ${esc(planText)}.</p><p>Пиши в ${esc(opts.contact || "—")} до 48 часа.</p><p>${btn(`${site}/admin/kouching`, "Към клиентите")}</p>`),
+    text: `${opts.name} (${opts.email}) плати ${planText}. Пиши в ${opts.contact || "—"}.`,
+    idempotencyKey: `coach-paid-${opts.sessionId}`,
+  }).catch(() => false);
 }
