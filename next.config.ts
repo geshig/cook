@@ -11,12 +11,14 @@ const isDev = process.env.NODE_ENV === "development";
  */
 const csp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline' https://cloud.umami.is${isDev ? " 'unsafe-eval'" : ""}`,
+  `script-src 'self' 'unsafe-inline' https://cloud.umami.is https://app.cal.com${isDev ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' blob: data: https://*.supabase.co",
+  "img-src 'self' blob: data: https://*.supabase.co https://app.cal.com https://cal.com",
   "font-src 'self' data:",
   // Umami Cloud sends stats to gateway.umami.is (older scripts: api-gateway.umami.dev).
-  "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://cloud.umami.is https://gateway.umami.is https://*.umami.is https://api-gateway.umami.dev",
+  "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://cloud.umami.is https://gateway.umami.is https://*.umami.is https://api-gateway.umami.dev https://app.cal.com https://cal.com",
+  // /treniray: the Cal.com booking calendar after the coaching form.
+  "frame-src https://cal.com https://app.cal.com",
   "media-src 'self' https://*.supabase.co",
   "worker-src 'self'",
   "manifest-src 'self'",
