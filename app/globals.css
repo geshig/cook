@@ -7261,6 +7261,14 @@ section.tr-form-wrap {
 .tr-prices .tr-small {
   margin-top: 14px;
 }
+.tr-next {
+  margin: -6px 0 16px;
+  font-size: 15px;
+  color: var(--text-dim);
+}
+.tr-book + .tr-book {
+  margin-top: 10px;
+}
 .tr-form-sub {
   margin: -6px 0 14px;
   color: var(--text-dim);
