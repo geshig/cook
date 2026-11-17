@@ -77,7 +77,6 @@ const eur = (cents: number) => `${(cents / 100).toFixed(0)} €`;
 export default async function Coaching({ searchParams }: PageProps<"/treniray">) {
   const q = await searchParams;
   const full = (await spotsLeft()) <= 0;
-  const perMonth = Math.round(COACHING.three / 3);
   const save = COACHING.month * 3 - COACHING.three;
 
   const cal = !!COACHING.calLink;
@@ -198,12 +197,11 @@ export default async function Coaching({ searchParams }: PageProps<"/treniray">)
                 <b>{eur(COACHING.three)}</b>
               </p>
               <p className="tr-per">
-                {eur(perMonth)} на месец · спестяваш {eur(save)}
+                Плащаш веднъж за 3-те месеца · спестяваш {eur(save)}
               </p>
               <ul className="tr-plan-list">
                 <li>12 седмици план и проверки</li>
                 <li>Достатъчно, за да видиш резултат и да хванеш навика</li>
-                <li>Плащаш веднъж</li>
               </ul>
             </div>
             <div className="tr-plan">

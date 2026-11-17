@@ -461,7 +461,7 @@ export async function sendCoachingApproved(opts: {
   ];
   const html = wrapT(
     paras(lines) +
-      `<p style="margin:22px 0 6px"><b>3 месеца: 237 €</b> (79 € на месец, спестяваш 54 €)<br><span style="color:#5e5a4f;font-size:14px">Еднократно плащане. Най-добрият вариант за истински резултат.</span></p><p>${btn(three, "Избирам 3 месеца")}</p>` +
+      `<p style="margin:22px 0 6px"><b>3 месеца: 237 €</b> (плащаш веднъж за 3-те месеца, спестяваш 54 €)<br><span style="color:#5e5a4f;font-size:14px">Еднократно плащане. Най-добрият вариант за истински резултат.</span></p><p>${btn(three, "Избирам 3 месеца")}</p>` +
       `<p style="margin:22px 0 6px"><b>Месечно: 97 € на месец</b><br><span style="color:#5e5a4f;font-size:14px">Спираш, когато поискаш, с едно съобщение до мен.</span></p><p>${btn(month, "Избирам месечно")}</p>` +
       paras(after) +
       "<p>Геша и Хоуми 🐾</p>"
