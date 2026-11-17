@@ -23,6 +23,7 @@ type F = {
   email: string;
   phone: string;
   contact_app: string;
+  discord: string;
   agree: boolean;
   website: string;
 };
@@ -45,6 +46,7 @@ const EMPTY: F = {
   email: "",
   phone: "",
   contact_app: "Viber",
+  discord: "",
   agree: false,
   website: "",
 };
@@ -252,6 +254,12 @@ export function CoachingForm() {
           </label>
           <label className="cf-label">Къде предпочиташ да си пишем по време на коучинга?</label>
           <Chips value={f.contact_app} options={CONTACT_APPS} onPick={(v) => set("contact_app", v)} />
+          {f.contact_app === "Discord" && (
+            <label className="cf-field">
+              <span>Потребителско име в Discord</span>
+              <input value={f.discord} onChange={(e) => set("discord", e.target.value)} autoCapitalize="off" maxLength={40} />
+            </label>
+          )}
 
           <input className="cf-hp" tabIndex={-1} autoComplete="off" value={f.website} onChange={(e) => set("website", e.target.value)} aria-hidden="true" />
 

@@ -26,7 +26,7 @@ export const ACTIVITY = [
 
 export const TRAIN_WHERE = ["Вкъщи без уреди", "Вкъщи с дъмбели/ластици", "Във фитнес", "Само хранене, без тренировки"];
 
-export const CONTACT_APPS = ["Viber", "WhatsApp", "Telegram"];
+export const CONTACT_APPS = ["Viber", "WhatsApp", "Discord"];
 
 /** Отметнато някое от тези: преди старт питам дали лекар е съгласен. */
 export const HEALTH = [
