@@ -23,7 +23,7 @@ function chatLink(app: CoachingApp): string | null {
   if (!n) return null;
   if (app.contact_app === "WhatsApp") return `https://wa.me/${n}`;
   if (app.contact_app === "Viber") return `viber://chat?number=%2B${n}`;
-  if (app.contact_app === "Telegram") return `https://t.me/+${n}`;
+  if (app.contact_app?.startsWith("Discord")) return null;
   return `tel:+${n}`;
 }
 
@@ -130,7 +130,7 @@ export function CoachingAdmin({ apps: initial, site }: { apps: CoachingApp[]; si
                     <dd>
                       <a href={`mailto:${a.email}`}>{a.email}</a>
                       {a.phone && " · "}
-                      {a.phone && (link ? <a href={link}>{a.phone} ({a.contact_app ?? "тел."})</a> : a.phone)}
+                      {a.phone && (link ? <a href={link}>{a.phone} ({a.contact_app ?? "тел."})</a> : `${a.phone} (${a.contact_app ?? "тел."})`)}
                     </dd>
                   </dl>
                   {doctor && a.status === "new" && (

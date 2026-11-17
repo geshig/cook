@@ -44,7 +44,11 @@ export async function POST(request: Request) {
     name,
     email,
     phone,
-    contact_app: oneOf(b.contact_app, CONTACT_APPS),
+    // Discord: keep the username with it ("Discord (ime)").
+    contact_app:
+      oneOf(b.contact_app, CONTACT_APPS) === "Discord" && str(b.discord, 40)
+        ? `Discord (${str(b.discord, 40)})`
+        : oneOf(b.contact_app, CONTACT_APPS),
     goal: oneOf(b.goal, GOALS),
     sex: oneOf(b.sex, ["Жена", "Мъж"]),
     age: num(b.age, 16, 90),
