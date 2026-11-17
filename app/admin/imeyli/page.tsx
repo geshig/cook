@@ -49,6 +49,7 @@ export default async function AdminEmails() {
         <Link href="/admin/imeyli" className="on">
           Имейли
         </Link>
+        <Link href="/admin/kouching">Коучинг</Link>
       </div>
       <h1 className="display" style={{ fontSize: 34, marginBottom: 6 }}>
         Имейли

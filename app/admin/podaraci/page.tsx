@@ -15,6 +15,7 @@ export default async function AdminGifts() {
           Подаръци
         </Link>
         <Link href="/admin/imeyli">Имейли</Link>
+        <Link href="/admin/kouching">Коучинг</Link>
       </div>
       <h1 className="display" style={{ fontSize: 34, marginBottom: 6 }}>
         Безплатен достъп

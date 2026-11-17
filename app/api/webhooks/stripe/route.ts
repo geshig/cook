@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
 import type Stripe from "stripe";
-import { sendCartReminder, sendGiftEmail, sendPurchaseEmail } from "@/lib/email";
+import { sendCartReminder, sendCoachingWelcome, sendGiftEmail, sendPurchaseEmail } from "@/lib/email";
 import { createGiftCodes } from "@/lib/gifts";
 import { bonusDaysFor } from "@/lib/launch";
 import { getStripe } from "@/lib/stripe";
@@ -57,6 +57,50 @@ export async function POST(request: Request) {
       // as "unpaid" here; we only offer instant ones, but never trust that.
       if (session.payment_status === "unpaid") {
         console.warn("checkout.session.completed още без плащане, session:", session.id);
+        break;
+      }
+
+      // Online coaching (97 €/месец or 237 € for 3 months): mark the place as
+      // taken, unlock the book (it is included) and send the first steps.
+      if (session.metadata?.kind === "coaching") {
+        const appId = session.metadata.app;
+        const plan = session.metadata.plan === "month" ? "month" : "three";
+        const { data: app, error } = await admin
+          .from("coaching_applications")
+          .update({
+            status: "paid",
+            paid_plan: plan,
+            paid_at: new Date(session.created * 1000).toISOString(),
+            stripe_session_id: session.id,
+            stripe_subscription_id: typeof session.subscription === "string" ? session.subscription : null,
+          })
+          .eq("id", appId ?? "")
+          .select("name, email, contact_app, phone")
+          .maybeSingle();
+        if (error) {
+          console.error("coaching paid update failed:", error.message);
+          return NextResponse.json({ error: "db" }, { status: 500 });
+        }
+        const owner = (app?.email ?? email).toLowerCase();
+        const { error: bErr } = await admin
+          .from("subscribers")
+          .upsert({ email: owner, purchased_book: true }, { onConflict: "email" });
+        if (bErr) {
+          console.error("coaching book unlock failed:", bErr.message);
+          return NextResponse.json({ error: "db" }, { status: 500 });
+        }
+        await admin
+          .from("subscribers")
+          .update({ book_purchased_at: new Date(session.created * 1000).toISOString() })
+          .eq("email", owner)
+          .is("book_purchased_at", null);
+        await sendCoachingWelcome({
+          sessionId: session.id,
+          email: owner,
+          name: app?.name ?? "",
+          plan,
+          contact: app?.contact_app && app.contact_app !== "Обаждане" ? `${app.contact_app} (${app.phone ?? ""})` : app?.contact_app ?? "",
+        }).catch((e) => console.error("coaching email failed:", e instanceof Error ? e.message : e));
         break;
       }
 
@@ -204,7 +248,10 @@ export async function POST(request: Request) {
     case "charge.refunded": {
       const charge = event.data.object as Stripe.Charge;
       if (!charge.refunded) break; // partial refund: keep access
-      const isBook = charge.metadata?.kind?.startsWith("book") || charge.amount >= 4000;
+      // Coaching charges (kind "coaching", or the 97 € monthly invoices with no
+      // kind) never touch the book.
+      const kind = charge.metadata?.kind;
+      const isBook = kind ? kind.startsWith("book") : charge.amount >= 4000 && charge.amount <= 7400;
       if (!isBook) break; // not the book
       const customerId = typeof charge.customer === "string" ? charge.customer : charge.customer?.id;
       const email = (charge.billing_details?.email ?? charge.receipt_email ?? "").toLowerCase();
@@ -235,6 +282,16 @@ export async function POST(request: Request) {
     case "customer.subscription.updated":
     case "customer.subscription.deleted": {
       const subscription = event.data.object as Stripe.Subscription;
+      // The monthly coaching plan is separate from the recipes subscription.
+      if (subscription.metadata?.kind === "coaching") {
+        if (subscription.status === "canceled" || event.type === "customer.subscription.deleted") {
+          await admin
+            .from("coaching_applications")
+            .update({ status: "ended" })
+            .eq("stripe_subscription_id", subscription.id);
+        }
+        break;
+      }
       const customerId =
         typeof subscription.customer === "string" ? subscription.customer : null;
       if (!customerId) break;
