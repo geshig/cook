@@ -91,14 +91,6 @@ export default async function Coaching({ searchParams }: PageProps<"/treniray">)
             директно на мен. Вземам само {COACHING.spots} души, за да имам време
             за всеки.
           </p>
-          <div className="tr-spots" aria-label={`Остават ${left} от ${COACHING.spots} места`}>
-            <div className="tr-dots">
-              {Array.from({ length: COACHING.spots }, (_, i) => (
-                <span key={i} className={i < COACHING.spots - left ? "taken" : ""} />
-              ))}
-            </div>
-            <b>{full ? "Местата свършиха" : `Остават ${left} от ${COACHING.spots} места`}</b>
-          </div>
           <a href="#forma" className="btn btn-cream tr-cta">
             {full ? "Запиши се за следващия път" : "Кандидатствай"}
           </a>
