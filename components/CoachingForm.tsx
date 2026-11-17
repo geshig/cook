@@ -122,7 +122,7 @@ export function CoachingForm() {
           <p className="cf-done-icon">💪</p>
           <h3>Получих анкетата ти!</h3>
           <p>
-            Последна стъпка: избери удобен час за 15-минутния разговор. Запознаваме се и виждаме дали сме подходящи.
+            Последна стъпка: избери удобен час за 15 минути в Google Meet. Линкът идва на имейла ти. Запознаваме се и виждаме дали сме подходящи.
             Безплатно е.
           </p>
           <CalBooking calLink={COACHING.calLink} name={f.name} email={f.email} />
@@ -134,7 +134,7 @@ export function CoachingForm() {
         <p className="cf-done-icon">💪</p>
         <h3>Получих анкетата ти!</h3>
         <p>
-          Чета я лично и до 48 часа ти пиша{f.contact_app !== "Обаждане" ? ` в ${f.contact_app}` : ""}, за да си уговорим
+          Чета я лично и до 48 часа ти пиша, за да си уговорим
           15-минутния разговор. Пратих ти и имейл: ако не го виждаш, провери „Спам“ и „Промоции“.
         </p>
         <p>Геша и Хоуми 🐾</p>
@@ -250,7 +250,7 @@ export function CoachingForm() {
             <span>Телефон</span>
             <input type="tel" autoComplete="tel" inputMode="tel" value={f.phone} onChange={(e) => set("phone", e.target.value)} placeholder="088…" maxLength={40} />
           </label>
-          <label className="cf-label">Къде да се чуем?</label>
+          <label className="cf-label">Къде предпочиташ да си пишем по време на коучинга?</label>
           <Chips value={f.contact_app} options={CONTACT_APPS} onPick={(v) => set("contact_app", v)} />
 
           <input className="cf-hp" tabIndex={-1} autoComplete="off" value={f.website} onChange={(e) => set("website", e.target.value)} aria-hidden="true" />
