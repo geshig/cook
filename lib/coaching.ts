@@ -27,7 +27,7 @@ export const ACTIVITY = [
   "Работа на крак / тренирам 5+ пъти",
 ];
 
-export const TRAIN_WHERE = ["Вкъщи без уреди", "Вкъщи с дъмбели/ластици", "Във фитнес", "Само хранене, без тренировки"];
+export const TRAIN_WHERE = ["Вече ходя на фитнес", "Ще започна сега", "Само хранене, без тренировки"];
 
 export const CONTACT_APPS = ["Viber", "WhatsApp", "Discord"];
 
