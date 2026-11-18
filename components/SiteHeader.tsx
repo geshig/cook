@@ -15,6 +15,7 @@ export async function SiteHeader() {
           <>
             {isAdmin(access) && <Link href="/admin">Админ</Link>}
             <Link href="/recipes">Рецепти</Link>
+            <Link href="/treniray" className="nav-coach">Треньорство</Link>
             <Link href="/novi">Нови</Link>
             <Link href="/narachnik">Наръчник</Link>
             <Link href="/menyuta">Менюта</Link>
@@ -25,6 +26,7 @@ export async function SiteHeader() {
           </>
         ) : (
           <>
+            <Link href="/treniray" className="nav-coach">Треньорство</Link>
             <Link href="/menyuta">Менюта</Link>
             <Link href="/produkti">Продукти</Link>
             <Link href="/za-men">За мен</Link>
