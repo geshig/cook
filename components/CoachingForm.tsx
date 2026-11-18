@@ -187,10 +187,10 @@ export function CoachingForm() {
 
       {step === 1 && (
         <div className="cf-step">
-          <label className="cf-label">Къде ще тренираш?</label>
+          <label className="cf-label">Ходиш ли на фитнес?</label>
           <Chips value={f.train_where} options={TRAIN_WHERE} onPick={(v) => set("train_where", v)} />
 
-          {f.train_where && f.train_where !== TRAIN_WHERE[3] && (
+          {f.train_where && f.train_where !== TRAIN_WHERE[2] && (
             <>
               <label className="cf-label">Колко пъти седмично можеш?</label>
               <Chips value={f.train_days} options={["2", "3", "4", "5"]} onPick={(v) => set("train_days", v)} />
