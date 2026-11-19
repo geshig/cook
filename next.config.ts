@@ -11,14 +11,14 @@ const isDev = process.env.NODE_ENV === "development";
  */
 const csp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline' https://cloud.umami.is https://app.cal.com${isDev ? " 'unsafe-eval'" : ""}`,
+  `script-src 'self' 'unsafe-inline' https://cloud.umami.is https://app.cal.com https://js.stripe.com${isDev ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' blob: data: https://*.supabase.co https://app.cal.com https://cal.com",
+  "img-src 'self' blob: data: https://*.supabase.co https://app.cal.com https://cal.com https://*.stripe.com",
   "font-src 'self' data:",
   // Umami Cloud sends stats to gateway.umami.is (older scripts: api-gateway.umami.dev).
-  "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://cloud.umami.is https://gateway.umami.is https://*.umami.is https://api-gateway.umami.dev https://app.cal.com https://cal.com",
+  "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://cloud.umami.is https://gateway.umami.is https://*.umami.is https://api-gateway.umami.dev https://app.cal.com https://cal.com https://api.stripe.com https://checkout.stripe.com",
   // /treniray: the Cal.com booking calendar after the coaching form.
-  "frame-src https://cal.com https://app.cal.com",
+  "frame-src https://cal.com https://app.cal.com https://js.stripe.com https://checkout.stripe.com https://hooks.stripe.com",
   "media-src 'self' https://*.supabase.co",
   "worker-src 'self'",
   "manifest-src 'self'",

@@ -37,6 +37,11 @@ export function CheckoutButton({
     setLoading(true);
     track(kind === "book" ? "Плащане: старт" : kind === "gift" ? "Подарък: старт" : "Абонамент: старт", { от: source ?? "друго" });
     const qs = [forTwo ? "for=2" : "", query ?? ""].filter(Boolean).join("&");
+    if (kind === "book" && /musical_ly|bytedance|tiktok|trill_/i.test(navigator.userAgent)) {
+      // TikTok won't open checkout.stripe.com: pay inside our own page instead.
+      window.location.assign(`/kupi${forTwo ? "?for=2" : ""}`);
+      return;
+    }
     if (kind === "book") {
       // A real navigation: the server answers with a redirect to Stripe. Works
       // in TikTok/Instagram browsers, where a JS redirect after fetch can fail.
