@@ -13,7 +13,11 @@ async function bookProduct(priceId: string): Promise<string> {
 }
 
 export async function POST(request: Request) {
-  const forTwo = new URL(request.url).searchParams.get("for") === "2";
+  const params = new URL(request.url).searchParams;
+  const forTwo = params.get("for") === "2";
+  // /kupi: Stripe Checkout inside our own page (TikTok blocks the jump to
+  // checkout.stripe.com). Answers with a client secret instead of a URL.
+  const embedded = params.get("embedded") === "1";
   const priceId = process.env.STRIPE_PRICE_BOOK?.trim();
   if (!priceId) {
     return NextResponse.json(
@@ -66,8 +70,15 @@ export async function POST(request: Request) {
           : []),
       ],
       ...(forTwo ? { metadata: { kind: "book_for_two" } } : {}),
-      success_url: `${siteUrl}/recipes?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${siteUrl}/?checkout=cancelled`,
+      ...(embedded
+        ? {
+            ui_mode: "embedded_page" as const,
+            return_url: `${siteUrl}/recipes?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
+          }
+        : {
+            success_url: `${siteUrl}/recipes?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${siteUrl}/?checkout=cancelled`,
+          }),
       locale: "bg",
       // Always euro: no "pay in UAH/BGN…" currency switch (Stripe Adaptive Pricing).
       adaptive_pricing: { enabled: false },
@@ -104,6 +115,13 @@ export async function POST(request: Request) {
       { error: `Плащането не можа да започне: ${msg}` },
       { status: 502 },
     );
+  }
+
+  if (embedded) {
+    if (!session.client_secret) {
+      return NextResponse.json({ error: "Неуспешно създаване на Checkout сесия" }, { status: 502 });
+    }
+    return NextResponse.json({ clientSecret: session.client_secret });
   }
 
   if (!session.url) {

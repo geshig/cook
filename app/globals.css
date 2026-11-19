@@ -7676,3 +7676,45 @@ section.tr-change {
   color: var(--accent);
   font-weight: 700;
 }
+
+/* /kupi: Stripe Checkout inside the page (TikTok) */
+section.kupi {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 22px 16px 40px;
+}
+.kupi-kicker {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-dim);
+}
+.kupi-title {
+  margin: 4px 0 14px;
+  font-family: "Playfair Display", serif;
+  font-size: 26px;
+  line-height: 1.15;
+}
+.kupi-loading {
+  padding: 30px 0;
+  text-align: center;
+  color: var(--text-dim);
+}
+.kupi-box {
+  border-radius: 14px;
+  overflow: hidden;
+}
+.kupi-help {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: var(--tint);
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+.kupi-help.show {
+  background: rgba(181, 86, 46, 0.1);
+  font-size: 16px;
+}
+.kupi-help p {
+  margin: 4px 0 10px;
+}
