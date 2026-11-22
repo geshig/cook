@@ -99,9 +99,6 @@ export function ProductCard({
           </b>
           <span>еднократно, с достъп завинаги</span>
         </div>
-        {now.book < REGULAR.book && (
-          <p className="pdp-save">−{Math.round((1 - now.book / REGULAR.book) * 100)}% отстъпка</p>
-        )}
         <PromoBar />
         {bonusMonths === 3 && (
           <div className="first100">

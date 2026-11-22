@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { PROMO, REGULAR, eur, promoDeadline } from "@/lib/price";
+import { PROMO, REGULAR, promoDeadline } from "@/lib/price";
 
 /**
- * Named promo strip ("ЧЕРЕН ПЕТЪК · 47 € 29,99 € само днес · 08:12:33"),
+ * Named promo strip ("ЧЕРЕН ПЕТЪК −50% · свършва след 08:12:33"): the
+ * discount said once, the prices stay in the price line above it.
  * shown next to the buy buttons while the promo runs; gone when it ends.
  */
 export function PromoBar({ compact = false }: { compact?: boolean }) {
@@ -20,17 +21,16 @@ export function PromoBar({ compact = false }: { compact?: boolean }) {
   const s = Math.floor(left / 1000);
   const pad = (n: number) => String(n).padStart(2, "0");
   const time = `${pad(Math.floor(s / 3600))}:${pad(Math.floor((s % 3600) / 60))}:${pad(s % 60)}`;
-  const today = s < 24 * 3600;
+  const off = Math.round((1 - PROMO.book / REGULAR.book) * 100);
   return (
     <div className={"promo-bar" + (compact ? " compact" : "")}>
-      {PROMO.name && <b className="promo-bar-name">🖤 {PROMO.name.toUpperCase()}</b>}
-      {!compact && (
-        <span className="promo-bar-price">
-          <s>{eur(REGULAR.book)}</s> <b>{eur(PROMO.book)}</b>
-          {today ? " само днес" : ""}
-        </span>
-      )}
-      <span className="promo-bar-time">⏳ {time}</span>
+      <b className="promo-bar-name">
+        🖤 {(PROMO.name || "Промоция").toUpperCase()} −{off}%
+      </b>
+      <span className="promo-bar-time">
+        {compact ? "⏳ " : "свършва след ⏳ "}
+        {time}
+      </span>
     </div>
   );
 }
